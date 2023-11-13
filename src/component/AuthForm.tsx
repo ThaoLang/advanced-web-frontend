@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
+import axios from 'axios';
 import { User, useAuth } from "@/context/AuthContext";
 
 export default function AuthForm() {
@@ -84,14 +84,14 @@ export default function AuthForm() {
       <input
         type="text"
         placeholder="Email"
-        className="input input-bordered w-full max-w-xs m-2 mx-auto"
+        className="input input-bordered w-full max-w-xs m-2 mx-auto dark:bg-white dark:text-black "
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <input
         type="text"
         placeholder="Password"
-        className="input input-bordered w-full max-w-xs m-2 mx-auto"
+        className="input input-bordered w-full max-w-xs m-2 mx-auto dark:bg-white dark:text-black"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />

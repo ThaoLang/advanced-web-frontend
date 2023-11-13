@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../globals.css'
+import NavBar from '@/component/NavBar'
+import Footer from '@/component/Footer'
+import Link from 'next/link'
+import { FaHouseChimney, FaCalendarDays, FaGear, FaSquarePhone, FaAddressCard } from "react-icons/fa6";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,10 +18,53 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const navigation = [
+    { name: "Home", href: "/", icon: <FaHouseChimney /> },
+    { name: "Calendar", href: "/calendar", icon: <FaCalendarDays /> },
+    { name: "About", href: "/about", icon: <FaAddressCard /> },
+    { name: "Contact", href: "/contact", icon: <FaSquarePhone /> },
+    { name: "Settings", href: "/setting", icon: <FaGear /> },
+  ];
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <label>Global layout</label>{children}</body>
+        <div className="drawer">
+          <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+          <div className="drawer-content">
+            <NavBar />
+            {children}
+            <Footer />
+          </div>
+          <div className="drawer-side">
+            <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
+            
+            <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content text-lg">
+              {/* Sidebar content here */}
+              <a className="btn btn-ghost normal-case text-xl mb-5">
+                <img className="h-8 w-auto" src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png" alt=""></img>
+                LightHub
+              </a>
+              {navigation.map(
+                (item, index) => (
+                  (
+                    <li className="cursor-pointer"
+                      key={index}>
+                      <Link href={item.href}>
+                        <div className="flex w-full">
+                          <div className="grid flex-grow place-items-center">{item.icon}</div>
+                          <div className="divider divider-horizontal"></div>
+                          <div className="grid flex-grow place-items-center">{item.name}</div>
+                        </div>
+                      </Link>
+                    </li>
+                  )
+                )
+              )}
+            </ul>
+          </div>
+        </div>
+      </body>
     </html>
   )
 }
