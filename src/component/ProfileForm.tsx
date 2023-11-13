@@ -1,24 +1,32 @@
 "use client";
 import React, { useState } from "react";
+import DragNDrop from "./DragNDrop";
+import { GrCircleInformation } from "react-icons/gr";
+import { GoChecklist } from "react-icons/go";
+import { VscFeedback } from "react-icons/vsc";
 
 interface ProfileFormProp {
   username: string;
   email: string;
-  saveInfo: (username: string, email: string) => void;
+  profilePicture: string;
+  saveInfo: (username: string, email: string, profilePicture: string) => void;
 }
 
 export default function ProfileForm(props: ProfileFormProp) {
   const [emailProxy, setEmailProxy] = useState(props.email);
   const [usernameProxy, setUsernameProxy] = useState(props.username);
+  const [profilePictureProxy, setProfilePictureProxy] = useState(
+    props.profilePicture
+  );
   const [isEditable, setIsEditable] = useState(false);
-  const [option, setOption] = useState("button2");
+  const [option, setOption] = useState("tab_1");
 
   const toggleEdit = async () => {
     setIsEditable(!isEditable);
   };
 
   const saveChanges = async () => {
-    props.saveInfo(usernameProxy, emailProxy);
+    props.saveInfo(usernameProxy, emailProxy, profilePictureProxy);
     setIsEditable(!isEditable);
   };
 
@@ -28,17 +36,35 @@ export default function ProfileForm(props: ProfileFormProp) {
   };
 
   return (
-    <div className="m-20">
+    <div className="m-4">
       <div className="flex flex-row justify-center">
-        <div className="mr-10 mt-28 inline-block align-middle">
-          <img
-            src="https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe"
-            className="rounded-full w-40 "
-            alt="profile picture"
-          />
+        <div className="flex flex-col justify-center mt-10">
+          {/* TODO: update this button UI */}
+          <div className="justify-center">
+            {isEditable || (
+              <img
+                src={props.profilePicture}
+                className="rounded-full w-40 m-5 mx-5"
+                alt="profile picture"
+              />
+            )}
+            {isEditable && profilePictureProxy && (
+              <img
+                src={profilePictureProxy}
+                className="rounded-full w-40 m-5 mx-5 brightness-50"
+                alt="image upload"
+              />
+            )}
+            <div className={`w-44 ${isEditable ? "active" : "invisible"}`}>
+              <DragNDrop
+                imageUrl={profilePictureProxy}
+                saveImageUrl={setProfilePictureProxy}
+              />
+            </div>
+          </div>
         </div>
-        <div className="grid grid-rows-3">
-          <div className="row-span-2 flex flex-col p-4 m-8 w-96 h-72 mx-auto my-auto bg-white">
+        <div className="grid grid-rows-4">
+          <div className="row-span-3 flex flex-col p-4 m-8 w-96 h-72 mx-auto my-auto bg-white">
             <label className="font-semibold h-fit text-2xl text-center my-10 mx-auto">
               {props.username}'s Profile
             </label>
@@ -109,11 +135,42 @@ export default function ProfileForm(props: ProfileFormProp) {
           )}
         </div>
       </div>
-      <div className="divider">ABOUT ME</div>
+
+      <div className="divider w-3/4 mx-auto"/>
+
+      <div className="tabs tabs-lifted items-center justify-center space-x-4">
+        <a
+          className={`tab text-lg space-x-2 ${
+            option === "tab_1" ? "tab-active border-b-2" : ""
+          }`}
+          onClick={() => handleOptionClick("tab_1")}
+        >
+          <GrCircleInformation size={20} />
+          <label>Bio</label>
+        </a>
+        <a
+          className={`tab text-lg space-x-2 ${
+            option === "tab_2" ? "tab-active border-b-2" : ""
+          }`}
+          onClick={() => handleOptionClick("tab_2")}
+        >
+          <VscFeedback size={20} />
+          <label>Comment</label>
+        </a>
+        <a
+          className={`tab text-lg space-x-2 ${
+            option === "tab_3" ? "tab-active border-b-2" : ""
+          }`}
+          onClick={() => handleOptionClick("tab_3")}
+        >
+          <GoChecklist size={20} />
+          <label>Activity</label>
+        </a>
+      </div>
 
       <div
-        className={`mr-10 mt-20 mx-auto inline-block align-left ${
-          option === "button1" ? "visible" : "hidden"
+        className={`mt-5 w-3/4 mx-auto ${
+          option === "tab_1" ? "visible" : "hidden"
         }`}
       >
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
@@ -136,8 +193,8 @@ export default function ProfileForm(props: ProfileFormProp) {
       </div>
 
       <div
-        className={`mr-10 mt-20 mx-auto inline-block align-left ${
-          option === "button2" ? "visible" : "hidden"
+        className={`mt-5 w-3/4 mx-auto ${
+          option === "tab_2" ? "visible" : "hidden"
         }`}
       >
         Donec in leo diam. Pellentesque habitant morbi tristique senectus et
@@ -154,8 +211,8 @@ export default function ProfileForm(props: ProfileFormProp) {
       </div>
 
       <div
-        className={`mr-10 mt-20 mx-auto inline-block align-left ${
-          option === "button3" ? "visible" : "hidden"
+        className={`mt-5 w-3/4 mx-auto ${
+          option === "tab_3" ? "visible" : "hidden"
         }`}
       >
         Vestibulum non eleifend augue. Maecenas efficitur molestie turpis eget
@@ -171,70 +228,6 @@ export default function ProfileForm(props: ProfileFormProp) {
         libero cursus quis. Nulla pharetra dignissim augue faucibus efficitur.
         Donec varius eget arcu vel tristique. Vivamus ac quam at metus molestie
         laoreet vel non nibh. Etiam in commodo tellus, vel venenatis ipsum.
-      </div>
-
-      {/* <div className="flex w-full flex-row align-middle justify-around"> */}
-      <div className="btm-nav">
-        <button
-          className={`${option === "button1" ? "disabled" : "active"}`}
-          onClick={() => handleOptionClick("button1")}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-            />
-          </svg>
-          <span className="btm-nav-label">Comments</span>
-        </button>
-        <button
-          className={`${option === "button2" ? "disabled" : "active"}`}
-          onClick={() => handleOptionClick("button2")}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span className="btm-nav-label">Bio</span>
-        </button>
-        <button
-          className={`${option === "button3" ? "disabled" : "active"}`}
-          onClick={() => handleOptionClick("button3")}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-            />
-          </svg>
-          <span className="btm-nav-label">Activities</span>
-        </button>
       </div>
     </div>
   );
