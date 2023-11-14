@@ -1,16 +1,15 @@
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 export interface User {
-  username: string;
   email: string;
+  password: string;
 }
 
 export interface AuthContextType {
   user: User | null;
   login: (userData: User) => void;
   logout: () => void;
-  profilePicture: string;
   isAuthModalOpen: boolean;
 }
 
@@ -25,7 +24,7 @@ export function useAuth() {
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-  return context; 
+  return context;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
@@ -33,16 +32,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
 
-  const login = (userData: User) => {
+
+  const login = async (userData: User) => {
+    console.log("Login", userData)
     setUser(userData);
   };
 
   const logout = () => {
     setUser(null);
   };
+  // const login = async (userData: User) => {
+  //   console.log("Login", userData)
+  //   setUser(userData);
+  // };
+
+  // const logout = () => {
+  //   setUser(null);
+  // };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, profilePicture, isAuthModalOpen }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthModalOpen }}>
       {children}
     </AuthContext.Provider>
   );

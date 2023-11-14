@@ -1,21 +1,29 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from 'next/link'
 import { FaBars, FaUser, FaGear, FaArrowRightFromBracket, FaX } from "react-icons/fa6";
 import '../app/page.module.css'
-import {useAuth} from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 
 export default function NavBar() {
 
 	//Random profile avatar
-	
+
 	const imgSrc = `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`
-	const { user, logout } = useAuth();
+	const auth = useAuth();
 
 	const handleLogout = () => {
 		// Call the logout function
-		logout();
+		auth.logout();
 	}
+
+	useEffect(() => {
+		const password = localStorage.getItem('password')
+		const email = localStorage.getItem('email');
+		if(email&&password){
+			auth.login({email:email,password:password});
+		}
+	}, []);
 
 	return (
 		<div className="navbar bg-amber-100">
@@ -37,7 +45,7 @@ export default function NavBar() {
 					<FaMagnifyingGlass className='absolute text-black mt-3 ml-3'/>
 					<input className='rounded-2xl border-solid boder-2 w-60 h-10 text-black pl-10 text-sm ' type='text' placeholder='Search' />
 				</div> */}
-				{user ?
+				{auth.user !== null ?
 					<>
 						<button className="btn btn-ghost btn-circle">
 							<div className="indicator">
@@ -46,7 +54,7 @@ export default function NavBar() {
 							</div>
 						</button>
 
-						<details  className="dropdown dropdown-end">
+						<details className="dropdown dropdown-end">
 							<summary tabIndex={0} className="btn btn-ghost btn-circle avatar">
 								<div className="w-10 rounded-full">
 									<img src={imgSrc} />
@@ -54,7 +62,7 @@ export default function NavBar() {
 							</summary>
 							<ul tabIndex={0} className="relative mt-3 z-[1] p-2 shadow menu dropdown-content bg-base-100 rounded-box h-auto w-80 space-y-10">
 								<li className="text-center font-bold text-lg font-sans pointer-events-none">
-									{user.email}
+									{auth.user.email}
 								</li>
 								<li className="items-center">
 									<label className="btn btn-ghost btn-circle avatar">
@@ -64,7 +72,7 @@ export default function NavBar() {
 									</label>
 								</li>
 								<li className="text-center text-xl pointer-events-none">
-									Hi, {user.username}!
+									Hi, {auth.user.email}!
 								</li>
 								<li className="items-center">
 									<Link href="/profile">
