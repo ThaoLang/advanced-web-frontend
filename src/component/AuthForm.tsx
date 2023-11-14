@@ -1,23 +1,16 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import axios from "axios";
 import { User, useAuth } from "@/context/AuthContext";
 
 export default function AuthForm() {
   const apiUrl = "http://localhost:4000";
-  const [isOpenedComment, setIsOpenedComment] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [isSigninOpeneded, setIsSigninOpeneded] = useState(true);
   const [isSignupOpeneded, setIsSignupOpeneded] = useState(false);
   const auth = useAuth();
-
-  const closeModal = () => {
-    setIsOpenedComment(false);
-  };
 
   const handleLogin = async () => {
     try {
@@ -38,8 +31,6 @@ export default function AuthForm() {
           });
         }
       }
-
-      closeModal();
     } catch (error) {
       console.error("Fail to login:", error);
     }
@@ -127,7 +118,7 @@ export default function AuthForm() {
           onClick={() => goToLogin()}
           className="flex text-center items-center justify-center"
         >
-          Already have an account ?{" "}
+          Already have an account ?
           <span className="text-blue-500"> Login</span>
         </label>
       )}
