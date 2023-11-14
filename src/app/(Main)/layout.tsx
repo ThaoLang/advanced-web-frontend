@@ -5,6 +5,7 @@ import NavBar from '@/component/NavBar'
 import Footer from '@/component/Footer'
 import Link from 'next/link'
 import { FaHouseChimney, FaCalendarDays, FaGear, FaSquarePhone, FaAddressCard } from "react-icons/fa6";
+import { AuthProvider } from '@/context/AuthContext';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,41 +30,43 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="drawer">
-          <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-          <div className="drawer-content">
-            <NavBar />
-            {children}
-            <Footer />
-          </div>
-          <div className="drawer-side">
-            <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-            
-            <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content text-lg">
-              {/* Sidebar content here */}
-              <a className="btn btn-ghost normal-case text-xl mb-5">
-                <img className="h-8 w-auto" src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png" alt=""></img>
-                LightHub
-              </a>
-              {navigation.map(
-                (item, index) => (
-                  (
-                    <li className="cursor-pointer"
-                      key={index}>
-                      <Link href={item.href}>
-                        <div className="flex w-full">
-                          <div className="grid flex-grow place-items-center">{item.icon}</div>
-                          <div className="divider divider-horizontal"></div>
-                          <div className="grid flex-grow place-items-center">{item.name}</div>
-                        </div>
-                      </Link>
-                    </li>
+        <AuthProvider>
+          <div className="drawer">
+            <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+            <div className="drawer-content">
+              <NavBar />
+              {children}
+              <Footer />
+            </div>
+            <div className="drawer-side">
+              <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
+
+              <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content text-lg">
+                {/* Sidebar content here */}
+                <a className="btn btn-ghost normal-case text-xl mb-5">
+                  <img className="h-8 w-auto" src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png" alt=""></img>
+                  LightHub
+                </a>
+                {navigation.map(
+                  (item, index) => (
+                    (
+                      <li className="cursor-pointer"
+                        key={index}>
+                        <Link href={item.href}>
+                          <div className="flex w-full">
+                            <div className="grid flex-grow place-items-center">{item.icon}</div>
+                            <div className="divider divider-horizontal"></div>
+                            <div className="grid flex-grow place-items-center">{item.name}</div>
+                          </div>
+                        </Link>
+                      </li>
+                    )
                   )
-                )
-              )}
-            </ul>
+                )}
+              </ul>
+            </div>
           </div>
-        </div>
+        </AuthProvider>
       </body>
     </html>
   )

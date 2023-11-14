@@ -1,24 +1,24 @@
 "use client"
 import React, { useState } from "react";
 import Link from 'next/link'
-import { FaBars, FaUser, FaGear, FaArrowRightFromBracket } from "react-icons/fa6";
+import { FaBars, FaUser, FaGear, FaArrowRightFromBracket, FaX } from "react-icons/fa6";
 import '../app/page.module.css'
-
+import {useAuth} from '@/context/AuthContext';
 
 export default function NavBar() {
 
 	//Random profile avatar
+	
 	const imgSrc = `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`
-	const user = {
-		username: "Quang",
-		email: "nmquang@gmail.com"
+	const { user, logout } = useAuth();
+
+	const handleLogout = () => {
+		// Call the logout function
+		logout();
 	}
-	const [isLogin, setIsLogin] = useState(false);
-
-
 
 	return (
-		<div className="navbar bg-base-100">
+		<div className="navbar bg-amber-100">
 			<div className="navbar-start">
 				<div className="dropdown">
 					<label htmlFor="my-drawer" tabIndex={0} className="btn btn-ghost drawer-button">
@@ -37,7 +37,7 @@ export default function NavBar() {
 					<FaMagnifyingGlass className='absolute text-black mt-3 ml-3'/>
 					<input className='rounded-2xl border-solid boder-2 w-60 h-10 text-black pl-10 text-sm ' type='text' placeholder='Search' />
 				</div> */}
-				{isLogin ?
+				{user ?
 					<>
 						<button className="btn btn-ghost btn-circle">
 							<div className="indicator">
@@ -46,14 +46,14 @@ export default function NavBar() {
 							</div>
 						</button>
 
-						<div className="dropdown dropdown-end">
-							<label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+						<details  className="dropdown dropdown-end">
+							<summary tabIndex={0} className="btn btn-ghost btn-circle avatar">
 								<div className="w-10 rounded-full">
 									<img src={imgSrc} />
 								</div>
-							</label>
-							<ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box h-auto w-80 space-y-10">
-								<li className="text-center font-bold text-lg font-sans">
+							</summary>
+							<ul tabIndex={0} className="relative mt-3 z-[1] p-2 shadow menu dropdown-content bg-base-100 rounded-box h-auto w-80 space-y-10">
+								<li className="text-center font-bold text-lg font-sans pointer-events-none">
 									{user.email}
 								</li>
 								<li className="items-center">
@@ -63,25 +63,24 @@ export default function NavBar() {
 										</div>
 									</label>
 								</li>
-								<li className="text-center text-xl">
-										Hi, {user.username}!
+								<li className="text-center text-xl pointer-events-none">
+									Hi, {user.username}!
 								</li>
 								<li className="items-center">
 									<Link href="/profile">
-										<button className="btn border-1 border-black">Manage your LightHub account</button>
+										<button className="btn btn-info border-1 border-black text-white font-">Manage your account</button>
 									</Link>
 									<Link href="/" className="justify-between" passHref legacyBehavior>
-										<button onClick={() => setIsLogin(false)}><FaArrowRightFromBracket />Logout</button>
+										<button onClick={handleLogout}><FaArrowRightFromBracket />Logout</button>
 									</Link>
 								</li>
 							</ul>
-						</div>
+						</details>
 					</>
 					:
 					<div>
-						<Link href="/" passHref legacyBehavior>
-							<button className="btn btn-ghost text-sm font-semibold leading-6 text-gray-900 border-black"
-									onClick={() => setIsLogin(true)}>
+						<Link href="/auth" passHref legacyBehavior>
+							<button className="btn btn-ghost text-sm font-semibold leading-6 text-gray-900 border-black">
 								Log in
 							</button>
 						</Link>

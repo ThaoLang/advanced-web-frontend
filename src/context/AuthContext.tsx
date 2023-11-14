@@ -10,6 +10,7 @@ export interface AuthContextType {
   user: User | null;
   login: (userData: User) => void;
   logout: () => void;
+  profilePicture: string;
   isAuthModalOpen: boolean;
 }
 
@@ -21,15 +22,16 @@ interface AuthProviderProps {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-//   if (!context) {
-//     throw new Error("useAuth must be used within an AuthProvider");
-//   }
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
   return context; 
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [profilePicture, setProfilePicture] = useState("");
 
   const login = (userData: User) => {
     setUser(userData);
@@ -40,7 +42,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthModalOpen }}>
+    <AuthContext.Provider value={{ user, login, logout, profilePicture, isAuthModalOpen }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,7 +5,7 @@ import Hero from '@/component/Hero'
 export default function Home() {
   const line = `test${process.env.DB_HOST}`;
   return (
-    <div className="bg-amber-100">
+    <div className="bg-white">
       <Hero />
       <div className="flex flex-col w-5/6 mx-auto">
         <div className="mt-10 lg:w-3/4 mx-auto text-center">
