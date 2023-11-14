@@ -1,27 +1,34 @@
-import React from "react";
-import { FaBars } from "react-icons/fa6";
+"use client"
+import React, { useState } from "react";
+import Link from 'next/link'
+import { FaBars, FaUser, FaGear, FaArrowRightFromBracket } from "react-icons/fa6";
 import '../app/page.module.css'
 
 
 export default function NavBar() {
 
 	//Random profile avatar
-	const imgId = Math.random() * 100;
-	const imgSrc = `https://source.unsplash.com/random/200x200?sig=${imgId}`
-	const isLogin = false;
+	const imgSrc = `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`
+	const user = {
+		username: "Quang",
+		email: "nmquang@gmail.com"
+	}
+	const [isLogin, setIsLogin] = useState(false);
+
+
 
 	return (
 		<div className="navbar bg-base-100">
 			<div className="navbar-start">
 				<div className="dropdown">
 					<label htmlFor="my-drawer" tabIndex={0} className="btn btn-ghost drawer-button">
-						<FaBars/>
+						<FaBars />
 					</label>
 				</div>
-				<a className="btn btn-ghost normal-case text-xl">
+				<Link href="/" className="btn btn-ghost normal-case text-xl">
 					<img className="h-8 w-auto" src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png" alt=""></img>
 					LightHub
-				</a>
+				</Link>
 				{/* TODO: implement Breadcrumb? */}
 			</div>
 
@@ -45,27 +52,41 @@ export default function NavBar() {
 									<img src={imgSrc} />
 								</div>
 							</label>
-							<ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-								<li>
-									<a className="justify-between">
-										Profile
-										<span className="badge">New</span>
-									</a>
+							<ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box h-auto w-80 space-y-10">
+								<li className="text-center font-bold text-lg font-sans">
+									{user.email}
 								</li>
-								<li><a>Settings</a></li>
-								<li><a>Logout</a></li>
+								<li className="items-center">
+									<label className="btn btn-ghost btn-circle avatar">
+										<div className="w-24 rounded-full">
+											<img src={imgSrc} />
+										</div>
+									</label>
+								</li>
+								<li className="text-center text-xl">
+										Hi, {user.username}!
+								</li>
+								<li className="items-center">
+									<Link href="/profile">
+										<button className="btn border-1 border-black">Manage your LightHub account</button>
+									</Link>
+									<Link href="/" className="justify-between" passHref legacyBehavior>
+										<button onClick={() => setIsLogin(false)}><FaArrowRightFromBracket />Logout</button>
+									</Link>
+								</li>
 							</ul>
 						</div>
 					</>
 					:
 					<div>
-						<button className="btn btn-ghost text-sm font-semibold leading-6 text-gray-900">
-							Log in
-						</button>
+						<Link href="/" passHref legacyBehavior>
+							<button className="btn btn-ghost text-sm font-semibold leading-6 text-gray-900 border-black"
+									onClick={() => setIsLogin(true)}>
+								Log in
+							</button>
+						</Link>
 					</div>
-					
 				}
-
 			</div>
 		</div>
 	);

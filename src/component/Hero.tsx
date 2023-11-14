@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link'
 
 export default function Hero() {
     return (
@@ -10,8 +11,12 @@ export default function Hero() {
                     <h1 className="mb-5 text-4xl lg:text-6xl font-bold lg:w-3/5">Manage Teaching and Learning with <span className="text-yellow-400">LightHub</span></h1>
                     <p className="mb-5 text-lg lg:w-3/5">A cutting-edge online platform for seamless education, collaboration, and innovation. Join us in shaping a brighter future for education.</p>
                     <div className="flex lg:flex-row flex-col">
-                        <button className="mb-5 lg:w-64 btn btn-info text-uppercase">Get Started</button>
-                        <button className="mb-5 lg:ml-5 btn btn-info text-uppercase ">Learn more</button>
+                        <Link href="/auth">
+                            <button className="mb-5 lg:w-64 w-screen btn btn-info text-uppercase">Get Started</button>
+                        </Link>
+                        <Link href="/about">
+                            <button className="mb-5 lg:ml-5 lg:w-36 w-screen btn btn-info text-uppercase">Learn more</button>
+                        </Link>
                     </div>
                     <p className="mb-5 text-lg"><b>LightHub is free to try</b> for as long as you’d like.</p>
                 </div>

@@ -58,16 +58,14 @@ export default function Home() {
         </div>
       </div>
       <div className="mt-20 text-center bg-[#365338]">
-        <div className="h-10"></div>  {/* Why can't i use mt-10??? */}
+        <div className="h-10"></div>  {/* Why i can't use mt-10??? */}
         <div className="text-4xl lg:text-5xl text-white"><b>See all you can accomplish with <span className="text-yellow-400">  LightHub</span></b></div>
         <div className="mt-10 flex lg:flex-row flex-col lg:justify-center">
           <button className="mb-5 lg:w-80 btn btn-info text-uppercase">Get Started</button>
           <button className="mb-5 lg:w-80 lg:ml-5 btn btn-info text-uppercase ">Learn more</button>
         </div>
-        <div className="h-10"></div>  {/* Why can't i use mt-10??? */}
+        <div className="h-10"></div>  {/* Why i can't use mt-10??? */}
       </div>
     </div>
-
-
   )
 }
