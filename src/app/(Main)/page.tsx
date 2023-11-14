@@ -3,6 +3,7 @@ import styles from './page.module.css'
 import Hero from '@/component/Hero'
 
 export default function Home() {
+  const line = `test${process.env.DB_HOST}`;
   return (
     <div className="bg-amber-100">
       <Hero />
@@ -65,6 +66,9 @@ export default function Home() {
           <button className="mb-5 lg:w-80 lg:ml-5 btn btn-info text-uppercase ">Learn more</button>
         </div>
         <div className="h-10"></div>  {/* Why i can't use mt-10??? */}
+      </div>
+      <div className="text-center underline">
+        <h1>The value of customKey is: {process.env.DB_HOST} {line}</h1>
       </div>
     </div>
   )
