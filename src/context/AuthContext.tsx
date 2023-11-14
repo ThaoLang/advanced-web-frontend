@@ -1,9 +1,9 @@
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 export interface User {
-  username: string;
   email: string;
+  password: string;
 }
 
 export interface AuthContextType {
@@ -21,23 +21,34 @@ interface AuthProviderProps {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-//   if (!context) {
-//     throw new Error("useAuth must be used within an AuthProvider");
-//   }
-  return context; 
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [profilePicture, setProfilePicture] = useState("");
 
-  const login = (userData: User) => {
+
+  const login = async (userData: User) => {
+    console.log("Login", userData)
     setUser(userData);
   };
 
   const logout = () => {
     setUser(null);
   };
+  // const login = async (userData: User) => {
+  //   console.log("Login", userData)
+  //   setUser(userData);
+  // };
+
+  // const logout = () => {
+  //   setUser(null);
+  // };
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isAuthModalOpen }}>
