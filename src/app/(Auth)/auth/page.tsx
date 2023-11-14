@@ -15,8 +15,8 @@ export default function Auth() {
       autoPlay
       loop
       mode="normal"
-      src="https://lottie.host/6d3f708a-276a-4c95-9cbd-4bd5152de477/f0QQhzDnhm.json"
-      style={{ width: "400px", height: "400px" }}
+      src="https://lottie.host/70be53ac-d1bc-48bd-a429-51d2c88ffd0e/Gj57p6J6EA.json"
+      style={{ width: "500px", height: "500px" }}
       className="absolute bottom-4"
     />
   )  
