@@ -32,15 +32,33 @@ export default function NavBar() {
   //     }
   //   }, []);
 
+  //   useEffect(() => {
+  //     const cur_user = localStorage.getItem("user");
+  //     if (cur_user) {
+  //       const loggedUser = JSON.parse(cur_user);
+  //       if (!loggedUser.avatarUrl) {
+  //         const updatedUser = {
+  //           ...loggedUser,
+  //           avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
+  //         };
+  //         localStorage.setItem("user", JSON.stringify(updatedUser));
+  //         auth.login(updatedUser);
+  //       } else {
+  //         auth.login(loggedUser);
+  //       }
+  //     }
+  //   }, []);
   useEffect(() => {
     const cur_user = localStorage.getItem("user");
     if (cur_user) {
       const loggedUser = JSON.parse(cur_user);
-      if (!loggedUser.avatarUrl) {
+
+      if (!loggedUser || !loggedUser.avatarUrl) {
         const updatedUser = {
           ...loggedUser,
           avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
         };
+
         localStorage.setItem("user", JSON.stringify(updatedUser));
         auth.login(updatedUser);
       } else {
