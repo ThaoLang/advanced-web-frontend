@@ -2,25 +2,48 @@
 import ProfileForm from "@/component/ProfileForm";
 import { UserType } from "@/model/UserType";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function Profile() {
-  const [email, setEmail] = useState("nguyen@gmail.com");
-  const [username, setUsername] = useState("Khanh");
   const [profilePicture, setProfilePicture] = useState(
     "https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe"
   );
+  // const savedUser=localStorage.getItem("user");
   const [user, setUser] = useState<UserType | null>(null);
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   const [showFailedMsg, setShowFailedMsg] = useState(false);
+  const router = useRouter();
 
-  const updateProfile = async () => {
+  const updateProfile = async (
+    _username: string,
+    _email: string,
+    _profilePicture: string
+  ) => {
+    setUser((prevUser: UserType | null) => {
+      if (!prevUser) {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+          const curUser: UserType = JSON.parse(savedUser);
+          return curUser;
+        }
+        return null;
+      }
+
+      return {
+        ...prevUser,
+        username: _username,
+        email: _email,
+      };
+    });
+
+    setProfilePicture(_profilePicture);
     try {
       const response = await axios.put(
         `http://localhost:4000/profile/update`,
         {
-          email: email,
-          usename: username,
+          email: user?.email,
+          username: user?.username,
         },
         {
           headers: {
@@ -29,29 +52,17 @@ export default function Profile() {
         }
       );
       if (response.status === 201) {
-        const cur_user: UserType = response.data;
-
-        localStorage.setItem("user", JSON.stringify(cur_user));
+        setShowSuccessMsg(true);
+        setTimeout(() => {
+          setShowSuccessMsg(false);
+        }, 2000);
       }
     } catch (error: any) {
-      const errorMessage =
-        error.response && error.response.data
-          ? error.response.data.message
-          : "Failed to login";
-
-      console.error("Failed to login:", error);
+      setShowFailedMsg(true);
+      setTimeout(() => {
+        setShowFailedMsg(false);
+      }, 2000);
     }
-  };
-
-  const handleSaveInfo = (
-    _username: string,
-    _email: string,
-    _profilePicture: string
-  ) => {
-    setUsername(_username);
-    setEmail(_email);
-
-    setProfilePicture(_profilePicture);
   };
 
   useEffect(() => {
@@ -60,10 +71,10 @@ export default function Profile() {
     if (savedUser) {
       const curUser: UserType = JSON.parse(savedUser);
       setUser(curUser);
-      setEmail(curUser.email);
-      setUsername(curUser.username);
+    } else {
+      router.push("/");
     }
-  }, [email, username]);
+  }, []);
 
   return (
     <div className="flex justify-center space-x-2 h-fit">
@@ -85,7 +96,7 @@ export default function Profile() {
           <span>Update profile successfully!</span>
         </div>
       )}
-      {showSuccessMsg && (
+      {showFailedMsg && (
         <div className="w-1/2 mx-auto mt-4 alert alert-error">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -103,12 +114,13 @@ export default function Profile() {
           <span>Fail to update profile!</span>
         </div>
       )}
-      <ProfileForm
-        username={username}
-        email={email}
-        profilePicture={profilePicture}
-        saveInfo={handleSaveInfo}
-      />
+      {user && (
+        <ProfileForm
+          user={user}
+          profilePicture={profilePicture}
+          saveInfo={updateProfile}
+        />
+      )}
     </div>
   );
 }

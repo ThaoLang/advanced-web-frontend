@@ -7,15 +7,14 @@ import { VscFeedback } from "react-icons/vsc";
 import { UserType } from "@/model/UserType";
 
 interface ProfileFormProp {
-  username: string;
-  email: string;
+  user: UserType;
   profilePicture: string;
   saveInfo: (username: string, email: string, profilePicture: string) => void;
 }
 
 export default function ProfileForm(props: ProfileFormProp) {
-  const [emailProxy, setEmailProxy] = useState(props.email);
-  const [usernameProxy, setUsernameProxy] = useState(props.username);
+  const [emailProxy, setEmailProxy] = useState(props.user.email);
+  const [usernameProxy, setUsernameProxy] = useState(props.user.username);
   const [profilePictureProxy, setProfilePictureProxy] = useState(
     props.profilePicture
   );
@@ -67,7 +66,7 @@ export default function ProfileForm(props: ProfileFormProp) {
         <div className="grid grid-rows-4">
           <div className="row-span-3 flex flex-col p-4 m-8 w-96 h-72 mx-auto my-auto bg-white">
             <label className="font-semibold h-fit text-2xl text-center my-10 mx-auto">
-              {props.username}'s Profile
+              {props.user.username}'s Profile
             </label>
             <div className="grid grid-cols-3 h-24 w-full">
               <label className="font-semibold text-md text-left inline-block align-bottom mt-2 ml-4">
@@ -85,7 +84,7 @@ export default function ProfileForm(props: ProfileFormProp) {
                   />
                 )) || (
                   <label className="text-md text-left inline-block align-bottom mt-2">
-                    {props.username}
+                    {props.user.username}
                   </label>
                 )}
               </div>
@@ -105,7 +104,7 @@ export default function ProfileForm(props: ProfileFormProp) {
                   />
                 )) || (
                   <label className="text-md text-left inline-block align-bottom mt-2">
-                    {props.email}
+                    {props.user.email}
                   </label>
                 )}
               </div>
