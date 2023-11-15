@@ -1,5 +1,6 @@
 import React from "react";
 import Hero from "./Hero";
+import Image from 'next/image'
 
 export default function LandingPage() {
   return (
@@ -14,7 +15,7 @@ export default function LandingPage() {
           </div>
           <p className="mt-5 text-lg lg:text-xl">
             At LightHub, we believe in the transformative power of education.
-            We've created a platform that goes beyond traditional learning,
+            We&apos;ve created a platform that goes beyond traditional learning,
             providing an immersive and collaborative environment for students
             and educators alike.
           </p>
@@ -33,10 +34,11 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="lg:w-1/2">
-            <img
+            <Image
+              alt="info image"
               className="rounded-xl w-screen"
               src="https://corp.kaltura.com/wp-content/uploads/2021/11/shutterstock_1760879942.jpg"
-            ></img>
+            ></Image>
           </div>
         </div>
 
@@ -45,17 +47,18 @@ export default function LandingPage() {
         <div className="lg:mt-20 lg:flex-row flex flex-col lg:justify-center space-x-4">
           <div className="lg:w-1/2">
             {/* Image */}
-            <img
+            <Image
+              alt="info image"
               className="rounded-xl w-screen"
               src="https://www.graduateprogram.org/wp-content/uploads/2020/07/July-9-Online-Courses-for-Teachers-this-Summer_web-1024x683.jpg.webp"
-            ></img>
+            ></Image>
           </div>
           <div className="lg:mt-10 mx-10 lg:w-1/2 text-right">
             <div className="text-3xl lg:text-5xl">
               <b>For Educators</b>
             </div>
             <p className="mt-5 text-lg lg:text-xl">
-              LightHub is not just a platform; it's a community of educators
+              LightHub is not just a platform; it&apos;s a community of educators
               shaping the future of learning. Join us in revolutionizing
               education one lesson at a time. Explore our educator-specific
               features and bring your teaching to new heights.
@@ -78,10 +81,11 @@ export default function LandingPage() {
           </div>
           <div className="lg:w-1/2">
             {/* Image */}
-            <img
+            <Image
+              alt="info image"
               className="rounded-xl w-screen"
               src="https://www.westend61.de/images/0001481557pw/boys-looking-at-laptop-while-e-learning-in-living-room-VABF04028.jpg"
-            ></img>
+            ></Image>
           </div>
         </div>
       </div>

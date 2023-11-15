@@ -6,6 +6,7 @@ import { GoChecklist } from "react-icons/go";
 import { VscFeedback } from "react-icons/vsc";
 // import { useAuth } from "@/context/AuthContext";
 import { UserType } from "@/model/UserType";
+import Image from 'next/image'
 
 interface ProfileFormProp {
   // username: string;
@@ -15,7 +16,7 @@ interface ProfileFormProp {
   saveInfo: (
     username: string | undefined,
     email: string | undefined,
-    profilePicture: string | undefined
+    profilePicture: string | any
   ) => void;
 }
 
@@ -49,14 +50,14 @@ export default function ProfileForm(props: ProfileFormProp) {
           {/* TODO: update this button UI */}
           <div className="justify-center">
             {isEditable || (
-              <img
-                src={props.user?.avatarUrl}
+              <Image
+                src={props.user?.avatarUrl ?? ''}
                 className="rounded-full w-40 m-5 mx-5"
                 alt="profile picture"
               />
             )}
             {isEditable && profilePictureProxy && (
-              <img
+              <Image
                 src={profilePictureProxy}
                 className="rounded-full w-40 m-5 mx-5 brightness-50"
                 alt="image upload"
@@ -73,7 +74,7 @@ export default function ProfileForm(props: ProfileFormProp) {
         <div className="grid grid-rows-4">
           <div className="row-span-3 flex flex-col p-4 m-8 w-96 h-72 mx-auto my-auto bg-white">
             <label className="font-semibold h-fit text-2xl text-center my-10 mx-auto">
-              {props.user?.username}'s Profile
+              {props.user?.username}&apos;s Profile
             </label>
             <div className="grid grid-cols-3 h-24 w-full">
               <label className="font-semibold text-md text-left inline-block align-bottom mt-2 ml-4">

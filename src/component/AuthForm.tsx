@@ -191,7 +191,7 @@ export default function AuthForm(props: AuthFormProps) {
           onClick={() => goToSignup()}
           className="flex text-center items-center justify-center"
         >
-          Don't have an account?
+          Don&apos;t have an account?
           <span className="text-blue-500 ml-2">Signup</span>
         </label>
       )}
