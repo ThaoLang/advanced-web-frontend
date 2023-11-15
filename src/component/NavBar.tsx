@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+
 import { FaBars, FaArrowRightFromBracket } from "react-icons/fa6";
 import "../app/page.module.css";
 import { useAuth } from "@/context/AuthContext";
@@ -81,11 +81,11 @@ export default function NavBar() {
           </label>
         </div>
         <Link href="/" className="btn btn-ghost normal-case text-xl">
-          <Image
+          <img
             className="h-8 w-auto"
             src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png"
-            alt=""
-          ></Image>
+            alt="logo"
+          ></img>
           LightHub
         </Link>
         {/* TODO: implement Breadcrumb? */}
@@ -121,7 +121,7 @@ export default function NavBar() {
             <div className="dropdown dropdown-end dropdown-hover">
               <div tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
-                  <Image alt="avatar" src={auth.user.avatarUrl} />
+                  <img alt="avatar" src={auth.user.avatarUrl} />
                 </div>
               </div>
               <ul
@@ -135,7 +135,7 @@ export default function NavBar() {
                 <li className="items-center">
                   <label className="btn btn-ghost btn-circle avatar">
                     <div className="w-24 rounded-full">
-                      <Image alt="avatar" src={auth.user.avatarUrl} />
+                      <img alt="avatar" src={auth.user.avatarUrl} />
                     </div>
                   </label>
                 </li>

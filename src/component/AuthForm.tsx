@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+
 import Link from "next/link";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
