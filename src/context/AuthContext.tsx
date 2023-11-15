@@ -1,13 +1,22 @@
 "use client";
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import {UserType} from '@/model/UserType';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import { UserType } from "@/model/UserType";
 
 export interface AuthContextType {
   user: UserType | null;
   login: (userData: UserType) => void;
   logout: () => void;
   isAuthModalOpen: boolean;
-  updateUser: (username: string | undefined, avatarUrl: string | undefined) => void;
+  updateUser: (
+    username: string | undefined,
+    avatarUrl: string | undefined
+  ) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,9 +37,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserType | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-
   const login = async (userData: UserType) => {
-    // console.log("Login", userData)
+    console.log("Login", userData);
     setUser(userData);
   };
 
@@ -46,7 +54,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   //   setUser(null);
   // };
 
-  const updateUser = (username: string | undefined, avatarUrl: string | undefined) => {
+  const updateUser = (
+    username: string | undefined,
+    avatarUrl: string | undefined
+  ) => {
     if (user) {
       setUser({
         ...user,
@@ -57,7 +68,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUser, isAuthModalOpen }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, updateUser, isAuthModalOpen }}
+    >
       {children}
     </AuthContext.Provider>
   );

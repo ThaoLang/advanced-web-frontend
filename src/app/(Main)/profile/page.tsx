@@ -17,7 +17,6 @@ export default function Profile() {
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   const [showFailedMsg, setShowFailedMsg] = useState(false);
 
-
   const updateProfile = async (
     _username: string,
     _email: string,
@@ -41,14 +40,15 @@ export default function Profile() {
     // });
 
     // setProfilePicture(_profilePicture);
-    
+
     try {
+      console.log("USE", _username);
       const response = await axios.put(
         `http://localhost:4000/profile/update`,
         {
-          email: auth.user?.email,
-          username: auth.user?.username,
-          avatarUrl: auth.user?.avatarUrl,
+          email: _email,
+          username: _username,
+          // avatarUrl: _profilePicture,
         },
         {
           headers: {
@@ -56,7 +56,7 @@ export default function Profile() {
           },
         }
       );
-      if (response.status === 201) {
+      if (response.status === 200) {
         setShowSuccessMsg(true);
         setTimeout(() => {
           setShowSuccessMsg(false);
@@ -70,13 +70,18 @@ export default function Profile() {
     }
   };
 
-  const handleSaveInfo = (
+  const handleSaveInfo = async (
     _username: string | undefined,
     _email: string | undefined,
     _profilePicture: string | undefined
   ) => {
     auth.updateUser(_username, _profilePicture);
-    if (auth.user) updateProfile(auth.user.username, auth.user.email, auth.user.avatarUrl);
+    if (auth.user)
+      await updateProfile(
+        _username ? _username : "",
+        _email ? _email : "",
+        auth.user.avatarUrl
+      );
   };
 
   useEffect(() => {
@@ -126,11 +131,7 @@ export default function Profile() {
           <span>Fail to update profile!</span>
         </div>
       )}
-      {
-        auth.user &&
-        <ProfileForm user={auth.user} 
-                    saveInfo={handleSaveInfo} />
-      }
+      {auth.user && <ProfileForm user={auth.user} saveInfo={handleSaveInfo} />}
     </div>
   );
 }
