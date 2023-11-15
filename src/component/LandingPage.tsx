@@ -34,11 +34,11 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="lg:w-1/2">
-            <Image
+            <img
               alt="info image"
               className="rounded-xl w-screen"
               src="https://corp.kaltura.com/wp-content/uploads/2021/11/shutterstock_1760879942.jpg"
-            ></Image>
+            ></img>
           </div>
         </div>
 
@@ -47,11 +47,11 @@ export default function LandingPage() {
         <div className="lg:mt-20 lg:flex-row flex flex-col lg:justify-center space-x-4">
           <div className="lg:w-1/2">
             {/* Image */}
-            <Image
+            <img
               alt="info image"
               className="rounded-xl w-screen"
               src="https://www.graduateprogram.org/wp-content/uploads/2020/07/July-9-Online-Courses-for-Teachers-this-Summer_web-1024x683.jpg.webp"
-            ></Image>
+            ></img>
           </div>
           <div className="lg:mt-10 mx-10 lg:w-1/2 text-right">
             <div className="text-3xl lg:text-5xl">
@@ -81,11 +81,11 @@ export default function LandingPage() {
           </div>
           <div className="lg:w-1/2">
             {/* Image */}
-            <Image
+            <img
               alt="info image"
               className="rounded-xl w-screen"
               src="https://www.westend61.de/images/0001481557pw/boys-looking-at-laptop-while-e-learning-in-living-room-VABF04028.jpg"
-            ></Image>
+            ></img>
           </div>
         </div>
       </div>
