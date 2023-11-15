@@ -16,7 +16,7 @@ export default function Profile() {
   // const [user, setUser] = useState<UserType | null>(null);
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   const [showFailedMsg, setShowFailedMsg] = useState(false);
-  const router = useRouter();
+
 
   const updateProfile = async (
     _username: string,
@@ -41,6 +41,7 @@ export default function Profile() {
     // });
 
     // setProfilePicture(_profilePicture);
+    
     try {
       const response = await axios.put(
         `http://localhost:4000/profile/update`,
@@ -66,12 +67,6 @@ export default function Profile() {
       setTimeout(() => {
         setShowFailedMsg(false);
       }, 2000);
-      const errorMessage =
-        error.response && error.response.data
-          ? error.response.data.message
-          : "Failed to login";
-
-      console.error("Failed to login:", error);
     }
   };
 
@@ -81,6 +76,7 @@ export default function Profile() {
     _profilePicture: string | undefined
   ) => {
     auth.updateUser(_username, _profilePicture);
+    if (auth.user) updateProfile(auth.user.username, auth.user.email, auth.user.avatarUrl);
   };
 
   useEffect(() => {
@@ -93,9 +89,9 @@ export default function Profile() {
   }, []);
 
   return (
-    <div className="flex justify-center space-x-2 h-fit">
+    <div className="flex flex-col justify-center space-x-2 h-fit">
       {showSuccessMsg && (
-        <div className=" w-1/2 mx-auto mt-4 alert alert-success ">
+        <div className="w-1/2 mx-auto mt-4 alert alert-success ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="stroke-current shrink-0 h-6 w-6"
@@ -130,7 +126,11 @@ export default function Profile() {
           <span>Fail to update profile!</span>
         </div>
       )}
-      <ProfileForm user={auth.user} saveInfo={handleSaveInfo} />
+      {
+        auth.user &&
+        <ProfileForm user={auth.user} 
+                    saveInfo={handleSaveInfo} />
+      }
     </div>
   );
 }
