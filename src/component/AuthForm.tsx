@@ -1,103 +1,115 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import axios from 'axios';
+import axios from "axios";
 import { User, useAuth } from "@/context/AuthContext";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { UserType } from "@/model/UserType";
 
-export default function AuthForm() {
-  const apiUrl = "http://localhost:4000";
+interface AuthFormProps {
+  showSuccessMsg: (show: boolean) => void;
+}
+export default function AuthForm(props: AuthFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [isSigninOpeneded, setIsSigninOpeneded] = useState(true);
   const [isSignupOpeneded, setIsSignupOpeneded] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isNotValidAuth, setIsNotValidAuth] = useState("");
+  const [validAuthMsg, setValidAuthMsg] = useState<string | null>(null);
+  const invalidEmailMsg = "Email is invalid.";
+  const invalidPasswordMsg =
+    "Password must be at least 8 characters with at least one uppercase\
+  letter, one special character, and one digit.";
   const router = useRouter();
-
-  const auth = useAuth();
 
   const isEmail = (email: string) => {
     const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     return regex.test(email);
-  } 
+  };
 
   const isPassword = (password: string) => {
     const regex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/;
     return regex.test(password);
-  } 
+  };
 
   const isValidAuth = (email: string, password: string) => {
-    setIsNotValidAuth("");
-    if (!isEmail(email)){
-      setIsNotValidAuth("email");
+    setValidAuthMsg(null);
+    if (!isEmail(email)) {
+      setValidAuthMsg(invalidEmailMsg);
       console.error("Error email");
       return false;
     }
-    if (!isPassword(password)){
-      setIsNotValidAuth("password");
+    if (!isPassword(password)) {
+      setValidAuthMsg(invalidPasswordMsg);
       console.error("Error password");
       return false;
     }
     return true;
-  } 
+  };
 
   const handleLogin = async () => {
-    if(!isValidAuth(email,password)) return;
+    if (!isValidAuth(email, password)) return;
 
-    // try {
-    //   const response = await axios.post(`${apiUrl}/auth/signin`, {
-    //     email: email,
-    //     password: password,
-    //   });
+    try {
+      const response = await axios.post(`http://localhost:4000/auth/login`, {
+        email: email,
+        password: password,
+      });
+      if (response.status === 201) {
+        const cur_user: UserType = response.data;
 
-    //   if (response.data) {
-    //     const { username, email, roles, authToken } = response.data;
+        localStorage.setItem("user", JSON.stringify(cur_user));
+      }
+      router.push("/");
+    } catch (error: any) {
+      const errorMessage =
+        error.response && error.response.data
+          ? error.response.data.message
+          : "Failed to login";
+      setValidAuthMsg(errorMessage);
 
-    //     console.log("AUTH", response.data);
-
-    //     if (auth && "login" in auth) {
-    //       auth.login({
-    //         username: username,
-    //         email: email,
-    //       });
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.error("Fail to login:", error);
-    // }
-    console.log("I'M HERE AUTHFORM");
-    localStorage.setItem("email", email);
-    localStorage.setItem("password", password);
-    router.push('/');
+      console.error("Failed to login:", error);
+    }
   };
 
   const handleSignup = async () => {
-    if(!isValidAuth(email,password)) return;
+    if (!isValidAuth(email, password)) return;
 
     try {
-      const response = await axios.post(`${apiUrl}/auth/signup`, {
+      const response = await axios.post(`http://localhost:4000/auth/register`, {
         email: email,
         password: password,
         username: username,
       });
 
-      if (response.data) {
+      if (response.status === 201) {
+        props.showSuccessMsg(true);
+        setTimeout(() => {
+          props.showSuccessMsg(false);
+        }, 2000);
       }
-    } catch (error) {
-      console.error("Fail to sign up:", error);
+    } catch (error: any) {
+      const errorMessage =
+        error.response && error.response.data
+          ? error.response.data.message
+          : "Failed to register";
+      setValidAuthMsg(errorMessage);
+
+      console.error("Failed to login:", error);
     }
   };
 
   const goToLogin = async () => {
+    setValidAuthMsg(null);
     setIsSignupOpeneded(false);
     setIsSigninOpeneded(true);
     setIsPasswordVisible(false);
   };
   const goToSignup = async () => {
+    setValidAuthMsg(null);
     setIsSigninOpeneded(false);
     setIsSignupOpeneded(true);
     setIsPasswordVisible(false);
@@ -140,21 +152,20 @@ export default function AuthForm() {
           className="absolute inset-y-0 right-4 flex items-center pt-2 px-4 text-gray-600"
           onClick={togglePasswordVisibility}
         >
-          {isPasswordVisible ? ( <AiOutlineEye/> ) : ( <AiOutlineEyeInvisible/> )}
+          {isPasswordVisible ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
         </button>
       </div>
-      {(isNotValidAuth==="email") && (
-        <label
-        className="flex text-center items-center justify-center my-3 text-red-700">
-        Email is invalid.
+      {validAuthMsg && (
+        <label className="flex text-center items-center justify-center my-3 text-red-700">
+          {validAuthMsg}
         </label>
       )}
-      {(isNotValidAuth==="password") && (
-        <label
-        className="flex text-center items-center justify-center my-3 text-red-700">
-        Password must be at least 8 characters with at least one uppercase letter, one special character, and one digit.
+      {/* {validAuthMsg === "password" && (
+        <label className="flex text-center items-center justify-center my-3 text-red-700">
+          Password must be at least 8 characters with at least one uppercase
+          letter, one special character, and one digit.
         </label>
-      )}
+      )} */}
 
       {isSigninOpeneded && (
         <button

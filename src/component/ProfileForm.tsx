@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DragNDrop from "./DragNDrop";
 import { GrCircleInformation } from "react-icons/gr";
 import { GoChecklist } from "react-icons/go";
 import { VscFeedback } from "react-icons/vsc";
+import { UserType } from "@/model/UserType";
 
 interface ProfileFormProp {
   username: string;
@@ -136,7 +137,7 @@ export default function ProfileForm(props: ProfileFormProp) {
         </div>
       </div>
 
-      <div className="divider w-3/4 mx-auto"/>
+      <div className="divider w-3/4 mx-auto" />
 
       <div className="tabs tabs-lifted items-center justify-center space-x-4">
         <a
