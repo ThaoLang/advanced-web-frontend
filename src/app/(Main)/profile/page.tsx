@@ -3,14 +3,16 @@ import ProfileForm from "@/component/ProfileForm";
 import { UserType } from "@/model/UserType";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useAuth } from '@/context/AuthContext';
 
 export default function Profile() {
-  const [email, setEmail] = useState("nguyen@gmail.com");
-  const [username, setUsername] = useState("Khanh");
-  const [profilePicture, setProfilePicture] = useState(
-    "https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe"
-  );
-  const [user, setUser] = useState<UserType | null>(null);
+  const auth = useAuth();
+  // const [email, setEmail] = useState("nguyen@gmail.com");
+  // const [username, setUsername] = useState("Khanh");
+  // const [profilePicture, setProfilePicture] = useState(
+  //   "https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe"
+  // );
+  // const [user, setUser] = useState<UserType | null>(null);
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   const [showFailedMsg, setShowFailedMsg] = useState(false);
 
@@ -19,12 +21,13 @@ export default function Profile() {
       const response = await axios.put(
         `http://localhost:4000/profile/update`,
         {
-          email: email,
-          usename: username,
+          email: auth.user?.email,
+          username: auth.user?.username,
+          avatarUrl: auth.user?.avatarUrl,
         },
         {
           headers: {
-            Authorization: `Bearer ${user?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       );
@@ -44,14 +47,11 @@ export default function Profile() {
   };
 
   const handleSaveInfo = (
-    _username: string,
-    _email: string,
-    _profilePicture: string
+    _username: string | undefined,
+    _email: string | undefined,
+    _profilePicture: string | undefined
   ) => {
-    setUsername(_username);
-    setEmail(_email);
-
-    setProfilePicture(_profilePicture);
+    auth.updateUser(_username, _profilePicture);
   };
 
   useEffect(() => {
@@ -59,11 +59,9 @@ export default function Profile() {
 
     if (savedUser) {
       const curUser: UserType = JSON.parse(savedUser);
-      setUser(curUser);
-      setEmail(curUser.email);
-      setUsername(curUser.username);
+      auth.login(curUser);
     }
-  }, [email, username]);
+  }, []);
 
   return (
     <div className="flex justify-center space-x-2 h-fit">
@@ -104,10 +102,8 @@ export default function Profile() {
         </div>
       )}
       <ProfileForm
-        username={username}
-        email={email}
-        profilePicture={profilePicture}
-        saveInfo={handleSaveInfo}
+          user={auth.user}
+          saveInfo={handleSaveInfo}
       />
     </div>
   );

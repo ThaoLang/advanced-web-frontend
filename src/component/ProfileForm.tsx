@@ -4,20 +4,25 @@ import DragNDrop from "./DragNDrop";
 import { GrCircleInformation } from "react-icons/gr";
 import { GoChecklist } from "react-icons/go";
 import { VscFeedback } from "react-icons/vsc";
-import { UserType } from "@/model/UserType";
+// import { useAuth } from "@/context/AuthContext";
+import { UserType } from '@/model/UserType';
 
 interface ProfileFormProp {
-  username: string;
-  email: string;
-  profilePicture: string;
-  saveInfo: (username: string, email: string, profilePicture: string) => void;
+  // username: string;
+  // email: string;
+  // profilePicture: string;
+  user: UserType | null;
+  saveInfo: (
+    username: string | undefined, 
+    email: string | undefined, 
+    profilePicture: string | undefined) => void;
 }
 
 export default function ProfileForm(props: ProfileFormProp) {
-  const [emailProxy, setEmailProxy] = useState(props.email);
-  const [usernameProxy, setUsernameProxy] = useState(props.username);
+  const [emailProxy, setEmailProxy] = useState(props.user?.email);
+  const [usernameProxy, setUsernameProxy] = useState(props.user?.username);
   const [profilePictureProxy, setProfilePictureProxy] = useState(
-    props.profilePicture
+    props.user?.avatarUrl
   );
   const [isEditable, setIsEditable] = useState(false);
   const [option, setOption] = useState("tab_1");
@@ -44,7 +49,7 @@ export default function ProfileForm(props: ProfileFormProp) {
           <div className="justify-center">
             {isEditable || (
               <img
-                src={props.profilePicture}
+                src={props.user?.avatarUrl}
                 className="rounded-full w-40 m-5 mx-5"
                 alt="profile picture"
               />
@@ -67,7 +72,7 @@ export default function ProfileForm(props: ProfileFormProp) {
         <div className="grid grid-rows-4">
           <div className="row-span-3 flex flex-col p-4 m-8 w-96 h-72 mx-auto my-auto bg-white">
             <label className="font-semibold h-fit text-2xl text-center my-10 mx-auto">
-              {props.username}'s Profile
+              {props.user?.username}'s Profile
             </label>
             <div className="grid grid-cols-3 h-24 w-full">
               <label className="font-semibold text-md text-left inline-block align-bottom mt-2 ml-4">
@@ -85,7 +90,7 @@ export default function ProfileForm(props: ProfileFormProp) {
                   />
                 )) || (
                   <label className="text-md text-left inline-block align-bottom mt-2">
-                    {props.username}
+                    {props.user?.username}
                   </label>
                 )}
               </div>
@@ -105,7 +110,7 @@ export default function ProfileForm(props: ProfileFormProp) {
                   />
                 )) || (
                   <label className="text-md text-left inline-block align-bottom mt-2">
-                    {props.email}
+                    {props.user?.email}
                   </label>
                 )}
               </div>

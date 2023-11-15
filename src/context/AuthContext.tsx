@@ -1,16 +1,13 @@
 "use client";
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-
-export interface User {
-  email: string;
-  password: string;
-}
+import {UserType} from '@/model/UserType';
 
 export interface AuthContextType {
-  user: User | null;
-  login: (userData: User) => void;
+  user: UserType | null;
+  login: (userData: UserType) => void;
   logout: () => void;
   isAuthModalOpen: boolean;
+  updateUser: (username: string | undefined, avatarUrl: string | undefined) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,13 +25,12 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [profilePicture, setProfilePicture] = useState("");
 
 
-  const login = async (userData: User) => {
-    console.log("Login", userData)
+  const login = async (userData: UserType) => {
+    // console.log("Login", userData)
     setUser(userData);
   };
 
@@ -50,8 +46,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
   //   setUser(null);
   // };
 
+  const updateUser = (username: string | undefined, avatarUrl: string | undefined) => {
+    if (user) {
+      setUser({
+        ...user,
+        username: username ?? user.username,
+        avatarUrl: avatarUrl ?? user.avatarUrl,
+      });
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthModalOpen }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, isAuthModalOpen }}>
       {children}
     </AuthContext.Provider>
   );
