@@ -33,9 +33,11 @@ export default function RootLayout({
         <AuthProvider>
           <div className="drawer">
             <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content">
+            <div className="drawer-content flex flex-col h-screen justify-between">
               <NavBar />
-              {children}
+              <main>
+                {children}
+              </main>
               <Footer />
             </div>
             <div className="drawer-side">

@@ -2,7 +2,7 @@ import React from 'react';
 import {useDropzone} from 'react-dropzone';
 
 interface ImageProp {
-  imageUrl: string;
+  imageUrl: string | undefined;
   saveImageUrl: (imageUrl: string) => void;
 }
 

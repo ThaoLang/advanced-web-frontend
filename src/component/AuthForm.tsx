@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
-import { User, useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { UserType } from "@/model/UserType";
 
@@ -83,6 +83,7 @@ export default function AuthForm(props: AuthFormProps) {
         email: email,
         password: password,
         username: username,
+        avatarUrl: `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`
       });
 
       if (response.status === 201) {

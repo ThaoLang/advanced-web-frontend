@@ -4,13 +4,16 @@ import { UserType } from "@/model/UserType";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Profile() {
-  const [profilePicture, setProfilePicture] = useState(
-    "https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe"
-  );
-  // const savedUser=localStorage.getItem("user");
-  const [user, setUser] = useState<UserType | null>(null);
+  const auth = useAuth();
+  // const [email, setEmail] = useState("nguyen@gmail.com");
+  // const [username, setUsername] = useState("Khanh");
+  // const [profilePicture, setProfilePicture] = useState(
+  //   "https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe"
+  // );
+  // const [user, setUser] = useState<UserType | null>(null);
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   const [showFailedMsg, setShowFailedMsg] = useState(false);
   const router = useRouter();
@@ -20,34 +23,35 @@ export default function Profile() {
     _email: string,
     _profilePicture: string
   ) => {
-    setUser((prevUser: UserType | null) => {
-      if (!prevUser) {
-        const savedUser = localStorage.getItem("user");
-        if (savedUser) {
-          const curUser: UserType = JSON.parse(savedUser);
-          return curUser;
-        }
-        return null;
-      }
+    // setUser((prevUser: UserType | null) => {
+    //   if (!prevUser) {
+    //     const savedUser = localStorage.getItem("user");
+    //     if (savedUser) {
+    //       const curUser: UserType = JSON.parse(savedUser);
+    //       return curUser;
+    //     }
+    //     return null;
+    //   }
 
-      return {
-        ...prevUser,
-        username: _username,
-        email: _email,
-      };
-    });
+    //   return {
+    //     ...prevUser,
+    //     username: _username,
+    //     email: _email,
+    //   };
+    // });
 
-    setProfilePicture(_profilePicture);
+    // setProfilePicture(_profilePicture);
     try {
       const response = await axios.put(
         `http://localhost:4000/profile/update`,
         {
-          email: user?.email,
-          username: user?.username,
+          email: auth.user?.email,
+          username: auth.user?.username,
+          avatarUrl: auth.user?.avatarUrl,
         },
         {
           headers: {
-            Authorization: `Bearer ${user?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       );
@@ -62,7 +66,21 @@ export default function Profile() {
       setTimeout(() => {
         setShowFailedMsg(false);
       }, 2000);
+      const errorMessage =
+        error.response && error.response.data
+          ? error.response.data.message
+          : "Failed to login";
+
+      console.error("Failed to login:", error);
     }
+  };
+
+  const handleSaveInfo = (
+    _username: string | undefined,
+    _email: string | undefined,
+    _profilePicture: string | undefined
+  ) => {
+    auth.updateUser(_username, _profilePicture);
   };
 
   useEffect(() => {
@@ -70,9 +88,7 @@ export default function Profile() {
 
     if (savedUser) {
       const curUser: UserType = JSON.parse(savedUser);
-      setUser(curUser);
-    } else {
-      router.push("/");
+      auth.login(curUser);
     }
   }, []);
 
@@ -114,13 +130,7 @@ export default function Profile() {
           <span>Fail to update profile!</span>
         </div>
       )}
-      {user && (
-        <ProfileForm
-          user={user}
-          profilePicture={profilePicture}
-          saveInfo={updateProfile}
-        />
-      )}
+      <ProfileForm user={auth.user} saveInfo={handleSaveInfo} />
     </div>
   );
 }
