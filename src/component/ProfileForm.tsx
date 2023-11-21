@@ -6,7 +6,7 @@ import { GoChecklist } from "react-icons/go";
 import { VscFeedback } from "react-icons/vsc";
 // import { useAuth } from "@/context/AuthContext";
 import { UserType } from "@/model/UserType";
-import Image from 'next/image'
+// import Image from 'next/image'
 
 interface ProfileFormProp {
   // username: string;
@@ -50,14 +50,14 @@ export default function ProfileForm(props: ProfileFormProp) {
           {/* TODO: update this button UI */}
           <div className="justify-center">
             {isEditable || (
-              <Image
+              <img
                 src={props.user?.avatarUrl ?? ''}
                 className="rounded-full w-40 m-5 mx-5"
                 alt="profile picture"
               />
             )}
             {isEditable && profilePictureProxy && (
-              <Image
+              <img
                 src={profilePictureProxy}
                 className="rounded-full w-40 m-5 mx-5 brightness-50"
                 alt="image upload"
