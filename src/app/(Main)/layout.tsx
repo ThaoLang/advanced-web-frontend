@@ -4,7 +4,9 @@ import '../globals.css'
 import NavBar from '@/component/NavBar'
 import Footer from '@/component/Footer'
 import Link from 'next/link'
-import { FaHouseChimney, FaCalendarDays, FaGear, FaSquarePhone, FaAddressCard } from "react-icons/fa6";
+import { FaHouseChimney, FaCalendarDays, FaGear } from "react-icons/fa6";
+import { FaChalkboardTeacher } from "react-icons/fa";
+import { GiGraduateCap } from "react-icons/gi";
 import { AuthProvider } from '@/context/AuthContext';
 
 const inter = Inter({ subsets: ['latin'] })
@@ -22,8 +24,8 @@ export default function RootLayout({
   const navigation = [
     { name: "Home", href: "/", icon: <FaHouseChimney /> },
     { name: "Calendar", href: "/calendar", icon: <FaCalendarDays /> },
-    { name: "About", href: "/about", icon: <FaAddressCard /> },
-    { name: "Contact", href: "/contact", icon: <FaSquarePhone /> },
+    { name: "Teaching", href: "/teaching", icon: <FaChalkboardTeacher /> },
+    { name: "Enrolled", href: "/enrolled", icon: <GiGraduateCap /> },
     { name: "Settings", href: "/setting", icon: <FaGear /> },
   ];
 
