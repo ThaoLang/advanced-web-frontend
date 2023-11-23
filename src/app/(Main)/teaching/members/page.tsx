@@ -40,8 +40,8 @@ const students = [
 export default function page() {
   return (
     <div className="w-3/4 lg:w-1/2 mx-auto">
-      <div className="text-2xl lg:text-3xl text-blue-500">Teachers</div>
-      <div className="divider divide-blue-500" />
+      <div className="text-2xl lg:text-3xl text-blue-600">Teachers</div>
+      <div className="divider mt-1 lg:mt-3 divide-blue-500" />
 
       <ul className="menu bg-base-200 rounded-box mb-10">
         {teachers.map((teacher, index) => (
@@ -79,10 +79,10 @@ export default function page() {
         ))}
       </ul>
 
-      <div className="text-2xl lg:text-3xl text-yellow-400">Students</div>
-      <div className="divider divide-yellow-400" />
+      <div className="text-2xl lg:text-3xl text-yellow-500">Students</div>
+      <div className="divider mt-1 lg:mt-3 divide-yellow-400" />
 
-      <ul className="menu bg-base-200 rounded-box my-10">
+      <ul className="menu bg-base-200 rounded-box mb-10">
         {students.map((student, index) => (
           <li>
             <a>

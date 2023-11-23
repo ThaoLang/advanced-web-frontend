@@ -97,7 +97,7 @@ const Pagination = (props: PaginationBarProp) => {
 
   return (
     <nav aria-label="Page navigation example">
-      <ul className="flex items-center -space-x-px h-10 text-base">{items}</ul>
+      <ul className="flex items-center -space-x-px h-5 text-base">{items}</ul>
     </nav>
   );
 };

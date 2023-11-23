@@ -19,7 +19,7 @@ export default function TeachingLayout({
     <section>
       {/* Include shared UI here e.g. a header or sidebar */}
 
-      <div className="tabs tabs-lifted h-20 justify-center space-x-4">
+      <div className="tabs tabs-lifted h-10 justify-center space-x-4">
         {navigation.map((item, index) => (
           <Link href={item.href}>
             <div
@@ -33,7 +33,7 @@ export default function TeachingLayout({
         ))}
       </div>
 
-      <div className="divider w-3/4 mx-auto" />
+      <div className="divider mt-1 w-3/4 mx-auto" />
 
       {children}
     </section>

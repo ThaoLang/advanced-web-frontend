@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import PaginationBar from "./PaginationBar";
 import SmallClass from "./classItem/SmallClass";
@@ -29,13 +29,146 @@ const classes = [
     description: "This is the class",
     inviteUrl: "inviteurl",
   },
+  {
+    id: 1,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name 2",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 2,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name 2",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 3,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name 2",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 1,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 2,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 3,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 1,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name 2",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 2,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name 2",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 3,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name 2",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 1,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 2,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 3,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 1,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name 2",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 2,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name 2",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
+  {
+    id: 3,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+    name: "My Class Name 2",
+    description: "This is the class",
+    inviteUrl: "inviteurl",
+  },
 ];
 
 export default function HomePage() {
   const auth = useAuth();
-  const totalPages = 10;
+  const maxItemNumber = 3;
   const limit = 5;
+  const totalPages = 
+    classes.length % maxItemNumber === 0
+      ? classes.length / maxItemNumber
+      : (classes.length - (classes.length % maxItemNumber)) / maxItemNumber + 1;
   const [page, setPage] = useState(1);
+
+  const filterData = useMemo(() => {
+    return classes.filter((item, index) => {
+      return (
+        index >= (page - 1) * maxItemNumber && index < page * maxItemNumber
+      );
+    });
+  }, [page]);
+
   const [showModal, setShowModal] = useState(false);
 
   function addNewClass() {
@@ -75,10 +208,10 @@ export default function HomePage() {
               <div className="modal-box">
                 <h3 className="font-bold text-lg">Hello!</h3>
                 <p className="py-4">Press ESC key or click outside to close</p>
-                <button className="" onClick={()=>joinClass}>
+                <button className="" onClick={() => joinClass}>
                   Join class
                 </button>
-                <button className="" onClick={()=>createClass}>
+                <button className="" onClick={() => createClass}>
                   Create class
                 </button>
               </div>
@@ -88,7 +221,7 @@ export default function HomePage() {
             </dialog>
           )}
 
-          {classes.map((items, index) => (
+          {filterData.map((items, index) => (
             <SmallClass
               id={items.id}
               imageUrl={items.imageUrl}

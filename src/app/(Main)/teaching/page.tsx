@@ -9,6 +9,7 @@ const classInfo = {
   name: "My Class Name",
   description: "This is the class",
   inviteUrl: "inviteurl",
+  classCode: "classCode",
 };
 
 export default function page() {
@@ -20,6 +21,7 @@ export default function page() {
         name={classInfo.name}
         description={classInfo.description}
         inviteUrl={classInfo.inviteUrl}
+        classCode={classInfo.classCode}
       />
     </div>
   );

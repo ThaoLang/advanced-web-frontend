@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io";
+import { FaRegCopy } from "react-icons/fa";
 
 interface BannerProp {
   id: number;
@@ -7,6 +8,7 @@ interface BannerProp {
   name: string;
   description: string;
   inviteUrl: string;
+  classCode: string;
 }
 
 const Banner = (classInfo: BannerProp) => {
@@ -54,10 +56,26 @@ const Banner = (classInfo: BannerProp) => {
             </span>
           </div>
 
-          {isActive && <div>
-            <p className="m-3 text-lg">Class code: ASDHDASKJ</p>
-            <p className="m-3 text-lg">Invite link: {classInfo.inviteUrl}</p>
-          </div>}
+          {isActive && (
+            <div className="grid grid-cols-6 items-center justify-center">
+              <div className="hidden md:block md:col-span-1 lg:col-span-1">
+                <p className="m-3 text-sm lg:text-md">Class code:</p>
+                <p className="m-3 text-sm lg:text-md">Invite link:</p>
+              </div>
+              <div className="col-span-5 md:col-span-4 lg:col-span-2 text-blue-500">
+                <p className="m-3 text-lg">{classInfo.classCode}</p>
+                <p className="m-3 text-lg">{classInfo.inviteUrl}</p>
+              </div>
+              <div className="text-lg gap-4">
+                <div className="row-end-2 m-3 cursor-pointer">
+                  <FaRegCopy />
+                </div>
+                <div className="row-start-2 m-3 cursor-pointer">
+                  <FaRegCopy />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

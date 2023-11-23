@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client";
+import Link from "next/link";
 import { IoMdPerson } from "react-icons/io";
 import { PiProjectorScreenChart } from "react-icons/pi";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -12,12 +13,11 @@ interface SmallClassProp {
 }
 
 const SmallClass = (classInfo: SmallClassProp) => {
-  const [isActive, setIsActive] = useState(false);
-
   return (
     <div className="max-w-[240px] bg-white rounded-xl shadow-md md:max-w-2xl relative">
       <div className="md:flex flex-col">
-        {/* <Link to={`/${classInfo.page}/detail/${classInfo.id}`}> */}
+        {/* <Link href={`/teaching/${classInfo.id}`}> */}
+        <Link href="/teaching">
         <div className="md:shrink-0 ">
           <img
             className="h-48 object-cover w-full"
@@ -25,9 +25,10 @@ const SmallClass = (classInfo: SmallClassProp) => {
             alt={classInfo.name}
           />
         </div>
-        {/* </Link> */}
+        </Link>
         <div className="p-3">
-          {/* <Link to={`/${classInfo.page}/detail/${classInfo.id}`}> */}
+          {/* <Link href={`/teaching/${classInfo.id}`}> */}
+          <Link href="/teaching">
           <div className="flex flex-row justify-between">
             <div
               className=" md:text-lg text-slate-400 italic "
@@ -46,7 +47,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
           <div className="mt-1 text-lg leading-tight font-medium text-black hover:underline text-ellipsis overflow-hidden roboto-bold text-wrap-2-line">
             {classInfo.name}
           </div>
-          {/* </Link> */}
+          </Link>
           <div className="mt-5 flex flex-row justify-between align-middle">
             <div className="flex flex-col">
               <div className="flex flex-row">
