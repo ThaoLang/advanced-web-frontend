@@ -23,7 +23,6 @@ export default function RootLayout({
 }) {
   const navigation = [
     { name: "Home", href: "/", icon: <FaHouseChimney /> },
-    { name: "Calendar", href: "/calendar", icon: <FaCalendarDays /> },
     { name: "Teaching", href: "/teaching", icon: <FaChalkboardTeacher /> },
     { name: "Enrolled", href: "/enrolled", icon: <GiGraduateCap /> },
     { name: "Settings", href: "/setting", icon: <FaGear /> },
@@ -33,7 +32,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <div className="drawer">
+          <div className="drawer 
+            bg-cover bg-[url('https://dbhi.edu.vn/wp-content/uploads/2019/09/white-background-with-blue-tech-hexagon_1017-19366.jpg')]"
+          >
             <input id="my-drawer" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content flex flex-col h-screen justify-between">
               <NavBar />

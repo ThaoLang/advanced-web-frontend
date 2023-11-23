@@ -10,6 +10,8 @@ interface SmallClassProp {
   name: string;
   description: string;
   inviteUrl: string;
+  isCopied: boolean;
+  CopyInviteLink: (text: string) => void;
 }
 
 const SmallClass = (classInfo: SmallClassProp) => {
@@ -18,35 +20,35 @@ const SmallClass = (classInfo: SmallClassProp) => {
       <div className="md:flex flex-col">
         {/* <Link href={`/teaching/${classInfo.id}`}> */}
         <Link href="/teaching">
-        <div className="md:shrink-0 ">
-          <img
-            className="h-48 object-cover w-full"
-            src={classInfo.imageUrl}
-            alt={classInfo.name}
-          />
-        </div>
+          <div className="md:shrink-0 ">
+            <img
+              className="h-48 object-cover w-full"
+              src={classInfo.imageUrl}
+              alt={classInfo.name}
+            />
+          </div>
         </Link>
         <div className="p-3">
           {/* <Link href={`/teaching/${classInfo.id}`}> */}
           <Link href="/teaching">
-          <div className="flex flex-row justify-between">
-            <div
-              className=" md:text-lg text-slate-400 italic "
-              style={{ fontSize: "12px" }}
-            >
-              {" "}
-              {classInfo.description}
+            <div className="flex flex-row justify-between">
+              <div
+                className=" md:text-lg text-slate-400 italic "
+                style={{ fontSize: "12px" }}
+              >
+                {" "}
+                {classInfo.description}
+              </div>
+              <div
+                className=" md:text-lg text-slate-400 italic "
+                style={{ fontSize: "12px" }}
+              >
+                {classInfo.inviteUrl}
+              </div>
             </div>
-            <div
-              className=" md:text-lg text-slate-400 italic "
-              style={{ fontSize: "12px" }}
-            >
-              {classInfo.inviteUrl}
+            <div className="mt-1 text-lg leading-tight font-medium text-black hover:underline text-ellipsis overflow-hidden roboto-bold text-wrap-2-line">
+              {classInfo.name}
             </div>
-          </div>
-          <div className="mt-1 text-lg leading-tight font-medium text-black hover:underline text-ellipsis overflow-hidden roboto-bold text-wrap-2-line">
-            {classInfo.name}
-          </div>
           </Link>
           <div className="mt-5 flex flex-row justify-between align-middle">
             <div className="flex flex-col">
@@ -76,7 +78,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
                   className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-40"
                 >
                   <li>
-                    <a>Copy invite link</a>
+                    <div onClick={() => classInfo.CopyInviteLink}>Copy invite link</div>
                   </li>
                   <li>
                     <a>Edit</a>
@@ -93,6 +95,13 @@ const SmallClass = (classInfo: SmallClassProp) => {
           </div>
         </div>
       </div>
+      {classInfo.isCopied && (
+        <div className="toast toast-top toast-end">
+          <div className="alert alert-info">
+            <span>Copied!</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

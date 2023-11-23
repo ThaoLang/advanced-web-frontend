@@ -3,6 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import PaginationBar from "./PaginationBar";
 import SmallClass from "./classItem/SmallClass";
 import { FaPlus } from "react-icons/fa";
+import Link from "next/link";
 
 const classes = [
   {
@@ -16,7 +17,7 @@ const classes = [
   {
     id: 2,
     imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+      "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
@@ -155,7 +156,7 @@ export default function HomePage() {
   const auth = useAuth();
   const maxItemNumber = 3;
   const limit = 5;
-  const totalPages = 
+  const totalPages =
     classes.length % maxItemNumber === 0
       ? classes.length / maxItemNumber
       : (classes.length - (classes.length % maxItemNumber)) / maxItemNumber + 1;
@@ -169,21 +170,55 @@ export default function HomePage() {
     });
   }, [page]);
 
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
 
-  function addNewClass() {
-    setShowModal(true);
-  }
+  // function addNewClass() {
+  //   setShowModal(true);
+  // }
 
-  function createClass() {
-    //
-    setShowModal(false);
-  }
+  // function createClass() {
+  //   //
+  //   setShowModal(false);
+  // }
 
-  function joinClass() {
-    //
-    setShowModal(false);
-  }
+  // function joinClass() {
+  //   //
+  //   setShowModal(false);
+  // }
+
+  // TODO: make this functional
+  // copy invite link
+  const [isCopied, setIsCopied] = useState(false);
+
+  const WriteToClipboard = async (text: string) => {
+    const param = "clipboard-write" as PermissionName;
+    const result = await navigator.permissions.query({ name: param });
+    if (result.state === "granted") {
+      console.log("Permission granted");
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    console.log("Permission denied");
+    return false;
+  };
+
+  const CopyInviteLink = (text: string) => {
+    // Asynchronously call
+    WriteToClipboard(text)
+      .then((result) => {
+        // If successful, update the isCopied state value
+        if (result) {
+          setIsCopied(true);
+          setTimeout(() => {
+            setIsCopied(false);
+          }, 1500);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  // end copy invite link
 
   return auth.user ? (
     <div className="mx-20 my-10">
@@ -193,17 +228,16 @@ export default function HomePage() {
 
       <div className="flex justify-around items-center font-poppins mb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 w-9/12 pt-10 ">
-          <div
-            className="max-w-[240px] bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl cursor-pointer"
-            onClick={() => addNewClass}
-          >
-            <div className="h-80 flex items-center justify-center text-4xl">
-              <FaPlus />
+          <Link href="/new_class">
+            <div className="max-w-[240px] bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl cursor-pointer">
+              <div className="h-80 flex items-center justify-center text-4xl">
+                <FaPlus />
+              </div>
             </div>
-          </div>
+          </Link>
 
-          {/* TODO: update to make this functional */}
-          {showModal && (
+          {/* Modal */}
+          {/* {showModal && (
             <dialog className="modal">
               <div className="modal-box">
                 <h3 className="font-bold text-lg">Hello!</h3>
@@ -219,7 +253,7 @@ export default function HomePage() {
                 <button>close</button>
               </form>
             </dialog>
-          )}
+          )} */}
 
           {filterData.map((items, index) => (
             <SmallClass
@@ -228,6 +262,8 @@ export default function HomePage() {
               name={items.name}
               description={items.description}
               inviteUrl={items.inviteUrl}
+              isCopied={isCopied}
+              CopyInviteLink={CopyInviteLink}
               key={index}
             />
           ))}

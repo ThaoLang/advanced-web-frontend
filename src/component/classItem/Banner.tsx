@@ -19,7 +19,7 @@ const Banner = (classInfo: BannerProp) => {
       <div className="md:flex flex-col">
         <div className="md:shrink-0 ">
           <img
-            className="h-80 object-cover w-full"
+            className="h-96 object-cover w-full"
             src={classInfo.imageUrl}
             alt={classInfo.name}
           />

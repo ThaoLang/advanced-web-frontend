@@ -7,7 +7,6 @@ export default function TeachingLayout({
 }) {
   const navigation = [
     { name: "About", href: "/teaching" },
-    { name: "Assignment", href: "/teaching/assignment" },
     { name: "Members", href: "/teaching/members" },
     { name: "Grades", href: "/teaching/grades" },
     { name: "Settings", href: "/teaching/settings" },
