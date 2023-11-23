@@ -13,6 +13,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
+    page: "enrolled"
   },
   {
     id: 2,
@@ -21,6 +22,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
+    page: "teaching"
   },
   {
     id: 3,
@@ -29,6 +31,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
+    page: "enrolled"
   },
   {
     id: 1,
@@ -37,6 +40,7 @@ const classes = [
     name: "My Class Name 2",
     description: "This is the class",
     inviteUrl: "inviteurl",
+    page: "enrolled"
   },
   {
     id: 2,
@@ -45,6 +49,7 @@ const classes = [
     name: "My Class Name 2",
     description: "This is the class",
     inviteUrl: "inviteurl",
+    page: "enrolled"
   },
   {
     id: 3,
@@ -53,6 +58,7 @@ const classes = [
     name: "My Class Name 2",
     description: "This is the class",
     inviteUrl: "inviteurl",
+    page: "enrolled"
   },
   {
     id: 1,
@@ -61,6 +67,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
+    page: "enrolled"
   },
   {
     id: 2,
@@ -69,87 +76,8 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-  },
-  {
-    id: 3,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-  },
-  {
-    id: 1,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name 2",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-  },
-  {
-    id: 2,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name 2",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-  },
-  {
-    id: 3,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name 2",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-  },
-  {
-    id: 1,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-  },
-  {
-    id: 2,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-  },
-  {
-    id: 3,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-  },
-  {
-    id: 1,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name 2",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-  },
-  {
-    id: 2,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name 2",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-  },
-  {
-    id: 3,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name 2",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-  },
+    page: "enrolled"
+  }
 ];
 
 export default function HomePage() {
@@ -229,7 +157,7 @@ export default function HomePage() {
       <div className="flex justify-around items-center font-poppins mb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 w-9/12 pt-10 ">
           <Link href="/new_class">
-            <div className="max-w-[240px] bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl cursor-pointer">
+            <div className="max-w-[240px] bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl cursor-pointer py-2">
               <div className="h-80 flex items-center justify-center text-4xl">
                 <FaPlus />
               </div>
@@ -262,6 +190,7 @@ export default function HomePage() {
               name={items.name}
               description={items.description}
               inviteUrl={items.inviteUrl}
+              page={items.page}
               isCopied={isCopied}
               CopyInviteLink={CopyInviteLink}
               key={index}

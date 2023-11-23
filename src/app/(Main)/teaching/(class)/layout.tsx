@@ -6,7 +6,7 @@ export default function TeachingLayout({
   children: React.ReactNode;
 }) {
   const navigation = [
-    { name: "About", href: "/teaching" },
+    { name: "About", href: "/teaching/detail" },
     { name: "Members", href: "/teaching/members" },
     { name: "Grades", href: "/teaching/grades" },
     { name: "Settings", href: "/teaching/settings" },
@@ -18,7 +18,7 @@ export default function TeachingLayout({
     <section>
       {/* Include shared UI here e.g. a header or sidebar */}
 
-      <div className="tabs tabs-lifted h-10 justify-center space-x-4">
+      <div className="tabs tabs-lifted h-10 justify-center space-x-4 lg:gap-10">
         {navigation.map((item, index) => (
           <Link href={item.href}>
             <div

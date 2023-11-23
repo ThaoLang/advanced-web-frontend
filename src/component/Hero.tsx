@@ -14,7 +14,7 @@ export default function Hero() {
                         <Link href="/auth">
                             <button className="mb-5 lg:w-64 w-screen btn btn-info text-uppercase">Get Started</button>
                         </Link>
-                        <Link href="/about">
+                        <Link href="/setting">
                             <button className="mb-5 lg:ml-5 lg:w-36 w-screen btn btn-info text-uppercase">Learn more</button>
                         </Link>
                     </div>

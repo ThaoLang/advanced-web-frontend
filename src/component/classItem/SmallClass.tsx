@@ -10,16 +10,17 @@ interface SmallClassProp {
   name: string;
   description: string;
   inviteUrl: string;
+  page: string;
   isCopied: boolean;
   CopyInviteLink: (text: string) => void;
 }
 
 const SmallClass = (classInfo: SmallClassProp) => {
   return (
-    <div className="max-w-[240px] bg-white rounded-xl shadow-md md:max-w-2xl relative">
+    <div className="max-w-[240px] bg-white rounded-xl overflow-hidden shadow-md md:max-w-2xl relative">
       <div className="md:flex flex-col">
         {/* <Link href={`/teaching/${classInfo.id}`}> */}
-        <Link href="/teaching">
+        <Link href={`/${classInfo.page}/detail`}>
           <div className="md:shrink-0 ">
             <img
               className="h-48 object-cover w-full"
@@ -30,7 +31,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
         </Link>
         <div className="p-3">
           {/* <Link href={`/teaching/${classInfo.id}`}> */}
-          <Link href="/teaching">
+          <Link href={`/${classInfo.page}/detail`}>
             <div className="flex flex-row justify-between">
               <div
                 className=" md:text-lg text-slate-400 italic "
@@ -66,7 +67,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
               </div>
             </div>
             <a>
-              <div className="dropdown dropdown-top">
+              <div className="dropdown dropdown-top dropdown-end">
                 <label
                   tabIndex={0}
                   className="btn rounded-full cursor-pointer text-md"
@@ -102,6 +103,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
