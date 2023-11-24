@@ -1,0 +1,71 @@
+{
+  "LandingPage": {
+    "title": "Manage Teaching and Learning with ",
+    "title_description": "A cutting-edge online platform for seamless education, collaboration, and innovation. Join us in shaping a brighter future for education.",
+    "intro_1": "LightHub is free to try",
+    "intro_2": " for as long as you’d like.",
+    "header_1": "Why",
+    "header_description_1": "At LightHub, we believe in the transformative power of education. We've created a platform that goes beyond traditional learning, providing an immersive and collaborative environment for students and educators alike.",
+    "header_2": "A new era of education",
+    "header_description_2": "Join LightHub and embark on a journey where learning knows no bounds. Sign up now and experience education reimagined.",
+    "header_3": "For Educators",
+    "header_description_3": "LightHub is not just a platform; it's a community of educators shaping the future of learning. Join us in revolutionizing education one lesson at a time. Explore our educator-specific features and bring your teaching to new heights.",
+    "header_4": "For Students",
+    "header_description_4": "Your learning adventure begins here. Dive into a world of possibilities, connect with peers, and explore subjects in ways you never imagined. LightHub is your portal to a brighter future.",
+    "header_5": "See all you can accomplish with",
+    "get_started_btn": "Get started",
+    "learn_more_btn": "Learn more"
+  },
+  "Navbar": {
+    "home": "Home",
+    "calendar": "Calendar",
+    "teaching": "Teaching",
+    "enrolled": "Enrolled",
+    "setting": "Setting",
+    "hi": "Hi",
+    "manage_account": "Manage your account",
+    "logout": "Logout",
+    "login": "Login",
+    "english": "English",
+    "vietnam": "Vietnamese"
+  },
+  "Footer": {
+    "copyright": ". All Rights Reserved.",
+    "resource": "Resources",
+    "follow_us": "Follow us",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "term": "Terms & Conditions"
+  },
+  "Authentication": {
+    "email": "Email",
+    "password": "Password",
+    "username": "Username",
+    "signin_btn": "Sign in",
+    "signup_btn": "Sign up",
+    "or": "OR",
+    "go_to_signup_mg": "Don't have an account? ",
+    "go_to_signin_mg": "Don't have an account? Signup",
+    "email_error_msg": "Email is invalid.",
+    "password_error_msg": "Password must be at least 8 characters with at least one uppercase letter, one special character, and one digit."
+  },
+  "Homepage": {
+    "welcome": "Welcome back! "
+  },
+  "Profile": {
+    "profile": "Your Profile",
+    "username": "Username",
+    "email": "Email",
+    "update_btn": "Update Profile",
+    "bio_tab": "Bio",
+    "comment_tab": "Comment",
+    "activity_tab": "Activity",
+    "save_btn": "Save",
+    "cancel_btn": "Cancel",
+    "dropping": "Drop the image here...",
+    "drop_area": "Drop an image here, or click to upload image"
+  },
+  "Setting": {
+    "language": "Language"
+  }
+}
