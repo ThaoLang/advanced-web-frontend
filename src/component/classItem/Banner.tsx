@@ -14,6 +14,39 @@ interface BannerProp {
 const Banner = (classInfo: BannerProp) => {
   const [isActive, setIsActive] = useState(false);
 
+  // copy
+  const [isCopied, setIsCopied] = useState(false);
+
+  const WriteToClipboard = async (text: string) => {
+    const param = "clipboard-write" as PermissionName;
+    const result = await navigator.permissions.query({ name: param });
+    if (result.state === "granted") {
+      console.log("Permission granted");
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    console.log("Permission denied");
+    return false;
+  };
+
+  const CopyText = (text: string) => {
+    // Asynchronously call
+    WriteToClipboard(text)
+      .then((result) => {
+        // If successful, update the isCopied state value
+        if (result) {
+          setIsCopied(true);
+          setTimeout(() => {
+            setIsCopied(false);
+          }, 1500);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  // end copy
+
   return (
     <div className="w-1/2 lg:w-3/4 bg-white rounded-xl shadow-md overflow-hidden relative">
       <div className="md:flex flex-col">
@@ -67,10 +100,16 @@ const Banner = (classInfo: BannerProp) => {
                 <p className="m-3 text-lg">{classInfo.inviteUrl}</p>
               </div>
               <div className="text-lg gap-4">
-                <div className="row-end-2 m-3 cursor-pointer">
+                <div
+                  className="row-end-2 p-2 cursor-pointer"
+                  onClick={() => CopyText(classInfo.classCode)}
+                >
                   <FaRegCopy />
                 </div>
-                <div className="row-start-2 m-3 cursor-pointer">
+                <div
+                  className="row-start-2 p-2 cursor-pointer"
+                  onClick={() => CopyText(classInfo.inviteUrl)}
+                >
                   <FaRegCopy />
                 </div>
               </div>
@@ -78,6 +117,13 @@ const Banner = (classInfo: BannerProp) => {
           )}
         </div>
       </div>
+      {isCopied && (
+        <div className="toast toast-bottom toast-end">
+          <div className="alert alert-info">
+            <span>Copied!</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

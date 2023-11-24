@@ -114,8 +114,7 @@ export default function HomePage() {
   //   setShowModal(false);
   // }
 
-  // TODO: make this functional
-  // copy invite link
+  // copy invite link  
   const [isCopied, setIsCopied] = useState(false);
 
   const WriteToClipboard = async (text: string) => {

@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 const teachers = [
@@ -38,6 +39,39 @@ const students = [
 ];
 
 export default function page() {
+  // copy  
+  const [isCopied, setIsCopied] = useState(false);
+
+  const WriteToClipboard = async (text: string) => {
+    const param = "clipboard-write" as PermissionName;
+    const result = await navigator.permissions.query({ name: param });
+    if (result.state === "granted") {
+      console.log("Permission granted");
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    console.log("Permission denied");
+    return false;
+  };
+
+  const CopyText = (text: string) => {
+    // Asynchronously call
+    WriteToClipboard(text)
+      .then((result) => {
+        // If successful, update the isCopied state value
+        if (result) {
+          setIsCopied(true);
+          setTimeout(() => {
+            setIsCopied(false);
+          }, 1500);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  // end copy
+
   return (
     <div className="w-3/4 lg:w-1/2 mx-auto">
       <div className="text-2xl lg:text-3xl text-blue-600">Teachers</div>
@@ -67,7 +101,7 @@ export default function page() {
                   className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
                 >
                   <li>
-                    <a>Email</a>
+                    <div onClick={()=>CopyText(teacher.email)}>Email</div>
                   </li>
                   <li>
                     <a>Leave class</a>
@@ -106,7 +140,7 @@ export default function page() {
                   className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
                 >
                   <li>
-                    <a>Email</a>
+                    <div onClick={()=>CopyText(student.email)}>Email</div>
                   </li>
                   <li>
                     <a>Remove</a>
@@ -117,6 +151,13 @@ export default function page() {
           </li>
         ))}
       </ul>
+      {isCopied && (
+        <div className="toast toast-bottom toast-end">
+          <div className="alert alert-info">
+            <span>Copied!</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

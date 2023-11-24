@@ -19,7 +19,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
   return (
     <div className="max-w-[240px] bg-white rounded-xl overflow-hidden shadow-md md:max-w-2xl relative">
       <div className="md:flex flex-col">
-        {/* <Link href={`/teaching/${classInfo.id}`}> */}
+        {/* <Link href={`/${classInfo.page}/detail/${classInfo.id}`}> */}
         <Link href={`/${classInfo.page}/detail`}>
           <div className="md:shrink-0 ">
             <img
@@ -30,7 +30,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
           </div>
         </Link>
         <div className="p-3">
-          {/* <Link href={`/teaching/${classInfo.id}`}> */}
+          {/* <Link href={`/${classInfo.page}/detail/${classInfo.id}`}> */}
           <Link href={`/${classInfo.page}/detail`}>
             <div className="flex flex-row justify-between">
               <div
@@ -79,7 +79,13 @@ const SmallClass = (classInfo: SmallClassProp) => {
                   className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-40"
                 >
                   <li>
-                    <div onClick={() => classInfo.CopyInviteLink}>Copy invite link</div>
+                    <div
+                      onClick={() =>
+                        classInfo.CopyInviteLink(classInfo.inviteUrl)
+                      }
+                    >
+                      Copy invite link
+                    </div>
                   </li>
                   <li>
                     <a>Edit</a>
@@ -97,13 +103,12 @@ const SmallClass = (classInfo: SmallClassProp) => {
         </div>
       </div>
       {classInfo.isCopied && (
-        <div className="toast toast-top toast-end">
+        <div className="toast toast-bottom toast-end">
           <div className="alert alert-info">
             <span>Copied!</span>
           </div>
         </div>
       )}
-
     </div>
   );
 };
