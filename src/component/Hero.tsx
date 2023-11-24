@@ -26,7 +26,7 @@ export default function Hero() {
                 {t("get_started_btn")}
               </button>
             </Link>
-            <Link href="/about">
+            <Link href="/setting">
               <button className="mb-5 lg:ml-5 lg:w-36 w-screen btn btn-info text-uppercase">
                 {t("learn_more_btn")}
               </button>
