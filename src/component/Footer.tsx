@@ -1,7 +1,9 @@
+import { useTranslations } from "next-intl";
 import React from "react";
 export default function Footer() {
+  const t = useTranslations("Footer");
   return (
-    <>
+    <div>
       <footer className="bg-amber-100 mt-10">
         <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
           <div className="md:flex md:justify-between">
@@ -20,7 +22,7 @@ export default function Footer() {
             <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
               <div>
                 <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                  Resources
+                  {t("resource")}
                 </h2>
                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                   <li className="mb-4">
@@ -40,7 +42,7 @@ export default function Footer() {
               </div>
               <div>
                 <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                  Follow us
+                  {t("follow_us")}
                 </h2>
                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                   <li className="mb-4">
@@ -63,17 +65,17 @@ export default function Footer() {
               </div>
               <div>
                 <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                  Legal
+                  {t("legal")}
                 </h2>
                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                   <li className="mb-4">
                     <a href="#" className="hover:underline">
-                      Privacy Policy
+                      {t("privacy")}
                     </a>
                   </li>
                   <li>
                     <a href="#" className="hover:underline">
-                      Terms &amp; Conditions
+                      {t("term")}
                     </a>
                   </li>
                 </ul>
@@ -87,7 +89,7 @@ export default function Footer() {
               <a href="https://flowbite.com/" className="hover:underline">
                 LightHub™
               </a>
-              . All Rights Reserved.
+              {t("copyright")}
             </span>
             <div className="flex mt-4 space-x-5 sm:justify-center sm:mt-0">
               <a
@@ -185,6 +187,6 @@ export default function Footer() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }

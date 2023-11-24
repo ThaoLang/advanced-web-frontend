@@ -14,7 +14,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "teaching"
+    page: "teaching",
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "teaching"
+    page: "teaching",
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "teaching"
+    page: "teaching",
   },
 ];
 
@@ -106,9 +106,9 @@ export default function page() {
 
   return auth.user ? (
     <div className="mx-20 my-10">
-      <p className="mb-5 text-2xl text-blue-600 flex justify-center items-center mx-auto"><b>
-        My Teaching Classes
-      </b></p>
+      <p className="mb-5 text-2xl text-blue-600 flex justify-center items-center mx-auto">
+        <b>My Teaching Classes</b>
+      </p>
 
       <div className="flex justify-around items-center font-poppins mb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 w-9/12 pt-10 ">

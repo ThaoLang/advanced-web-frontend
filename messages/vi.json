@@ -1,0 +1,69 @@
+{
+  "LandingPage": {
+    "title": "Quản lý giảng dạy và Học tập với ",
+    "title_description": "Một nền tảng trực tuyến tiên tiến cho giáo dục mượt mà, sự hợp tác và đổi mới. Hãy tham gia cùng chúng tôi định hình một tương lai tươi sáng cho giáo dục.",
+    "intro_1": "LightHub là công cụ miễn phí",
+    "intro_2": " có thể dùng bao lâu tùy thích.",
+    "header_1": "Tại sao chọn ",
+    "header_description_1": "Tại LightHub, chúng tôi tin vào sức mạnh biến đổi của giáo dục. Chúng tôi đã tạo ra một nền tảng vượt xa khỏi học truyền thống, cung cấp một môi trường học tập chân thực và hợp tác cho cả sinh viên và giáo viên.",
+    "header_2": "Một kỷ nguyên mới của giáo dục",
+    "header_description_2": "Tham gia LightHub và bắt đầu một hành trình nơi học tập không giới hạn. Đăng ký ngay bây giờ và trải nghiệm giáo dục được tưởng tượng lại.",
+    "header_3": "Dành cho Giáo viên",
+    "header_description_3": "LightHub không chỉ là một nền tảng; đó là một cộng đồng của những người giáo viên hình thành tương lai của học tập. Hãy tham gia cùng chúng tôi trong việc cách mạng hóa giáo dục từng bài học một. Khám phá các tính năng dành riêng cho giáo viên của chúng tôi và đưa việc giảng dạy của bạn lên mức mới.",
+    "header_4": "Dành cho Sinh viên",
+    "header_description_4": "Cuộc phiêu lưu học tập của bạn bắt đầu từ đây. Đắm chìm vào một thế giới của cơ hội, kết nối với đồng học và khám phá các môn học theo cách bạn chưa bao giờ tưởng tượng. LightHub là cổng thông tin của bạn đến một tương lai tươi sáng.",
+    "header_5": "Xem tất cả những gì bạn có thể đạt được với",
+    "get_started_btn": "Bắt đầu",
+    "learn_more_btn": "Tìm hiểu thêm",
+    "login_btn": "Đăng nhập"
+  },
+  "Navbar": {
+    "home": "Trang chủ",
+    "calendar": "Lịch",
+    "teaching": "Giảng dạy",
+    "enrolled": "Đã đăng ký",
+    "setting": "Cài đặt",
+    "hi": "Xin chào",
+    "manage_account": "Quản lý tài khoản của bạn",
+    "logout": "Đăng xuất",
+    "login": "Đăng nhập",
+    "english": "Tiếng Anh",
+    "vietnam": "Tiếng Việt"
+  },
+  "Footer": {
+    "copyright": "© 2023 LightHub™. Đã đăng ký Bản quyền.",
+    "resource": "Tài nguyên",
+    "follow_us": "Theo dõi chúng tôi",
+    "legal": "Pháp lý",
+    "privacy": "Chính sách Bảo mật",
+    "term": "Điều khoản & Điều kiện"
+  },
+  "Authentication": {
+    "email": "Email",
+    "password": "Mật khẩu",
+    "username": "Tên người dùng",
+    "signin_btn": "Đăng nhập",
+    "signup_btn": "Đăng ký",
+    "or": "HOẶC",
+    "go_to_signup_mg": "Chưa có tài khoản? ",
+    "go_to_signin_mg": "Đã có tài khoản?",
+    "email_error_msg": "Email không hợp lệ.",
+    "password_error_msg": "Mật khẩu phải có ít nhất 8 ký tự với ít nhất một chữ in hoa, một ký tự đặc biệt và một chữ số."
+  },
+  "Homepage": {
+    "welcome": "Chào mừng trở lại! "
+  },
+  "Profile": {
+    "profile": "Hồ sơ của bạn",
+    "username": "Tên người dùng",
+    "email": "Email",
+    "update_btn": "Cập nhật",
+    "bio_tab": "Tiểu sử",
+    "comment_tab": "Bình luận",
+    "activity_tab": "Hoạt động",
+    "save_btn": "Lưu",
+    "cancel_btn": "Hủy",
+    "dropping": "Kéo thả hình ảnh ở đây...",
+    "drop_area": "Kéo thả hình ảnh ở đây, hoặc tải ảnh lên"
+  }
+}

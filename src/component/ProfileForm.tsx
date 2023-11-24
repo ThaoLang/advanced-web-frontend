@@ -6,6 +6,7 @@ import { GoChecklist } from "react-icons/go";
 import { VscFeedback } from "react-icons/vsc";
 // import { useAuth } from "@/context/AuthContext";
 import { UserType } from "@/model/UserType";
+import { useTranslations } from "next-intl";
 // import Image from 'next/image'
 
 interface ProfileFormProp {
@@ -28,6 +29,7 @@ export default function ProfileForm(props: ProfileFormProp) {
   );
   const [isEditable, setIsEditable] = useState(false);
   const [option, setOption] = useState("tab_1");
+  const t = useTranslations("Profile");
 
   const toggleEdit = async () => {
     setIsEditable(!isEditable);
@@ -51,7 +53,7 @@ export default function ProfileForm(props: ProfileFormProp) {
           <div className="justify-center">
             {isEditable || (
               <img
-                src={props.user?.avatarUrl ?? ''}
+                src={props.user?.avatarUrl ?? ""}
                 className="rounded-full w-40 m-5 mx-5"
                 alt="profile picture"
               />
@@ -74,17 +76,17 @@ export default function ProfileForm(props: ProfileFormProp) {
         <div className="grid grid-rows-4">
           <div className="row-span-3 flex flex-col p-4 m-8 w-96 h-72 mx-auto my-auto bg-white">
             <label className="font-semibold h-fit text-2xl text-center my-10 mx-auto">
-              {props.user?.username}&apos;s Profile
+              {t("profile")}
             </label>
             <div className="grid grid-cols-3 h-24 w-full">
               <label className="font-semibold text-md text-left inline-block align-bottom mt-2 ml-4">
-                Username:
+                {t("username")}:
               </label>{" "}
               <div className="col-span-2">
                 {(isEditable && (
                   <input
                     type="text"
-                    placeholder="Username"
+                    placeholder={t("username")}
                     className="input input-bordered w-full max-w-xs"
                     value={usernameProxy}
                     onChange={(e) => setUsernameProxy(e.target.value)}
@@ -99,13 +101,13 @@ export default function ProfileForm(props: ProfileFormProp) {
             </div>
             <div className="grid grid-cols-3 h-24 w-full">
               <label className="font-semibold text-md text-left inline-block align-bottom mt-2 ml-4">
-                Email:
+                {t("email")}:
               </label>
               <div className="col-span-2">
                 {(isEditable && (
                   <input
                     type="text"
-                    placeholder="Email"
+                    placeholder={t("email")}
                     className="input input-bordered w-full max-w-xs"
                     value={emailProxy}
                     onChange={(e) => setEmailProxy(e.target.value)}
@@ -123,7 +125,7 @@ export default function ProfileForm(props: ProfileFormProp) {
               onClick={toggleEdit}
               className="btn btn-info w-full max-w-xs mx-auto"
             >
-              Update Profile
+              {t("update_btn")}
             </button>
           )) || (
             <div className="flex flex-row w-full max-w-xs mx-auto">
@@ -131,13 +133,13 @@ export default function ProfileForm(props: ProfileFormProp) {
                 onClick={saveChanges}
                 className="btn btn-info w-1/2 max-w-xs mr-4"
               >
-                Save
+                {t("save_btn")}
               </button>
               <button
                 onClick={toggleEdit}
                 className="btn btn-info w-1/2 max-w-xs ml-4"
               >
-                Cancel
+                {t("cancel_btn")}
               </button>
             </div>
           )}
@@ -154,7 +156,7 @@ export default function ProfileForm(props: ProfileFormProp) {
           onClick={() => handleOptionClick("tab_1")}
         >
           <GrCircleInformation size={20} />
-          <label>Bio</label>
+          <label>{t("bio_tab")}</label>
         </a>
         <a
           className={`tab text-lg space-x-2 ${
@@ -163,7 +165,7 @@ export default function ProfileForm(props: ProfileFormProp) {
           onClick={() => handleOptionClick("tab_2")}
         >
           <VscFeedback size={20} />
-          <label>Comment</label>
+          <label>{t("comment_tab")}</label>
         </a>
         <a
           className={`tab text-lg space-x-2 ${
@@ -172,7 +174,7 @@ export default function ProfileForm(props: ProfileFormProp) {
           onClick={() => handleOptionClick("tab_3")}
         >
           <GoChecklist size={20} />
-          <label>Activity</label>
+          <label>{t("activity_tab")}</label>
         </a>
       </div>
 

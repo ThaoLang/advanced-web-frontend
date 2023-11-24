@@ -1,16 +1,34 @@
 "use client";
 import React, { useEffect } from "react";
 import Link from "next/link";
+import {
+  Link as LinkIntl,
+  usePathname,
+  useRouter,
+} from "../language_navigation";
 
 import { FaBars, FaArrowRightFromBracket } from "react-icons/fa6";
-import "../app/page.module.css";
+import "../app/[locale]/page.module.css";
 import { useAuth } from "@/context/AuthContext";
+import { useTranslations } from "next-intl";
+import { IoLanguage } from "react-icons/io5";
+
+import { createSharedPathnamesNavigation } from "next-intl/navigation";
 
 export default function NavBar() {
-  //Random profile avatar
+  const t = useTranslations("Navbar");
+
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const ImageSrc = `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`;
   const auth = useAuth();
+
+  const handleLanguageChange = (locale: string) => {
+    setIsDropdownOpen(false);
+    router.replace(pathname, { locale: locale });
+  };
 
   const handleLogout = () => {
     localStorage.setItem("user", null as any);
@@ -96,8 +114,47 @@ export default function NavBar() {
 					<FaMagnifyingGlass className='absolute text-black mt-3 ml-3'/>
 					<input className='rounded-2xl border-solid boder-2 w-60 h-10 text-black pl-10 text-sm ' type='text' placeholder='Search' />
 				</div> */}
+        <div className="dropdown dropdown-end">
+          <label
+            tabIndex={0}
+            className=""
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <div className="mx-4">
+              <IoLanguage size={20} />
+            </div>
+          </label>
+
+          {isDropdownOpen && (
+            <ul
+              tabIndex={0}
+              className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <LinkIntl
+                  href="./"
+                  locale="en"
+                  onClick={() => handleLanguageChange("en")}
+                  className="cursor-pointer"
+                >
+                  {t("english")}
+                </LinkIntl>
+              </li>
+              <li>
+                <LinkIntl
+                  href="./"
+                  locale="vi"
+                  onClick={() => handleLanguageChange("vi")}
+                  className="cursor-pointer"
+                >
+                  {t("vietnam")}
+                </LinkIntl>
+              </li>
+            </ul>
+          )}
+        </div>
         {auth.user ? (
-          <>
+          <div>
             <button className="btn btn-ghost btn-circle">
               <div className="indicator">
                 <svg
@@ -117,6 +174,31 @@ export default function NavBar() {
                 <span className="badge badge-xs badge-primary indicator-item"></span>
               </div>
             </button>
+
+            {/* <div className="dropdown dropdown-end">
+              <label tabIndex={0} className="">
+                {" "}
+                <div className="mx-4">
+                  <IoLanguage size={20} />
+                </div>
+              </label>
+
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <Link href="./" locale="en">
+                    {t("english")}
+                  </Link>
+                </li>
+                <li>
+                  <Link href="./" locale="vi">
+                    {t("vietnam")}
+                  </Link>
+                </li>
+              </ul>
+            </div> */}
 
             <div className="dropdown dropdown-end dropdown-hover">
               <div tabIndex={0} className="btn btn-ghost btn-circle avatar">
@@ -140,12 +222,12 @@ export default function NavBar() {
                   </label>
                 </li>
                 <li className="text-center text-xl pointer-events-none">
-                  Hi, {auth.user.username}!
+                  {t("hi")}, {auth.user.username}!
                 </li>
                 <li className="items-center">
                   <Link href="/profile">
                     <button className="bg-sky-500 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-full">
-                      Manage your account
+                      {t("manage_account")}
                     </button>
                   </Link>
                   <Link
@@ -159,18 +241,18 @@ export default function NavBar() {
                       onClick={handleLogout}
                     >
                       <FaArrowRightFromBracket />
-                      Logout
+                      {t("logout")}
                     </button>
                   </Link>
                 </li>
               </ul>
             </div>
-          </>
+          </div>
         ) : (
           <div>
             <Link href="/auth" passHref legacyBehavior>
               <button className="btn btn-ghost text-sm font-semibold leading-6 text-gray-900 border-black">
-                Log in
+                {t("login")}
               </button>
             </Link>
           </div>
