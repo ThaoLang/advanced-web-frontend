@@ -1,7 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 
 function CreateAssignmentModal() {
