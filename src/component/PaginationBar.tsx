@@ -6,7 +6,7 @@ interface PaginationBarProp {
     current: number;
 
     onChange: (page: number) => void;
-  }  
+}  
 
 function calculatePaginationRange(currentPage:number, totalPages:number, pageLimit:number) {
   console.log(currentPage, totalPages, pageLimit);
@@ -96,7 +96,7 @@ const Pagination = (props: PaginationBarProp) => {
   }
 
   return (
-    <nav aria-label="Page navigation example">
+    <nav>
       <ul className="flex items-center -space-x-px h-5 text-base">{items}</ul>
     </nav>
   );

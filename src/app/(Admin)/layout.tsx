@@ -8,11 +8,8 @@ import {
     FaAngleLeft,
     FaBars,
     FaChartSimple,
-    FaCalendar,
     FaChalkboardUser,
-    FaWpforms,
-    FaBell,
-    FaRegUser,
+    FaPerson,
     FaGear,
     FaArrowRightFromBracket,
     FaAngleDown,
@@ -20,7 +17,7 @@ import {
     FaMoon,
 } from "react-icons/fa6";
 import NavBar from '@/component/admin/NavBar';
-import Footer from '@/component/Footer';
+import Footer from '@/component/admin/Footer';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,7 +34,7 @@ export default function AdminLayout({
 
     const navigation = [
         { name: "Dashboard", href: "/admin/", icon: <FaChartSimple /> },
-        { name: "Calendar", href: "/admin/calendar", icon: <FaCalendar /> },
+        { name: "User Accounts", href: "/admin/account", icon: <FaPerson /> },
         { name: "Classes", href: "/admin/class", icon: <FaChalkboardUser /> },
         // { name: "Assignments", href: "/admin/assignment", icon: <FaSquarePhone /> },
         { name: "Settings", href: "/admin/setting", icon: <FaGear /> },
@@ -57,22 +54,18 @@ export default function AdminLayout({
                         </div>
                         <div className="drawer-side">
                             <label htmlFor="admin-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                            <aside className="absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-slate-100 duration-300 ease-linear lg:static lg:translate-x-0 -translate-x-full">
+                            <aside className="absolute left-0 top-0 z-999999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-slate-700 duration-300 ease-linear dark:bg-current lg:static lg:translate-x-0 -translate-x-full">
                                 <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
                                     <Link href="/" className="normal-case text-xl">
                                         <div className="mt-5 flex flex-row items-center gap-3.5">
                                             <img className="h-8 w-auto"
                                                 src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png"
                                                 alt="logo" />
-                                            <span className="font-semibold">
+                                            <span className="font-semibold text-slate-200">
                                                 LightHub
                                             </span>
                                         </div>
                                     </Link>
-                                    {/* <button aria-controls="sidebar" aria-expanded="false" className="block">
-                                <FaAngleLeft/>
-                            </button> */}
-
                                 </div>
                                 {/* <div className="divider"></div> */}
                                 <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
@@ -84,7 +77,8 @@ export default function AdminLayout({
                                                     navigation.map((items, index) => (
                                                         <li className="cursor-pointer"
                                                             key={index}>
-                                                            <Link href={items.href} className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 false">
+                                                            <Link href={items.href} 
+                                                                className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-normal text-slate-200 duration-300 ease-in-out hover:bg-gray-200 hover:text-black dark:hover:bg-meta-4 false">
                                                                 {items.icon}
                                                                 {items.name}
                                                             </Link>
