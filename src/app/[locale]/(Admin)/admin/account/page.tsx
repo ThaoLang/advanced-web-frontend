@@ -156,7 +156,6 @@ export default function Account({
                         <AccountTable currentPage={currentPage}
                                     setCurrentPage={setCurrentPage} 
                                     fetchAccountList={fetchAccountList} />
-                        
                     </Suspense>
                 </div>
             </div>

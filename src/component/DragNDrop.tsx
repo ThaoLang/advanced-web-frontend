@@ -1,5 +1,6 @@
-import React from 'react';
-import {useDropzone} from 'react-dropzone';
+import { useTranslations } from "next-intl";
+import React from "react";
+import { useDropzone } from "react-dropzone";
 
 interface ImageProp {
   imageUrl: string | undefined;
@@ -7,32 +8,33 @@ interface ImageProp {
 }
 
 const dropzoneStyle = {
-  border: '2px dashed #cccccc',
-  borderRadius: '4px',
-  padding: '20px',
-  cursor: 'pointer',
-  outerWidth: '40px'
+  border: "2px dashed #cccccc",
+  borderRadius: "4px",
+  padding: "20px",
+  cursor: "pointer",
+  outerWidth: "40px",
 };
 
 function DragNDrop(props: ImageProp) {
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
-        "image/*": [".png", ".gif", ".jpeg", ".jpg"],
-      },
-    onDrop: acceptedFiles => {
+      "image/*": [".png", ".gif", ".jpeg", ".jpg"],
+    },
+    onDrop: (acceptedFiles) => {
       const fileUrl = URL.createObjectURL(acceptedFiles[0]);
       props.saveImageUrl(fileUrl);
-    }
+    },
   });
+  const t = useTranslations("Profile");
 
   return (
     <div>
-      <div {...getRootProps()} style={dropzoneStyle}>
+  <div {...getRootProps()} style={dropzoneStyle}>
         <input {...getInputProps()} />
         {isDragActive ? (
-          <p className='text-center'>Drop the image here...</p>
+          <p className="text-center">{t("dropping")}</p>
         ) : (
-          <p className='text-center'>Drop an image here, or click to upload image</p>
+          <p className="text-center">{t("drop_area")}</p>
         )}
       </div>
     </div>

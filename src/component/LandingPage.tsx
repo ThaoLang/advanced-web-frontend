@@ -1,8 +1,10 @@
 import React from "react";
 import Hero from "./Hero";
+import { useTranslations } from "next-intl";
 // import Image from 'next/image'
 
 export default function LandingPage() {
+  const t = useTranslations("LandingPage");
   return (
     <div className="bg-white">
       <Hero />
@@ -10,15 +12,10 @@ export default function LandingPage() {
         <div className="mt-10 lg:w-3/4 mx-auto text-center">
           <div className="text-5xl">
             <b>
-              Why <span className="text-yellow-400">LightHub?</span>
+              {t("header_1")} <span className="text-yellow-400">LightHub?</span>
             </b>
           </div>
-          <p className="mt-5 text-lg lg:text-xl">
-            At LightHub, we believe in the transformative power of education.
-            We&apos;ve created a platform that goes beyond traditional learning,
-            providing an immersive and collaborative environment for students
-            and educators alike.
-          </p>
+          <p className="mt-5 text-lg lg:text-xl">{t("header_description_1")}</p>
         </div>
 
         <div className="divider lg:hidden"></div>
@@ -26,11 +23,10 @@ export default function LandingPage() {
         <div className="lg:mt-20 lg:flex-row flex flex-col lg:justify-center space-x-4">
           <div className="lg:mt-10 mx-10 lg:w-1/2">
             <div className="text-3xl lg:text-5xl">
-              <b>A new era of education</b>
+              <b>{t("header_2")}</b>
             </div>
             <p className="mt-5 text-lg lg:text-xl">
-              Join LightHub and embark on a journey where learning knows no
-              bounds. Sign up now and experience education reimagined.
+              {t("header_description_2")}{" "}
             </p>
           </div>
           <div className="lg:w-1/2">
@@ -55,13 +51,10 @@ export default function LandingPage() {
           </div>
           <div className="lg:mt-10 mx-10 lg:w-1/2 text-right">
             <div className="text-3xl lg:text-5xl">
-              <b>For Educators</b>
+              <b>{t("header_3")}</b>
             </div>
             <p className="mt-5 text-lg lg:text-xl">
-              LightHub is not just a platform; it&apos;s a community of educators
-              shaping the future of learning. Join us in revolutionizing
-              education one lesson at a time. Explore our educator-specific
-              features and bring your teaching to new heights.
+              {t("header_description_3")}
             </p>
           </div>
         </div>
@@ -71,12 +64,10 @@ export default function LandingPage() {
         <div className="lg:mt-20 lg:flex-row flex flex-col lg:justify-center space-x-4">
           <div className="lg:mt-10 mx-10 lg:w-1/2">
             <div className="text-3xl lg:text-5xl">
-              <b>For Students</b>
+              <b>{t("header_4")}</b>
             </div>
             <p className="mt-5 text-lg lg:text-xl">
-              Your learning adventure begins here. Dive into a world of
-              possibilities, connect with peers, and explore subjects in ways
-              you never imagined. LightHub is your portal to a brighter future.
+              {t("header_description_4")}{" "}
             </p>
           </div>
           <div className="lg:w-1/2">
@@ -93,16 +84,15 @@ export default function LandingPage() {
         <div className="h-10"></div> {/* Why i can't use mt-10??? */}
         <div className="text-4xl lg:text-5xl text-white">
           <b>
-            See all you can accomplish with{" "}
-            <span className="text-yellow-400"> LightHub</span>
+            {t("header_5")} <span className="text-yellow-400"> LightHub</span>
           </b>
         </div>
         <div className="mt-10 flex lg:flex-row flex-col lg:justify-center">
           <button className="mb-5 lg:w-80 btn btn-info text-uppercase">
-            Get Started
+            {t("get_started_btn")}
           </button>
           <button className="mb-5 lg:w-80 lg:ml-5 btn btn-info text-uppercase ">
-            Learn more
+            {t("learn_more_btn")}
           </button>
         </div>
         <div className="h-10"></div> {/* Why i can't use mt-10??? */}

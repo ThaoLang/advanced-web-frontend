@@ -10,29 +10,29 @@ const classes = [
   {
     id: 2,
     imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+      "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "enrolled"
+    page: "teaching",
   },
   {
     id: 2,
     imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+      "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "enrolled"
+    page: "teaching",
   },
   {
     id: 2,
     imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+      "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "enrolled"
+    page: "teaching",
   },
 ];
 
@@ -106,9 +106,9 @@ export default function page() {
 
   return auth.user ? (
     <div className="mx-20 my-10">
-      <p className="mb-5 text-2xl text-yellow-500 flex justify-center items-center mx-auto"><b>
-        My Enrolled Classes
-      </b></p>
+      <p className="mb-5 text-2xl text-blue-600 flex justify-center items-center mx-auto">
+        <b>My Teaching Classes</b>
+      </p>
 
       <div className="flex justify-around items-center font-poppins mb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 w-9/12 pt-10 ">

@@ -7,6 +7,7 @@ import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { UserType } from "@/model/UserType";
+import { useTranslations } from "next-intl";
 
 interface AuthFormProps {
   showSuccessMsg: (show: boolean) => void;
@@ -19,11 +20,8 @@ export default function AuthForm(props: AuthFormProps) {
   const [isSignupOpeneded, setIsSignupOpeneded] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [validAuthMsg, setValidAuthMsg] = useState<string | null>(null);
-  const invalidEmailMsg = "Email is invalid.";
-  const invalidPasswordMsg =
-    "Password must be at least 8 characters with at least one uppercase\
-  letter, one special character, and one digit.";
   const router = useRouter();
+  const t = useTranslations("Authentication");
 
   const isEmail = (email: string) => {
     const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -38,12 +36,12 @@ export default function AuthForm(props: AuthFormProps) {
   const isValidAuth = (email: string, password: string) => {
     setValidAuthMsg(null);
     if (!isEmail(email)) {
-      setValidAuthMsg(invalidEmailMsg);
+      setValidAuthMsg(t("email_error_msg"));
       console.error("Error email");
       return false;
     }
     if (!isPassword(password)) {
-      setValidAuthMsg(invalidPasswordMsg);
+      setValidAuthMsg(t("password_error_msg"));
       console.error("Error password");
       return false;
     }
@@ -83,7 +81,7 @@ export default function AuthForm(props: AuthFormProps) {
         email: email,
         password: password,
         username: username,
-        avatarUrl: `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`
+        avatarUrl: `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`,
       });
 
       if (response.status === 201) {
@@ -126,7 +124,7 @@ export default function AuthForm(props: AuthFormProps) {
       {isSignupOpeneded && (
         <input
           type="text"
-          placeholder="Username"
+          placeholder={t("username")}
           className="input input-bordered w-full max-w-xs m-2 mx-auto"
           value={username}
           maxLength={15}
@@ -135,7 +133,7 @@ export default function AuthForm(props: AuthFormProps) {
       )}
       <input
         type="text"
-        placeholder="Email"
+        placeholder={t("email")}
         className="input input-bordered w-full max-w-xs m-2 mx-auto dark:bg-white dark:text-black "
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -143,7 +141,7 @@ export default function AuthForm(props: AuthFormProps) {
       <div className="relative">
         <input
           type={isPasswordVisible ? "text" : "password"}
-          placeholder="Password"
+          placeholder={t("password")}
           className="input input-bordered w-full max-w-xs ml-4 mt-2 mx-auto"
           value={password}
           maxLength={16}
@@ -173,7 +171,7 @@ export default function AuthForm(props: AuthFormProps) {
           onClick={() => handleLogin()}
           className="btn btn-info w-full max-w-xs m-4 mx-auto mt-3"
         >
-          Sign in
+          {t("signin_btn")}
         </button>
       )}
 
@@ -182,17 +180,17 @@ export default function AuthForm(props: AuthFormProps) {
           onClick={() => handleSignup()}
           className="btn btn-info w-full max-w-xs m-4 mx-auto mt-3"
         >
-          Sign up
+          {t("signup_btn")}
         </button>
       )}
-      <div className="divider">OR</div>
+      <div className="divider">{t("or")}</div>
       {isSigninOpeneded && (
         <label
           onClick={() => goToSignup()}
           className="flex text-center items-center justify-center"
         >
-          Don&apos;t have an account?
-          <span className="text-blue-500 ml-2">Signup</span>
+          {t("go_to_signup_mg")}
+          <span className="text-blue-500 ml-2">{t("signup_btn")}</span>
         </label>
       )}
       {isSignupOpeneded && (
@@ -200,8 +198,8 @@ export default function AuthForm(props: AuthFormProps) {
           onClick={() => goToLogin()}
           className="flex text-center items-center justify-center"
         >
-          Already have an account?
-          <span className="text-blue-500 ml-2">Login</span>
+          {t("go_to_signin_mg")}
+          <span className="text-blue-500 ml-2">{t("signin_btn")}</span>
         </label>
       )}
     </div>

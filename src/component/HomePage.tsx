@@ -13,7 +13,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "enrolled"
+    page: "enrolled",
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "teaching"
+    page: "teaching",
   },
   {
     id: 3,
@@ -31,7 +31,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "enrolled"
+    page: "enrolled",
   },
   {
     id: 1,
@@ -40,7 +40,7 @@ const classes = [
     name: "My Class Name 2",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "enrolled"
+    page: "enrolled",
   },
   {
     id: 2,
@@ -49,7 +49,7 @@ const classes = [
     name: "My Class Name 2",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "enrolled"
+    page: "enrolled",
   },
   {
     id: 3,
@@ -58,7 +58,7 @@ const classes = [
     name: "My Class Name 2",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "enrolled"
+    page: "enrolled",
   },
   {
     id: 1,
@@ -67,7 +67,7 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "enrolled"
+    page: "enrolled",
   },
   {
     id: 2,
@@ -76,8 +76,8 @@ const classes = [
     name: "My Class Name",
     description: "This is the class",
     inviteUrl: "inviteurl",
-    page: "enrolled"
-  }
+    page: "enrolled",
+  },
 ];
 
 export default function HomePage() {
@@ -114,7 +114,7 @@ export default function HomePage() {
   //   setShowModal(false);
   // }
 
-  // copy invite link  
+  // copy invite link
   const [isCopied, setIsCopied] = useState(false);
 
   const WriteToClipboard = async (text: string) => {
