@@ -23,7 +23,7 @@ export default async function AccountTable(props: AccountTableProps ) {
     const endIndex = Math.min(startIndex + ITEMS_PER_PAGE - 1, totalItems);
 
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto mt-5 bg-white">
             <table className="table max-h-96">
                 {/* head */}
                 <thead>

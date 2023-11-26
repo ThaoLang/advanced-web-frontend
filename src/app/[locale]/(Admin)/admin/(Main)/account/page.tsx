@@ -138,7 +138,7 @@ export default function Account({
     }
 
     return (
-        <div className="w-full">
+        <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">
             <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
                 <ul>
                     <li><Link href="/admin/">Home</Link></li>
