@@ -107,7 +107,7 @@ export default function page() {
                     <div onClick={() => CopyText(teacher.email)}>Email</div>
                   </li>
                   {/* <li>
-                    <a>Leave class</a>
+                    <div>Leave class</div>
                   </li> */}
                 </ul>
               </div>
@@ -148,7 +148,7 @@ export default function page() {
                     <div onClick={() => CopyText(student.email)}>Email</div>
                   </li>
                   <li>
-                    <a>{t("leave_class")}</a>
+                    <div>{t("leave_class")}</div>
                   </li>
                 </ul>
               </div>

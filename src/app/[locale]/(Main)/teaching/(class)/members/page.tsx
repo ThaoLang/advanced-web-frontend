@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { IoMdPersonAdd } from "react-icons/io";
 import { useTranslations } from "next-intl";
 
 const teachers = [
@@ -24,17 +25,17 @@ const teachers = [
 const students = [
   {
     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Name",
+    name: "Nguyen Minh Quang",
     email: "name@flaticon.com",
   },
   {
     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Name",
-    email: "name@flaticon.com",
+    name: "Lang Thao Thao",
+    email: "ltt@flaticon.com",
   },
   {
     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Name",
+    name: "Le Hoang Khanh Nguyen",
     email: "name@flaticon.com",
   },
 ];
@@ -77,7 +78,14 @@ export default function page() {
 
   return (
     <div className="w-3/4 lg:w-1/2 mx-auto">
-      <div className="text-2xl lg:text-3xl text-blue-600">{t("teachers")}</div>
+      <div className="flex flex-row justify-between">
+        <div className="text-2xl lg:text-3xl text-blue-600">
+          {t("teachers")}
+        </div>
+        <div className="text-2xl text-blue-600 p-2 cursor-pointer">
+          <IoMdPersonAdd />
+        </div>
+      </div>
       <div className="divider mt-1 lg:mt-3 divide-blue-500" />
 
       <ul className="menu bg-base-200 rounded-box mb-10">
@@ -107,7 +115,7 @@ export default function page() {
                     <div onClick={() => CopyText(teacher.email)}>Email</div>
                   </li>
                   <li>
-                    <a>{t("leave_class")}</a>
+                    <div>{t("leave_class")}</div>
                   </li>
                 </ul>
               </div>
@@ -116,11 +124,15 @@ export default function page() {
         ))}
       </ul>
 
-      <div className="text-2xl lg:text-3xl text-yellow-500">
-        {t("students")}
+      <div className="flex flex-row justify-between">
+        <div className="text-2xl lg:text-3xl text-yellow-500">
+          {t("students")}
+        </div>
+        <div className="text-2xl text-yellow-500 p-2 cursor-pointer">
+          <IoMdPersonAdd />
+        </div>
       </div>
       <div className="divider mt-1 lg:mt-3 divide-yellow-400" />
-
       <ul className="menu bg-base-200 rounded-box mb-10">
         {students.map((student, index) => (
           <li>
@@ -148,7 +160,7 @@ export default function page() {
                     <div onClick={() => CopyText(student.email)}>Email</div>
                   </li>
                   <li>
-                    <a>{t("remove")}</a>
+                    <div>{t("remove")}</div>
                   </li>
                 </ul>
               </div>

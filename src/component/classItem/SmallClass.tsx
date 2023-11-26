@@ -96,12 +96,21 @@ const SmallClass = (classInfo: SmallClassProp) => {
                       {t("copy_invite_url")}
                     </div>
                   </li>
-                  <li>
-                    <a>{t("edit")}</a>
-                  </li>
-                  <li>
-                    <a>{t("leave_class")}</a>
-                  </li>
+                  {classInfo.page === "teaching" && (
+                    <>
+                      <li>
+                        <div>{t("edit")}</div>
+                      </li>
+                      <li>
+                        <div>{t("delete_class")}</div>
+                      </li>
+                    </>
+                  )}
+                  {classInfo.page === "enrolled" && (
+                    <li>
+                      <div>{t("leave_class")}</div>
+                    </li>
+                  )}
                 </ul>
               </div>
             </a>

@@ -93,6 +93,7 @@
     "teachers": "Teacher(s)",
     "students": "Student(s)",
     "leave_class": "Leave class",
+    "delete_class": "Delete class",
     "remove": "Remove",
     "edit": "Edit"
   }
