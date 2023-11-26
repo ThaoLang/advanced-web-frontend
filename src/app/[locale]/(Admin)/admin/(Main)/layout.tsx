@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import '../globals.css'
+import "@/app/[locale]/globals.css";
 import { AuthProvider } from '@/context/AuthContext'
 import React from "react";
 import Link from 'next/link';
@@ -45,7 +45,7 @@ export default function AdminLayout({
                 <AuthProvider>
                     <div className="drawer lg:drawer-open">
                         <input id="admin-drawer" type="checkbox" className="drawer-toggle" />
-                        <div className="drawer-content flex flex-col h-screen justify-between dark:bg-boxdark-2 dark:text-bodydark">
+                        <div className="drawer-content flex flex-col justify-between dark:bg-boxdark-2 dark:text-bodydark">
                             <NavBar />
                             <main>
                                 {children}
@@ -54,7 +54,7 @@ export default function AdminLayout({
                         </div>
                         <div className="drawer-side">
                             <label htmlFor="admin-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                            <aside className="absolute left-0 top-0 z-999999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-slate-700 duration-300 ease-linear dark:bg-current lg:static lg:translate-x-0 -translate-x-full">
+                            <aside className="absolute left-0 top-0 z-999999 flex min-h-screen w-72.5 flex-col overflow-y-hidden bg-slate-700 duration-300 ease-linear dark:bg-current lg:static lg:translate-x-0 -translate-x-full">
                                 <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
                                     <Link href="/" className="normal-case text-xl">
                                         <div className="mt-5 flex flex-row items-center gap-3.5">

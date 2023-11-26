@@ -54,7 +54,7 @@ export default function NavBar() {
                                 <div className="fill-current duration-300 ease-in-out dropdown">
                                     <div tabIndex={0} className="hover:text-primary focus:text-primary"><FaBell /></div>
                                     <ul tabIndex={0} className="dropdown-content absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80">
-                                        <div className="px-4.5 py-3 mx-auto">
+                                        {/* <div className="px-4.5 py-3 mx-auto">
                                             <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
                                         </div>
                                         <ul className="flex h-auto flex-col overflow-y-auto ml-2">
@@ -82,7 +82,7 @@ export default function NavBar() {
                                                     <p className="text-xs">01 Dec, 2024</p>
                                                 </a>
                                             </li>
-                                        </ul>
+                                        </ul> */}
                                     </ul>
                                 </div>
                             </a>
