@@ -1,15 +1,18 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function TeachingLayout({
   children, // will be a page or nested layout
 }: {
   children: React.ReactNode;
 }) {
+  const t = useTranslations("Tabs");
+
   const navigation = [
-    { name: "About", href: "/teaching/detail" },
-    { name: "Members", href: "/teaching/members" },
-    { name: "Grades", href: "/teaching/grades" },
-    { name: "Settings", href: "/teaching/settings" },
+    { name: t("about"), href: "/teaching/detail" },
+    { name: t("members"), href: "/teaching/members" },
+    { name: t("grades"), href: "/teaching/grades" },
+    { name: t("settings"), href: "/teaching/settings" },
   ];
 
   let option = "About";

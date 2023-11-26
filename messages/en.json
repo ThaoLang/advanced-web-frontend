@@ -50,7 +50,7 @@
     "password_error_msg": "Password must be at least 8 characters with at least one uppercase letter, one special character, and one digit."
   },
   "Homepage": {
-    "welcome": "Welcome back! "
+    "class": "My Classes"
   },
   "Profile": {
     "profile": "Your Profile",
@@ -67,5 +67,33 @@
   },
   "Setting": {
     "language": "Language"
+  },
+  "EnrolledPage": {
+    "title": "My Enrolled Classes"
+  },
+  "TeachingPage": {
+    "title": "My Teaching Classes"
+  },
+  "Tabs": {
+    "about": "About",
+    "members": "Members",
+    "grades": "Grades",
+    "settings": "Settings",
+    "create_class_btn": "Create class",
+    "create_class_name": "Class name (required)",
+    "create_class_desc": "Description",
+    "join_class_btn": "Join class",
+    "join_class_code": "Class code (required)",
+    "join_class_id": "Student id (required)",
+    "help_join_class": "Ask your teacher for the class code",
+    "class_code": "Class code",
+    "invite_url": "Invite link",
+    "copy_invite_url": "Copy invite link",
+    "copied": "Copied",
+    "teachers": "Teacher(s)",
+    "students": "Student(s)",
+    "leave_class": "Leave class",
+    "remove": "Remove",
+    "edit": "Edit"
   }
 }

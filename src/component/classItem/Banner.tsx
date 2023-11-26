@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io";
 import { FaRegCopy } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 interface BannerProp {
   id: number;
@@ -13,6 +14,7 @@ interface BannerProp {
 
 const Banner = (classInfo: BannerProp) => {
   const [isActive, setIsActive] = useState(false);
+  const t = useTranslations("Tabs");
 
   // copy
   const [isCopied, setIsCopied] = useState(false);
@@ -48,11 +50,11 @@ const Banner = (classInfo: BannerProp) => {
   // end copy
 
   return (
-    <div className="w-1/2 lg:w-3/4 bg-white rounded-xl shadow-md overflow-hidden relative">
+    <div className="w-1/2 lg:w-2/5 bg-white rounded-xl shadow-md overflow-hidden relative">
       <div className="md:flex flex-col">
         <div className="md:shrink-0 ">
           <img
-            className="h-96 object-cover w-full"
+            className="h-44 object-cover w-full"
             src={classInfo.imageUrl}
             alt={classInfo.name}
           />
@@ -92,10 +94,10 @@ const Banner = (classInfo: BannerProp) => {
           {isActive && (
             <div className="grid grid-cols-6 items-center justify-center">
               <div className="hidden md:block md:col-span-1 lg:col-span-1">
-                <p className="m-3 text-sm lg:text-md">Class code:</p>
-                <p className="m-3 text-sm lg:text-md">Invite link:</p>
+                <p className="m-3 text-sm lg:text-md">{t("class_code")}:</p>
+                <p className="m-3 text-sm lg:text-md">{t("invite_url")}:</p>
               </div>
-              <div className="col-span-5 md:col-span-4 lg:col-span-2 text-blue-500">
+              <div className="col-span-5 md:col-span-4 lg:col-span-3 text-blue-500">
                 <p className="m-3 text-lg">{classInfo.classCode}</p>
                 <p className="m-3 text-lg">{classInfo.inviteUrl}</p>
               </div>
@@ -120,7 +122,7 @@ const Banner = (classInfo: BannerProp) => {
       {isCopied && (
         <div className="toast toast-bottom toast-end">
           <div className="alert alert-info">
-            <span>Copied!</span>
+            <span>{t("copied")}</span>
           </div>
         </div>
       )}

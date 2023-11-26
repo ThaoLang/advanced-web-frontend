@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { useTranslations } from "next-intl";
 
 const teachers = [
   {
@@ -39,7 +40,9 @@ const students = [
 ];
 
 export default function page() {
-  // copy  
+  const t = useTranslations("Tabs");
+
+  // copy
   const [isCopied, setIsCopied] = useState(false);
 
   const WriteToClipboard = async (text: string) => {
@@ -74,7 +77,7 @@ export default function page() {
 
   return (
     <div className="w-3/4 lg:w-1/2 mx-auto">
-      <div className="text-2xl lg:text-3xl text-blue-600">Teachers</div>
+      <div className="text-2xl lg:text-3xl text-blue-600">{t("teachers")}</div>
       <div className="divider mt-1 lg:mt-3 divide-blue-500" />
 
       <ul className="menu bg-base-200 rounded-box mb-10">
@@ -101,10 +104,10 @@ export default function page() {
                   className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
                 >
                   <li>
-                    <div onClick={()=>CopyText(teacher.email)}>Email</div>
+                    <div onClick={() => CopyText(teacher.email)}>Email</div>
                   </li>
                   <li>
-                    <a>Leave class</a>
+                    <a>{t("leave_class")}</a>
                   </li>
                 </ul>
               </div>
@@ -113,7 +116,9 @@ export default function page() {
         ))}
       </ul>
 
-      <div className="text-2xl lg:text-3xl text-yellow-500">Students</div>
+      <div className="text-2xl lg:text-3xl text-yellow-500">
+        {t("students")}
+      </div>
       <div className="divider mt-1 lg:mt-3 divide-yellow-400" />
 
       <ul className="menu bg-base-200 rounded-box mb-10">
@@ -140,10 +145,10 @@ export default function page() {
                   className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
                 >
                   <li>
-                    <div onClick={()=>CopyText(student.email)}>Email</div>
+                    <div onClick={() => CopyText(student.email)}>Email</div>
                   </li>
                   <li>
-                    <a>Remove</a>
+                    <a>{t("remove")}</a>
                   </li>
                 </ul>
               </div>
@@ -154,7 +159,7 @@ export default function page() {
       {isCopied && (
         <div className="toast toast-bottom toast-end">
           <div className="alert alert-info">
-            <span>Copied!</span>
+            <span>{t("copied")}!</span>
           </div>
         </div>
       )}
