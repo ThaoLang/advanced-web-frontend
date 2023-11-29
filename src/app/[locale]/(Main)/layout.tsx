@@ -4,7 +4,7 @@ import "../globals.css";
 import NavBar from "@/component/NavBar";
 import Footer from "@/component/Footer";
 import Link from "next/link";
-import { FaHouseChimney, FaCalendarDays, FaGear } from "react-icons/fa6";
+import { FaHouseChimney, FaGear } from "react-icons/fa6";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GiGraduateCap } from "react-icons/gi";
 import { AuthProvider } from "@/context/AuthContext";
@@ -41,14 +41,13 @@ export default function RootLayout({
   if (!locales.includes(locale as any)) notFound();
   const navigation = [
     { name: `${t("home")}`, href: "/", icon: <FaHouseChimney /> },
-    { name: `${t("calendar")}`, href: "/calendar", icon: <FaCalendarDays /> },
     {
       name: `${t("teaching")}`,
       href: "/teaching",
       icon: <FaChalkboardTeacher />,
     },
     { name: `${t("enrolled")}`, href: "/enrolled", icon: <GiGraduateCap /> },
-    { name: `${t("setting")}`, href: "/setting", icon: <FaGear /> },
+    { name: `${t("setting")}`, href: "/settings", icon: <FaGear /> },
   ];
 
   return (

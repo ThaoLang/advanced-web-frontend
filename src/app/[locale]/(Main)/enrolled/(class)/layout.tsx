@@ -1,15 +1,18 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function EnrolledLayout({
   children, // will be a page or nested layout
 }: {
   children: React.ReactNode;
 }) {
+  const t = useTranslations("Tabs");
+
   const navigation = [
-    { name: "About", href: "/enrolled/detail" },
-    { name: "Members", href: "/enrolled/members" },
-    { name: "Grades", href: "/enrolled/grades" },
-    { name: "Settings", href: "/enrolled/settings" },
+    { name: t("about"), href: "/enrolled/detail" },
+    { name: t("members"), href: "/enrolled/members" },
+    { name: t("grades"), href: "/enrolled/grades" },
+    { name: t("settings"), href: "/enrolled/settings" },
   ];
 
   let option = "About";

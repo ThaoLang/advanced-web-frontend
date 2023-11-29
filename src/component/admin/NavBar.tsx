@@ -18,18 +18,18 @@ import {
 
 
 export default function NavBar() {
-    const avatarUrl = "https://scontent.fsgn2-6.fna.fbcdn.net/v/t39.30808-6/397658181_3702137070031120_469521859074779795_n.jpg?stp=cp6_dst-jpg&_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEEkxlHWRD3NGroXIaB1nxlmcYR7pFQoRyZxhHukVChHA3cJI80WGna_GkOsqry5kSLYLGMCT3YwOOHnukqypFm&_nc_ohc=FVu_ZxalpnoAX-Wq2cl&_nc_ht=scontent.fsgn2-6.fna&oh=00_AfAWQGARzjAtH91WvmK1BHhZ6crhbe-gghHTMJeptnB8IA&oe=65625582";
+    const avatarUrl = "https://scontent.fsgn5-10.fna.fbcdn.net/v/t39.30808-1/398534440_712492687404314_4951001529935588432_n.jpg?stp=c12.215.197.197a_dst-jpg&_nc_cat=107&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeFaUsexPKcDrToYxtmxLwrfaeoefWNJmOtp6h59Y0mY6w747LQVfj87mu_G5CfaLGbC5lGyfMKrky4mQQXAeE_7&_nc_ohc=rMLJXF5To3sAX-_ZEfW&_nc_ht=scontent.fsgn5-10.fna&oh=00_AfAErJlelj3T20XSeWKBth0yQbGlGbRuu5U_gGg5IgAEgw&oe=65640C39";
 
     return (
-        <header className="navbar sticky top-0 left-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
+        <header className="navbar top-0 z-[999] flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
             <div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
                 <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
-                    <label htmlFor="admin-drawer" aria-label="open sidebar" className="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden">
-                        <span><FaBars /></span>
+                    <label htmlFor="admin-drawer" aria-label="close sidebar" className="z-[99999] block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark">
+                        <span><FaBars/></span>
                     </label>
                 </div>
                 <div className="hidden sm:block">
-
+                    
                 </div>
                 <div className="flex items-center gap-3 2xsm:gap-7">
                     <ul className="flex items-center gap-2 2xsm:gap-4">
@@ -54,7 +54,7 @@ export default function NavBar() {
                                 <div className="fill-current duration-300 ease-in-out dropdown">
                                     <div tabIndex={0} className="hover:text-primary focus:text-primary"><FaBell /></div>
                                     <ul tabIndex={0} className="dropdown-content absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80">
-                                        <div className="px-4.5 py-3 mx-auto">
+                                        {/* <div className="px-4.5 py-3 mx-auto">
                                             <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
                                         </div>
                                         <ul className="flex h-auto flex-col overflow-y-auto ml-2">
@@ -82,7 +82,7 @@ export default function NavBar() {
                                                     <p className="text-xs">01 Dec, 2024</p>
                                                 </a>
                                             </li>
-                                        </ul>
+                                        </ul> */}
                                     </ul>
                                 </div>
                             </a>
@@ -91,8 +91,8 @@ export default function NavBar() {
                     <div className="relative dropdown dropdown-end dropdown-hover">
                         <a className="flex items-center gap-4" href="#">
                             <span className="hidden text-right lg:block">
-                                <span className="block text-sm font-medium text-black dark:text-white">Khanh Nguyên</span>
-                                <span className="block text-xs">Teacher</span>
+                                <span className="block text-sm font-medium text-black dark:text-white">Lăng Thảo Thảo</span>
+                                <span className="block text-xs">Admin</span>
                             </span>
                             <span className="h-12 w-12">
                                 <img className="rounded-full"

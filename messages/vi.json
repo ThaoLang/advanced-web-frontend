@@ -51,7 +51,7 @@
     "password_error_msg": "Mật khẩu phải có ít nhất 8 ký tự với ít nhất một chữ in hoa, một ký tự đặc biệt và một chữ số."
   },
   "Homepage": {
-    "welcome": "Chào mừng trở lại! "
+    "class": "Danh sách lớp"
   },
   "Profile": {
     "profile": "Hồ sơ của bạn",
@@ -65,5 +65,34 @@
     "cancel_btn": "Hủy",
     "dropping": "Kéo thả hình ảnh ở đây...",
     "drop_area": "Kéo thả hình ảnh ở đây, hoặc tải ảnh lên"
+  },
+  "EnrolledPage": {
+    "title": "Lớp đăng ký"
+  },
+  "TeachingPage": {
+    "title": "Lớp giảng dạy"
+  },
+  "Tabs": {
+    "about": "Thông tin",
+    "members": "Thành viên",
+    "grades": "Điểm",
+    "settings": "Cài đặt",
+    "create_class_btn": "Tạo lớp",
+    "create_class_name": "Tên lớp (bắt buộc)",
+    "create_class_desc": "Miêu tả",
+    "join_class_btn": "Vào lớp",
+    "join_class_code": "Mã lớp (bắt buộc)",
+    "join_class_id": "Mã học sinh (bắt buộc)",
+    "help_join_class": "Hỏi giáo viên của bạn về mã lớp",
+    "class_code": "Mã lớp",
+    "invite_url": "Link mời",
+    "copy_invite_url": "Sao chép link mời",
+    "copied": "Sao chép thành công",
+    "teachers": "Giáo viên",
+    "students": "Học sinh",
+    "leave_class": "Rời lớp",
+    "delete_class": "Xóa lớp",
+    "remove": "Loại bỏ",
+    "edit": "Chỉnh sửa"
   }
 }

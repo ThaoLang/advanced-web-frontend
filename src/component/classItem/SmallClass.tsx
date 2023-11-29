@@ -3,6 +3,7 @@ import Link from "next/link";
 import { IoMdPerson } from "react-icons/io";
 import { PiProjectorScreenChart } from "react-icons/pi";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { useTranslations } from "next-intl";
 
 interface SmallClassProp {
   id: number;
@@ -16,6 +17,8 @@ interface SmallClassProp {
 }
 
 const SmallClass = (classInfo: SmallClassProp) => {
+  const t = useTranslations("Tabs");
+
   return (
     <div className="max-w-[240px] bg-white rounded-xl overflow-hidden shadow-md md:max-w-2xl relative">
       <div className="md:flex flex-col">
@@ -57,13 +60,19 @@ const SmallClass = (classInfo: SmallClassProp) => {
                 <div className="text-lg">
                   <PiProjectorScreenChart />
                 </div>
-                <p className="text-slate-500 ml-1 text-sm"> 2 teachers </p>
+                <p className="text-slate-500 ml-1 text-sm lowercase">
+                  {" "}
+                  2 {t("teachers")}{" "}
+                </p>
               </div>
               <div className="flex flex-row">
                 <div className="text-lg">
                   <IoMdPerson />
                 </div>
-                <p className="text-slate-500 ml-1 text-sm"> 2 students </p>
+                <p className="text-slate-500 ml-1 text-sm lowercase">
+                  {" "}
+                  2 {t("students")}{" "}
+                </p>
               </div>
             </div>
             <a>
@@ -76,7 +85,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
                 </label>
                 <ul
                   tabIndex={0}
-                  className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-40"
+                  className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-44"
                 >
                   <li>
                     <div
@@ -84,18 +93,24 @@ const SmallClass = (classInfo: SmallClassProp) => {
                         classInfo.CopyInviteLink(classInfo.inviteUrl)
                       }
                     >
-                      Copy invite link
+                      {t("copy_invite_url")}
                     </div>
                   </li>
-                  <li>
-                    <a>Edit</a>
-                  </li>
-                  <li>
-                    <a>Unenroll</a>
-                  </li>
-                  <li>
-                    <a>Leave</a>
-                  </li>
+                  {classInfo.page === "teaching" && (
+                    <>
+                      <li>
+                        <div>{t("edit")}</div>
+                      </li>
+                      <li>
+                        <div>{t("delete_class")}</div>
+                      </li>
+                    </>
+                  )}
+                  {classInfo.page === "enrolled" && (
+                    <li>
+                      <div>{t("leave_class")}</div>
+                    </li>
+                  )}
                 </ul>
               </div>
             </a>
