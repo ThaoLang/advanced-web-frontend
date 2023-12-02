@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
 import Link from "next/link";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
@@ -106,16 +105,21 @@ export default function AuthForm(props: AuthFormProps) {
     setIsSignupOpeneded(false);
     setIsSigninOpeneded(true);
     setIsPasswordVisible(false);
+
   };
   const goToSignup = async () => {
     setValidAuthMsg(null);
     setIsSigninOpeneded(false);
     setIsSignupOpeneded(true);
-    setIsPasswordVisible(false);
   };
+
 
   function togglePasswordVisibility() {
     setIsPasswordVisible((prevState) => !prevState);
+  }
+
+  function goToResetPassword(): void {
+    router.push('/forget_password');
   }
 
   return (
@@ -131,6 +135,7 @@ export default function AuthForm(props: AuthFormProps) {
           onChange={(e) => setUsername(e.target.value)}
         />
       )}
+
       <input
         type="text"
         placeholder={t("email")}
@@ -138,22 +143,24 @@ export default function AuthForm(props: AuthFormProps) {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <div className="relative">
-        <input
-          type={isPasswordVisible ? "text" : "password"}
-          placeholder={t("password")}
-          className="input input-bordered w-full max-w-xs ml-4 mt-2 mx-auto"
-          value={password}
-          maxLength={16}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          className="absolute inset-y-0 right-4 flex items-center pt-2 px-4 text-gray-600"
-          onClick={togglePasswordVisibility}
-        >
-          {isPasswordVisible ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
-        </button>
-      </div>
+
+
+        <div className="relative">
+          <input
+            type={isPasswordVisible ? "text" : "password"}
+            placeholder={t("password")}
+            className="input input-bordered w-full max-w-xs ml-4 mt-2 mx-auto"
+            value={password}
+            maxLength={16}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            className="absolute inset-y-0 right-4 flex items-center pt-2 px-4 text-gray-600"
+            onClick={togglePasswordVisibility}
+          >
+            {isPasswordVisible ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+          </button>
+        </div>
       {validAuthMsg && (
         <label className="flex text-center items-center justify-center my-3 text-red-700">
           {validAuthMsg}
@@ -183,7 +190,8 @@ export default function AuthForm(props: AuthFormProps) {
           {t("signup_btn")}
         </button>
       )}
-      <div className="divider">{t("or")}</div>
+        <div className="divider">{t("or")}</div>
+
       {isSigninOpeneded && (
         <label
           onClick={() => goToSignup()}
@@ -201,6 +209,15 @@ export default function AuthForm(props: AuthFormProps) {
           {t("go_to_signin_mg")}
           <span className="text-blue-500 ml-2">{t("signin_btn")}</span>
         </label>
+      )}
+      {isSigninOpeneded && (
+        <>
+          <div className="divider">{t("or")}</div>
+          <label onClick={() => goToResetPassword()}
+            className="flex text-center items-center justify-center italic text-blue-500 ml-2">
+            {t("go_to_password_reset_mg")}
+          </label>
+        </>
       )}
     </div>
   );
