@@ -43,11 +43,18 @@
     "username": "Username",
     "signin_btn": "Sign in",
     "signup_btn": "Sign up",
+    "forget_password_btn": "Start",
     "or": "OR",
     "go_to_signup_mg": "Don't have an account? ",
-    "go_to_signin_mg": "Don't have an account? Signup",
+    "go_to_signin_mg": "Already have an account? ",
+    "go_to_password_reset_mg": "I've forgotten my details",
+    "forget_password_request_success_msg": "Request sended! Please check your email!",
+    "reset_password_success_msg": "Your password has been reset!",
+    "assistance_msg": "Need further assistance? Contact us via our support system.",
     "email_error_msg": "Email is invalid.",
-    "password_error_msg": "Password must be at least 8 characters with at least one uppercase letter, one special character, and one digit."
+    "password_error_msg": "Password must be at least 8 characters with at least one uppercase letter, one special character, and one digit.",
+    "password_not_match_msg": "Confirm password does not match",
+    "accept_terms_and_conditions_msg": "Please accept terms and conditions"
   },
   "Homepage": {
     "class": "My Classes"

@@ -21,7 +21,7 @@ export default function NavBar() {
     "https://scontent.fsgn5-10.fna.fbcdn.net/v/t39.30808-1/398534440_712492687404314_4951001529935588432_n.jpg?stp=c12.215.197.197a_dst-jpg&_nc_cat=107&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeFaUsexPKcDrToYxtmxLwrfaeoefWNJmOtp6h59Y0mY6w747LQVfj87mu_G5CfaLGbC5lGyfMKrky4mQQXAeE_7&_nc_ohc=rMLJXF5To3sAX-_ZEfW&_nc_ht=scontent.fsgn5-10.fna&oh=00_AfAErJlelj3T20XSeWKBth0yQbGlGbRuu5U_gGg5IgAEgw&oe=65640C39";
 
   return (
-    <header className="navbar top-0 z-[999] flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
+    <header className="top-0 z-40 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
       <div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           <label
