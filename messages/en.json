@@ -27,7 +27,8 @@
     "logout": "Logout",
     "login": "Login",
     "english": "English",
-    "vietnam": "Vietnamese"
+    "vietnam": "Vietnamese",
+    "no_notification": "No new notifications"
   },
   "Footer": {
     "copyright": ". All Rights Reserved.",

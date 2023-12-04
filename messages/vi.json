@@ -28,7 +28,8 @@
     "logout": "Đăng xuất",
     "login": "Đăng nhập",
     "english": "Tiếng Anh",
-    "vietnam": "Tiếng Việt"
+    "vietnam": "Tiếng Việt",
+    "no_notification": "Không có thông báo mới"
   },
   "Footer": {
     "copyright": "© 2023 LightHub™. Đã đăng ký Bản quyền.",
