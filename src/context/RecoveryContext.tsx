@@ -11,7 +11,8 @@ export interface RecoveryContextType {
     email: string | null;
     otp: number | undefined;
     password: string | undefined;
-    page: string;    
+    page: string;
+    request: string;    
 }
 
 const RecoveryContext = createContext<RecoveryContextType | undefined>(undefined);
@@ -33,10 +34,11 @@ export function useRecoveryContext() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [page, setPage] = useState("forget-password");
+    const [request, setRequest] = useState("");
     
     return (
       <RecoveryContext.Provider
-        value={{ otp, email, password, page }}
+        value={{ otp, email, password, page, request }}
       >
         {children}
       </RecoveryContext.Provider>

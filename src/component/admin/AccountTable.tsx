@@ -4,12 +4,13 @@ import Pagination from '@/component/admin/Pagination';
 import React, { useState, useEffect } from 'react';
 import DeletePopupModal from '@/component/admin/(modal)/DeletePopupModal';
 import BanPopupModal from './(modal)/BanPopupModal';
+import { useAccount } from '@/context/AccountContext';
 
 const ITEMS_PER_PAGE = 5;
 
 interface AccountTableProps {
-    accounts: any;
-    query: string;
+    paginatedResult: any;
+    totalItems: number;
     currentPage: number;
     setCurrentPage: (value: number) => void
     deleteAccount: (account: any) => void;
@@ -17,63 +18,14 @@ interface AccountTableProps {
 }
 
 export default async function AccountTable(props: AccountTableProps) {
-
-    const [paginatedResult, setPaginatedResult] = useState<any>([]);
-    const [totalItems, setTotalItems] = useState(0);
-
-    useEffect(() => {
-        console.log("Account Table Render");
-        const paginateAccountData = async () => {
-
-            if (!props.accounts) {
-                // Handle the case where accounts is still loading or null
-                return { paginatedResult: [], totalItems: 0 };
-            }
-
-            function filterArrayByQuery(array: Array<any>, query: string) {
-                if (query.trim() === '') {
-                    // If query is empty, return the original array
-                    return array;
-                }
-
-                return array.filter(item => {
-                    return Object.values(item).some(value => {
-                        if (typeof value === 'string') {
-                            return value.toLowerCase().includes(query.toLowerCase());
-                        }
-                        return false;
-                    });
-                });
-            }
-
-            const result = filterArrayByQuery(props.accounts, props.query);
-            const totalItems = result.length;
-
-            const startIndex = (props.currentPage - 1) * ITEMS_PER_PAGE;
-            const endIndex = startIndex + ITEMS_PER_PAGE;
-            const paginatedResult = result.slice(startIndex, endIndex);
-
-            return { paginatedResult, totalItems };
-        }
-
-        const fetchData = async () => {
-            const response = await paginateAccountData();
-            if (!response) return;
-            const { paginatedResult, totalItems } = response;
-            setPaginatedResult(paginatedResult);
-            setTotalItems(totalItems);
-        };
-
-        fetchData();
-    }, [props.currentPage, props.accounts]); // Run this effect when currentPage or accounts changes
-
+    const context = useAccount();
     const totalPages =
-        totalItems % ITEMS_PER_PAGE === 0
-            ? totalItems / ITEMS_PER_PAGE
-            : (totalItems - (totalItems % ITEMS_PER_PAGE)) / ITEMS_PER_PAGE + 1;
+        props.totalItems % ITEMS_PER_PAGE === 0
+            ? props.totalItems / ITEMS_PER_PAGE
+            : (props.totalItems - (props.totalItems % ITEMS_PER_PAGE)) / ITEMS_PER_PAGE + 1;
 
     const startIndex = (props.currentPage - 1) * ITEMS_PER_PAGE + 1;
-    const endIndex = Math.min(startIndex + ITEMS_PER_PAGE - 1, totalItems);
+    const endIndex = Math.min(startIndex + ITEMS_PER_PAGE - 1, props.totalItems);
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isBanModalOpen, setIsBanModalOpen] = useState(false);
@@ -144,42 +96,35 @@ export default async function AccountTable(props: AccountTableProps) {
                     </thead>
                     <tbody>
                         {
-                            paginatedResult.map((items: any, index: number) => (
+                            props.paginatedResult.map((items: any, index: number) => (
                                 <tr key={index} className="hover:bg-gray-100 cursor-pointer hover:border-1 hover:border-gray-200">
                                     <td>{items.id}</td>
                                     <td>
                                         <div className="flex items-center gap-3">
                                             <div className="avatar">
                                                 <div className="mask mask-squircle w-12 h-12">
-                                                    <img src={items.avatar} alt="User avatar" />
+                                                    <img src={items.avatarUrl} alt="User avatar" />
                                                 </div>
                                             </div>
                                             <div>
-                                                <div className="font-bold">{items.name}</div>
+                                                <div className="font-bold">{items.username}</div>
                                                 <div className="text-sm opacity-50">{items.email}</div>
                                             </div>
                                         </div>
                                     </td>
                                     {
-                                        items.role === 'student' ?
+                                        items.role.name === 'admin' ?
                                             (
                                                 <td>
-                                                    <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-blue-100 text-blue-700 ring-1 ring-inset ring-blue-700/10">Student</span>
+                                                    <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium text-yellow-800 bg-yellow-200 ring-1 ring-inset ring-yellow-600/20">Admin</span>
                                                 </td>
                                             )
                                             :
-                                            items.role === 'teacher' ?
-                                                (
-                                                    <td>
-                                                        <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-green-100 text-green-700 ring-1 ring-inset ring-green-600/20">Teacher</span>
-                                                    </td>
-                                                )
-                                                :
-                                                (
-                                                    <td>
-                                                        <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium text-yellow-800 bg-yellow-200 ring-1 ring-inset ring-yellow-600/20">Admin</span>
-                                                    </td>
-                                                )
+                                            (
+                                                <td>
+                                                    <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-blue-100 text-blue-700 ring-1 ring-inset ring-blue-700/10">User</span>
+                                                </td>
+                                            )
                                     }
                                     {
                                         items.status === 'ban' ?
@@ -201,7 +146,9 @@ export default async function AccountTable(props: AccountTableProps) {
                                         <div className="flex flex-row justify-start space-x-2">
                                             <div className="cursor-pointer hover:text-primary">
                                                 <Link href={`/admin/account/${items.id}`} passHref legacyBehavior>
-                                                    <FaRegEye />
+                                                    <button onClick={() => context.account = items}>
+                                                        <FaRegEye />
+                                                    </button>
                                                 </Link>
                                             </div>
                                             <button className="cursor-pointer hover:text-primary"
@@ -218,14 +165,10 @@ export default async function AccountTable(props: AccountTableProps) {
                             ))
                         }
                     </tbody>
-                    {/* foot */}
-                    <tfoot>
-                    </tfoot>
-
                 </table>
-                <div className="mt-10 w-full flex flex-col lg:flex-row justify-center lg:justify-between">
-                    <div className="mx-2 my-3">Showing {startIndex} to {endIndex} of {totalItems} entries</div>
-                    <div className="mx-2 my-3">
+                <div className="mt-10 w-full flex flex-col lg:flex-row justify-center items-center lg:justify-between">
+                    <div className="mx-5 my-5">Showing {startIndex} to {endIndex} of {props.totalItems} entries</div>
+                    <div className="mx-10 my-5">
                         <Pagination
                             total={totalPages}
                             limit={5}

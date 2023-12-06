@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import axios from "axios";
 
 interface OTPInputProps {
+  isRouting: boolean;
+  nextPage: string;
   setSuccessMsg: (msg: string) => void;
   setErrorMsg: (msg: string) => void;
   showSuccessMsg: (show: boolean) => void;
@@ -16,7 +18,6 @@ export default function OTPInput(props: OTPInputProps) {
   const context = useRecoveryContext();
   const [timerCount, setTimer] = React.useState(60);
   const [OTPinput, setOTPinput] = useState([0, 0, 0, 0]);
-
   const [disable, setDisable] = useState(true);
   const router = useRouter();
 
@@ -25,7 +26,7 @@ export default function OTPInput(props: OTPInputProps) {
     const generatedOTP = Math.floor(Math.random() * 9000 + 1000);
     context.otp = generatedOTP;
     axios
-      .post("http://localhost:4000/auth/send_recovery_email", {
+      .post(context.request, {
         email: context.email,
         otp: context.otp,
       })
@@ -42,7 +43,13 @@ export default function OTPInput(props: OTPInputProps) {
       setTimeout(() => {
         props.showSuccessMsg(false);
       }, 2000);
-      context.page = "reset-password";
+      console.log('isRouting: ', props.isRouting, props.nextPage);
+      if (!props.isRouting)
+        //changing component, remain on page
+        context.page = props.nextPage;
+      else {
+        router.push(props.nextPage);
+      }
       return;
     }
 

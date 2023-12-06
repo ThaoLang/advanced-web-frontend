@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { UserType } from "@/model/UserType";
 import { useTranslations } from "next-intl";
+import { useRecoveryContext } from "@/context/RecoveryContext";
 
 interface AuthFormProps {
   showSuccessMsg: (show: boolean) => void;
@@ -19,8 +20,10 @@ export default function AuthForm(props: AuthFormProps) {
   const [isSignupOpeneded, setIsSignupOpeneded] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [validAuthMsg, setValidAuthMsg] = useState<string | null>(null);
+  const context = useRecoveryContext();
   const router = useRouter();
   const t = useTranslations("Authentication");
+  context.request = "http://localhost:4000/auth/send-verification";
 
   const isEmail = (email: string) => {
     const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -82,12 +85,14 @@ export default function AuthForm(props: AuthFormProps) {
         username: username,
         avatarUrl: `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`,
       });
-
+      
       if (response.status === 201) {
         props.showSuccessMsg(true);
         setTimeout(() => {
           props.showSuccessMsg(false);
         }, 2000);
+        router.push('/verification');
+        await handleVerification();
       }
     } catch (error: any) {
       const errorMessage =
@@ -99,6 +104,37 @@ export default function AuthForm(props: AuthFormProps) {
       console.error("Failed to login:", error);
     }
   };
+
+  const handleVerification = async () => {
+    context.email = email;
+    const generatedOTP = Math.floor(Math.random() * 9000 + 1000);
+    context.otp = generatedOTP;
+    console.log("RecoveryContext:", context);
+
+    try {
+        const response = await axios.post(context.request, {
+            email: context.email,
+            otp: context.otp
+        });
+        // console.log("Status code: ", response.status);
+        if (response.status === 201) {
+            // props.setSuccessMsg(t("forget_password_request_success_msg"));
+            props.showSuccessMsg(true)
+            setTimeout(() => {
+                props.showSuccessMsg(false);
+            }, 2000);
+            context.page = "otp";
+        }
+    } catch (error: any) {
+        const errorMessage =
+            error.response && error.response.data
+                ? error.response.data.message
+                : "Failed to send reset password request";
+        setValidAuthMsg(errorMessage);
+
+        console.error("Failed to send reset password request:", error);
+    }
+};
 
   const goToLogin = async () => {
     setValidAuthMsg(null);

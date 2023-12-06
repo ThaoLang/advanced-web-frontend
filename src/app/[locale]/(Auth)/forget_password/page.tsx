@@ -13,7 +13,10 @@ export default function ForgetPasswordPage() {
   const [showErrorMsg, setShowErrorMsg] = useState(false);
   const context = useRecoveryContext();
   const [page, setPage] = useState(context.page);
+  const isRouting = false;
+  const otpNextPage = "reset-password";
   const t = useTranslations("Authentication");
+  context.request = "http://localhost:4000/auth/send-recovery-email";
 
   useEffect(() => {
     setPage(context.page);
@@ -28,6 +31,8 @@ export default function ForgetPasswordPage() {
         showErrorMsg={setShowErrorMsg} />;
     if (page === "otp")
       return <OTPInput
+        isRouting={isRouting}
+        nextPage={otpNextPage}
         setSuccessMsg={setSuccessMsg}
         setErrorMsg={setErrorMsg}
         showSuccessMsg={setShowSuccessMsg}
