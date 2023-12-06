@@ -84,6 +84,8 @@ const classes = [
 
 export default function HomePage() {
   const auth = useAuth();
+  const t = useTranslations("Homepage");
+
   const maxItemNumber = 3;
   const limit = 5;
   const totalPages =
@@ -91,7 +93,6 @@ export default function HomePage() {
       ? classes.length / maxItemNumber
       : (classes.length - (classes.length % maxItemNumber)) / maxItemNumber + 1;
   const [page, setPage] = useState(1);
-  const t = useTranslations("Homepage");
 
   const filterData = useMemo(() => {
     return classes.filter((item, index) => {
