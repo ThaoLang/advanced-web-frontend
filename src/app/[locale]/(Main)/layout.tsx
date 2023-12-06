@@ -8,7 +8,7 @@ import { FaHouseChimney, FaGear } from "react-icons/fa6";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GiGraduateCap } from "react-icons/gi";
 import { AuthProvider } from "@/context/AuthContext";
-import StyledComponentsRegistry from "../../../lib/AntdRegistry";
+// import StyledComponentsRegistry from "../../../lib/AntdRegistry";
 import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 import {
@@ -16,6 +16,8 @@ import {
   useMessages,
   useTranslations,
 } from "next-intl";
+import { SessionProvider } from "next-auth/react";
+import Providers from "@/component/Providers";
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -63,9 +65,9 @@ export default function RootLayout({
               <div className="drawer-content flex flex-col h-screen justify-between">
                 <NavBar />
                 <main>
-                  <StyledComponentsRegistry>
-                    {children}
-                  </StyledComponentsRegistry>
+                  {/* <StyledComponentsRegistry> */}
+                  <Providers>{children}</Providers>
+                  {/* </StyledComponentsRegistry> */}
                 </main>
                 <Footer />
               </div>

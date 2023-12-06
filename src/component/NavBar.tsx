@@ -154,7 +154,7 @@ export default function NavBar() {
             </ul>
           )}
         </div>
-        {auth.user ? (
+        {auth.user && auth.user.email ? (
           <div className="flex justify-center gap-2">
             <button className="btn btn-ghost btn-circle">
               <div className="indicator">

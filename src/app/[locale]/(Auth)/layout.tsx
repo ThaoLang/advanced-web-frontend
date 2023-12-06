@@ -9,6 +9,8 @@ import {
   useTranslations,
 } from "next-intl";
 import { notFound } from "next/navigation";
+import { SessionProvider } from "next-auth/react";
+import Providers from "@/component/Providers";
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -34,7 +36,9 @@ export default function AuthLayout({
     <html lang={locale}>
       <body className={inter.className}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <Providers>{children}</Providers>
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>
