@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Footer() {
     return (
-        <footer className="py-4 bg-gray-100 mt-auto">
+        <footer className="py-4 bg-gray-300 mt-auto">
         <div className="container-fluid px-4">
           <div className="flex items-center justify-between">
             <div className="text-base">Copyright © LightHub 2023</div>

@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { UserType } from "@/model/UserType";
 import { useTranslations } from "next-intl";
+import { useRecoveryContext } from "@/context/RecoveryContext";
 import { signIn as signInWithGoogle } from "next-auth/react";
 import { io } from "socket.io-client";
 
@@ -22,8 +23,10 @@ export default function AuthForm(props: AuthFormProps) {
   const [isSignupOpeneded, setIsSignupOpeneded] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [validAuthMsg, setValidAuthMsg] = useState<string | null>(null);
+  const context = useRecoveryContext();
   const router = useRouter();
   const t = useTranslations("Authentication");
+  context.request = "http://localhost:4000/auth/send-verification";
   const socket = io("http://localhost:4000");
 
   const isEmail = (email: string) => {
@@ -92,6 +95,8 @@ export default function AuthForm(props: AuthFormProps) {
         setTimeout(() => {
           props.showSuccessMsg(false);
         }, 2000);
+        router.push("/verification");
+        await handleVerification();
       }
     } catch (error: any) {
       const errorMessage =
@@ -101,6 +106,37 @@ export default function AuthForm(props: AuthFormProps) {
       setValidAuthMsg(errorMessage);
 
       console.error("Failed to login:", error);
+    }
+  };
+
+  const handleVerification = async () => {
+    context.email = email;
+    const generatedOTP = Math.floor(Math.random() * 9000 + 1000);
+    context.otp = generatedOTP;
+    console.log("RecoveryContext:", context);
+
+    try {
+      const response = await axios.post(context.request, {
+        email: context.email,
+        otp: context.otp,
+      });
+      // console.log("Status code: ", response.status);
+      if (response.status === 201) {
+        // props.setSuccessMsg(t("forget_password_request_success_msg"));
+        props.showSuccessMsg(true);
+        setTimeout(() => {
+          props.showSuccessMsg(false);
+        }, 2000);
+        context.page = "otp";
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error.response && error.response.data
+          ? error.response.data.message
+          : "Failed to send reset password request";
+      setValidAuthMsg(errorMessage);
+
+      console.error("Failed to send reset password request:", error);
     }
   };
 
@@ -114,11 +150,14 @@ export default function AuthForm(props: AuthFormProps) {
     setValidAuthMsg(null);
     setIsSigninOpeneded(false);
     setIsSignupOpeneded(true);
-    setIsPasswordVisible(false);
   };
 
   function togglePasswordVisibility() {
     setIsPasswordVisible((prevState) => !prevState);
+  }
+
+  function goToResetPassword(): void {
+    router.push("/forget_password");
   }
 
   const handleGoogleLogin = async () => {
@@ -150,6 +189,7 @@ export default function AuthForm(props: AuthFormProps) {
           onChange={(e) => setUsername(e.target.value)}
         />
       )}
+
       <input
         type="text"
         placeholder={t("email")}
@@ -157,6 +197,7 @@ export default function AuthForm(props: AuthFormProps) {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
+
       <div className="relative">
         <input
           type={isPasswordVisible ? "text" : "password"}
@@ -203,6 +244,7 @@ export default function AuthForm(props: AuthFormProps) {
         </button>
       )}
       <div className="divider">{t("or")}</div>
+
       <button
         onClick={() => handleGoogleLogin()}
         className="flex w-full items-center justify-center gap-3.5 font-medium rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-80 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-80 my-4"
@@ -273,6 +315,17 @@ export default function AuthForm(props: AuthFormProps) {
           {t("go_to_signin_mg")}
           <span className="text-blue-500 ml-2">{t("signin_btn")}</span>
         </label>
+      )}
+      {isSigninOpeneded && (
+        <>
+          <div className="divider">{t("or")}</div>
+          <label
+            onClick={() => goToResetPassword()}
+            className="flex text-center items-center justify-center italic text-blue-500 ml-2"
+          >
+            {t("go_to_password_reset_mg")}
+          </label>
+        </>
       )}
     </div>
   );

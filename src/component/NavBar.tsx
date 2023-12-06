@@ -13,18 +13,36 @@ import { useAuth } from "@/context/AuthContext";
 import { useTranslations } from "next-intl";
 import { IoLanguage } from "react-icons/io5";
 import { FaRegBell } from "react-icons/fa";
+import NotificationList from "./NotificationList";
+import { io } from "socket.io-client";
 
 import { createSharedPathnamesNavigation } from "next-intl/navigation";
 
 export default function NavBar() {
   const t = useTranslations("Navbar");
 
+  const [isNotificationVisible, setIsNotificationVisible] =
+    React.useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  const ImageSrc = `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`;
   const auth = useAuth();
+
+  // const testMessages = ["Hello", "Nice to meet you", "Bye bye"];
+  const testMessages = new Array<string>();
+
+  // const socket = io("http://localhost:4000/notification", {
+  //   extraHeaders: {
+  //     Authorization: `Bearer ${auth.user?.access_token}`,
+  //   },
+  // });
+
+  // socket.on("connect", () => {
+  //   testMessages.push(`Welcome ${socket.id}`);
+  // });
+
+  // socket.emit("notification", "parameters");
 
   const handleLanguageChange = (locale: string) => {
     setIsDropdownOpen(false);
@@ -84,6 +102,8 @@ export default function NavBar() {
       } else {
         auth.login(loggedUser);
       }
+
+      async () => {};
     }
   }, []);
 
@@ -118,8 +138,8 @@ export default function NavBar() {
         <div className="dropdown dropdown-end">
           <label
             tabIndex={0}
-            className=""
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="btn btn-ghost btn-circle"
+            onClick={() => setIsDropdownOpen(true)}
           >
             <div className="mx-4">
               <IoLanguage size={20} />
@@ -156,39 +176,37 @@ export default function NavBar() {
         </div>
         {auth.user && auth.user.email ? (
           <div className="flex justify-center gap-2">
-            <button className="btn btn-ghost btn-circle">
-              <div className="indicator">
-                <div>
-                  <FaRegBell size={20} />
+            <div className="dropdown dropdown-end">
+              <button
+                tabIndex={0}
+                className="btn btn-ghost btn-circle"
+                onClick={() => setIsNotificationVisible(true)}
+              >
+                <div className={`${testMessages.length !== 0 && "indicator"}`}>
+                  <div>
+                    <FaRegBell size={20} />
+                  </div>
+                  {testMessages.length !== 0 && (
+                    <span className="badge badge-xs badge-primary indicator-item" />
+                  )}
                 </div>
-                <span className="badge badge-xs badge-primary indicator-item"></span>
-              </div>
-            </button>
-
-            {/* <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="">
-                {" "}
-                <div className="mx-4">
-                  <IoLanguage size={20} />
-                </div>
-              </label>
+              </button>
 
               <ul
                 tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+                className="relative mt-3 z-[1] p-2 menu dropdown-content h-auto w-60 space-y-10"
               >
-                <li>
-                  <Link href="./" locale="en">
-                    {t("english")}
-                  </Link>
-                </li>
-                <li>
-                  <Link href="./" locale="vi">
-                    {t("vietnam")}
-                  </Link>
-                </li>
+                {isNotificationVisible && (
+                  <>
+                    {(testMessages.length === 0 && (
+                      <div className="flex align-center justify-center pt-2 h-10 text-md shadow bg-white border-1 border-gray-300 rounded-box">
+                        {t("no_notification")}
+                      </div>
+                    )) || <NotificationList messages={testMessages} />}
+                  </>
+                )}
               </ul>
-            </div> */}
+            </div>
 
             <div className="dropdown dropdown-end dropdown-hover">
               <div tabIndex={0} className="btn btn-ghost btn-circle avatar">

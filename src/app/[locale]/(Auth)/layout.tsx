@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { RecoveryProvider } from "@/context/RecoveryContext";
 import { ReactNode } from "react";
 import {
   NextIntlClientProvider,
@@ -37,7 +38,7 @@ export default function AuthLayout({
       <body className={inter.className}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AuthProvider>
-            <Providers>{children}</Providers>
+            <RecoveryProvider>{children}</RecoveryProvider>
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

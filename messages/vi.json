@@ -28,14 +28,15 @@
     "logout": "Đăng xuất",
     "login": "Đăng nhập",
     "english": "Tiếng Anh",
-    "vietnam": "Tiếng Việt"
+    "vietnam": "Tiếng Việt",
+    "no_notification": "Không có thông báo mới"
   },
   "Footer": {
     "copyright": "© 2023 LightHub™. Đã đăng ký Bản quyền.",
     "resource": "Tài nguyên",
     "follow_us": "Theo dõi chúng tôi",
     "legal": "Pháp lý",
-    "privacy": "Chính sách Bảo mật",
+    "privacy": "Chính sách bảo mật",
     "term": "Điều khoản & Điều kiện"
   },
   "Authentication": {
@@ -44,11 +45,18 @@
     "username": "Tên người dùng",
     "signin_btn": "Đăng nhập",
     "signup_btn": "Đăng ký",
+    "forget_password_btn": "Gửi yêu cầu",
     "or": "HOẶC",
     "go_to_signup_mg": "Chưa có tài khoản? ",
-    "go_to_signin_mg": "Đã có tài khoản?",
+    "go_to_signin_mg": "Đã có tài khoản? ",
+    "go_to_password_reset_mg": "Quên mật khẩu?",
+    "forget_password_request_success_msg": "Yêu cầu đã được gửi! Vui lòng kiểm tra email của bạn!",
+    "reset_password_success_msg": "Mật khẩu của bạn đã được đặt lại!",
+    "assistance_msg": "Cần thêm sự hỗ trợ? Liên hệ với chúng tôi qua hệ thống hỗ trợ của chúng tôi.",
     "email_error_msg": "Email không hợp lệ.",
-    "password_error_msg": "Mật khẩu phải có ít nhất 8 ký tự với ít nhất một chữ in hoa, một ký tự đặc biệt và một chữ số."
+    "password_error_msg": "Mật khẩu phải có ít nhất 8 ký tự với ít nhất một chữ in hoa, một ký tự đặc biệt và một chữ số.",
+    "password_not_match_msg": "Mật khẩu nhập lại không khớp",
+    "accept_terms_and_conditions_msg": "Vui lòng chấp nhận các điều khoản và điều kiện"
   },
   "Homepage": {
     "class": "Danh sách lớp"

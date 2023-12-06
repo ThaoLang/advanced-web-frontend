@@ -27,7 +27,7 @@ export default function Search(props: SearchProps) {
             params.delete('query');
         }
         replace(`${pathname}?${params.toString()}`);
-    }, 300);
+    }, 400);
 
  
   return (
