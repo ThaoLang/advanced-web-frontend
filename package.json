@@ -12,6 +12,7 @@
     "@lottiefiles/lottie-player": "^2.0.2",
     "@lottiefiles/react-lottie-player": "^3.5.3",
     "@types/react-lottie": "^1.2.9",
+    "antd": "^5.12.1",
     "axios": "^1.6.0",
     "bufferutil": "^4.0.8",
     "debounce": "^2.0.0",
