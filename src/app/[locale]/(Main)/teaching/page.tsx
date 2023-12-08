@@ -38,8 +38,8 @@ const classes = [
   },
 ];
 
-export default function page() {
-  const auth = useAuth();
+
+export default function TeachingPage() {
   const maxItemNumber = 3;
   const limit = 5;
   const totalPages =
@@ -58,6 +58,9 @@ export default function page() {
   }, [page]);
 
   const [showModal, setShowModal] = useState(false);
+
+  const [isCopied, setIsCopied] = useState(false);
+  const auth = useAuth();
 
   const handleModal = () => {
     console.log("Modal changed");
@@ -80,7 +83,6 @@ export default function page() {
 
   // TODO: make this functional
   // copy invite link
-  const [isCopied, setIsCopied] = useState(false);
 
   const WriteToClipboard = async (text: string) => {
     const param = "clipboard-write" as PermissionName;

@@ -127,8 +127,8 @@ export default function Page({ params }: { params: { slug: string } }) {
                     disabled={!isEditable}
                     value={role?.id}>
                     {
-                      roles.map((items) => (
-                        <option value={items.id}>{items.name}</option>
+                      roles.map((items, index) => (
+                        <option key={index} value={items.id}>{items.name}</option>
                       ))
                     }
                   </select>
@@ -225,8 +225,8 @@ export default function Page({ params }: { params: { slug: string } }) {
               </div>
               <div className="p-7">
                   {
-                    classes.map((items) =>
-                      <div className="mb-5 card card-side bg-base-100 shadow-lg">
+                    classes.map((items, index) =>
+                      <div key={index} className="mb-5 card card-side bg-base-100 shadow-lg">
                         {/* <figure><img src={items.imageUrl}></img></figure> */}
                          <div className="card-body">
                             <h2 className="card-title">{items.name}</h2>

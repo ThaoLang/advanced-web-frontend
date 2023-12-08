@@ -38,7 +38,7 @@ const classes = [
   },
 ];
 
-export default function page() {
+export default function EnrolledPage() {
   const auth = useAuth();
   const maxItemNumber = 3;
   const limit = 5;

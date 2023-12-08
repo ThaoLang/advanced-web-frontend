@@ -39,11 +39,11 @@ const students = [
   },
 ];
 
-export default function page() {
-  const t = useTranslations("Tabs");
 
+export default function MemberPage() {
   // copy
   const [isCopied, setIsCopied] = useState(false);
+  const t = useTranslations("Tabs");
 
   const WriteToClipboard = async (text: string) => {
     const param = "clipboard-write" as PermissionName;
@@ -82,7 +82,7 @@ export default function page() {
 
       <ul className="menu bg-base-200 rounded-box mb-10">
         {teachers.map((teacher, index) => (
-          <li>
+          <li key={index}>
             <a>
               <div tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
@@ -123,7 +123,7 @@ export default function page() {
 
       <ul className="menu bg-base-200 rounded-box mb-10">
         {students.map((student, index) => (
-          <li>
+          <li key={index}>
             <a>
               <div tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">

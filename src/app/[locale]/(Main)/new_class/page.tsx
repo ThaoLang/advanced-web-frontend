@@ -4,7 +4,8 @@ import CreateClassForm from "@/component/classItem/CreateClassForm";
 import JoinClassForm from "@/component/classItem/JoinClassForm";
 import Link from "next/link";
 
-export default function page() {
+
+export default function NewClassPage() {
   const [status, setStatus] = useState("none");
   return (
     <div className="items-center h-[450px]">
