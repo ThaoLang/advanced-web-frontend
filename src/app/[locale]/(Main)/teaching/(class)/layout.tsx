@@ -7,16 +7,16 @@ export default function TeachingLayout({
   children: React.ReactNode;
 }) {
   const t = useTranslations("Tabs");
-  
+
   const navigation = [
     { name: t("about"), href: "/teaching/detail" },
     { name: t("members"), href: "/teaching/members" },
     { name: t("grades"), href: "/teaching/grades" },
-    { name: t("settings"), href: "/teaching/settings" },
+    { name: t("review"), href: "/teaching/review" },
   ];
-  
+
   let option = "About";
-  
+
   return (
     <section>
       {/* Include shared UI here e.g. a header or sidebar */}

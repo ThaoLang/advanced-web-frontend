@@ -22,7 +22,7 @@
     "calendar": "Lịch",
     "teaching": "Giảng dạy",
     "enrolled": "Đã đăng ký",
-    "setting": "Cài đặt",
+    "settings": "Cài đặt",
     "hi": "Xin chào",
     "manage_account": "Quản lý tài khoản của bạn",
     "logout": "Đăng xuất",
@@ -85,6 +85,7 @@
     "members": "Thành viên",
     "grades": "Điểm",
     "settings": "Cài đặt",
+    "review": "Phúc khảo",
     "create_class_btn": "Tạo lớp",
     "create_class_name": "Tên lớp (bắt buộc)",
     "create_class_desc": "Miêu tả",
@@ -102,5 +103,33 @@
     "delete_class": "Xóa lớp",
     "remove": "Loại bỏ",
     "edit": "Chỉnh sửa"
+  },
+  "Comment": {
+    "comments": " bình luận",
+    "reply": "Phản hồi",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "leave_a_comment": "Để lại bình luận..."
+  },
+  "Review": {
+    "review_detail": "Chi tiết Phúc khảo",
+    "my_review": "Danh sách Phúc khảo",
+    "all_reviews": "Danh sách Phúc khảo",
+    "student": "Học sinh",
+    "grade_composition": "Tên cột điểm",
+    "current_grade": "Điểm hiện tại",
+    "student_expectation_grade": "Điểm mong muốn",
+    "student_explanation": "Giải thích",
+    "status": "Trạng thái",
+    "update": "Cập nhật",
+    "create_review": "Tạo Phúc khảo",
+    "select_composition": "Chọn tên cột điểm",
+    "mock_quizzes": "Điểm quá trình",
+    "mid_term_exam": "Điểm giữa kì",
+    "final_exam": "Điểm cuối kì",
+    "updated_grade": "Điểm mới",
+    "note": "Ghi chú (không bắt buộc)",
+    "update_grade": "Cập nhật điểm",
+    "mark_as_completed": "Đánh dấu hoàn thành"
   }
 }

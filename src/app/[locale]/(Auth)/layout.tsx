@@ -4,11 +4,7 @@ import "../globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { RecoveryProvider } from "@/context/RecoveryContext";
 import { ReactNode } from "react";
-import {
-  NextIntlClientProvider,
-  useMessages,
-  useTranslations,
-} from "next-intl";
+import { NextIntlClientProvider, useMessages } from "next-intl";
 import { notFound } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import Providers from "@/component/Providers";
