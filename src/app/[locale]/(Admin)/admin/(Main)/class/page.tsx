@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import ClassTable from "@/component/admin/ClassTable";
 import SearchBar from "@/component/admin/SearchBar";
 import { Suspense } from "react";
+import { ClassType } from "@/model/ClassType";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -15,124 +16,46 @@ export default function Classes({
     page?: string;
   };
 }) {
+  const [classes, setClasses] = useState<any>(null);
   const [query, setQuery] = useState(searchParams?.query || "");
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams?.page) || 1
   );
+  const [paginatedResult, setPaginatedResult] = useState<Array<any>>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  
+  useEffect(() => {
+    console.log('render page.tsx');
 
-  const fetchClassList = async () => {
-    const classes = [
-      {
-        id: "45038cad5e644840a4f356d6a1f144fb",
-        host_name: "Nguyễn Minh Quang",
-        email: "20127605@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=1",
-        description: "A dedicated student pursuing excellence in Math 101.",
-        class_name: "Math 101",
-      },
-      {
-        id: "87b40e669a764bef845f8f33a3ce568e",
-        host_name: "Lê Hoàng Khanh Nguyên",
-        email: "20127679@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=2",
-        description:
-          "An experienced teacher with a passion for imparting knowledge and fostering a love for History. In History 201, students embark on a captivating journey through different eras, exploring significant events and understanding their impact on the present. Mr. Nguyên brings history to life through engaging lectures, thought-provoking discussions, and interactive activities. His commitment to creating a dynamic and inclusive learning environment ensures that students not only grasp historical facts but also develop critical thinking skills. Join History 201 to uncover the fascinating tapestry of our past under the guidance of an inspiring educator!",
-        class_name: "History 201",
-      },
-      {
-        id: "0feb69a4dd89474288d13a4a1dcc7586",
-        host_name: "Lăng Thảo Thảo",
-        email: "20127629@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=3",
-        description:
-          "Administrative role overseeing and managing activities in English 301.",
-        class_name: "English 301",
-      },
-      {
-        id: "4bf67405028d49fca40bdeb5197f350f",
-        host_name: "Lê Hoài Phương",
-        email: "20127598@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=4",
-        description:
-          "Administrative role handling tasks related to Geometry 401.",
-        class_name: "Geometry 401",
-      },
-      {
-        id: "e67e7db5bc254568bf8ec4f96c9e5fa9",
-        host_name: "Hoàng Hữu Minh An",
-        email: "20127102@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=5",
-        description:
-          "Administrative role overseeing and managing activities in Physics 501.",
-        class_name: "Physics 501",
-      },
-      {
-        id: "0460929e75de42ffa4d149e4d1a1210e",
-        host_name: "Huỳnh Minh Chiến",
-        email: "20127444@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=6",
-        description:
-          "Experienced teacher guiding students through the intricacies of Chemistry 601.",
-        class_name: "Chemistry 601",
-      },
-      {
-        id: "a5eb7b9a06e64c6fb09220ffdecf554f",
-        host_name: "Nguyễn Hoàng Phúc",
-        email: "20127523@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=7",
-        description: "A dedicated student passionate about Programming 701.",
-        class_name: "Programming 701",
-      },
-      {
-        id: "4dfc9c7adb7c4a2590a33364556e5a7d",
-        host_name: "Lê Duẩn",
-        email: "20127123@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=8",
-        description: "A diligent student focused on mastering Physics 801.",
-        class_name: "Physics 801",
-      },
-      {
-        id: "1ae055a4e2ae48b89310caadfe2a3839",
-        host_name: "Lê Cung Tiến",
-        email: "20127034@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=9",
-        description: "A dedicated student exploring the world of Calculus 102.",
-        class_name: "Calculus 102",
-      },
-      {
-        id: "460613348c9146b7935411f04c60bc7e",
-        host_name: "Nguyễn Đăng Khoa",
-        email: "20127528@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=10",
-        description:
-          "Experienced teacher specializing in Advanced Web Programming 202.",
-        class_name: "Advanced Web Programming 202",
-      },
-      {
-        id: "539347bdb71645c78606499c0100e4c1",
-        host_name: "Bùi Thị Dung",
-        email: "20127349@gmail.com",
-        avatar: "https://i.pravatar.cc/150?u=11",
-        description:
-          "Administrative role overseeing and managing activities in Internet of Things 901.",
-        class_name: "Internet of Things 901",
-      },
-    ];
+    const fetchData = async () => {
+        const classData = await fetchClassesData();
+        setClasses(classData);
+    }
+    fetchData()
+        .catch(console.error)
+}, []);
 
-    function filterArrayByQuery(array: Array<any>, query: string) {
-      if (query.trim() === "") {
-        // If query is empty, return the original array
-        return array;
+  useEffect(() => {
+    const paginateClassesData = async () => {
+      if (!classes) {
+            // Handle the case where classes is still loading or null
+            return { paginatedResult: [], totalItems: 0 };
       }
 
-      return array.filter((item) => {
-        return Object.values(item).some((value) => {
-          if (typeof value === "string") {
-            return value.toLowerCase().includes(query.toLowerCase());
-          }
-          return false;
+      function filterArrayByQuery(array: Array<any>, query: string) {
+        if (query.trim() === '') {
+            // If query is empty, return the original array
+            return array;
+        }
+
+        return array.filter(item => {
+            return Object.values(item).some(value => {
+                if (typeof value === 'string') {
+                    return value.toLowerCase().includes(query.toLowerCase());
+                }
+                return false;
+            });
         });
-      });
     }
 
     const result = filterArrayByQuery(classes, query);
@@ -143,7 +66,181 @@ export default function Classes({
     const paginatedResult = result.slice(startIndex, endIndex);
 
     return { paginatedResult, totalItems };
+    }
+    const fetchData = async () => {
+      await paginateClassesData().then((value) => {
+          const { paginatedResult, totalItems } = value;
+          setPaginatedResult(paginatedResult);
+          setTotalItems(totalItems);
+      })
   };
+  fetchData();
+
+
+    },[query, currentPage, classes]);
+
+  const fetchClassesData = async () => {
+    const templateClasses: Array<ClassType> = [
+      {
+        id: 'class1',
+        host_id: '1',
+        description: 'Introduction to Mathematics',
+        name: 'Mathematics 101',
+        class_code: 'MATH101',
+        invite_url: 'https://example.com/invite/math101',
+      },
+      {
+        id: 'class2',
+        host_id: '1',
+        description: 'Programming Fundamentals',
+        name: 'Programming 101',
+        class_code: 'CS101',
+        invite_url: 'https://example.com/invite/cs101',
+      },
+      {
+        id: 'class3',
+        host_id: '3',
+        description: 'Literature Appreciation',
+        name: 'English Literature',
+        class_code: 'ENG101',
+        invite_url: 'https://example.com/invite/eng101',
+      },
+      {
+        id: 'class4',
+        host_id: '5',
+        description: 'Chemistry Basics',
+        name: 'Chemistry 101',
+        class_code: 'CHEM101',
+        invite_url: 'https://example.com/invite/chem101',
+      },
+      {
+        id: 'class5',
+        host_id: '5',
+        description: 'History of Art',
+        name: 'Art History',
+        class_code: 'ART101',
+        invite_url: 'https://example.com/invite/art101',
+      },
+      {
+        id: 'class6',
+        host_id: '7',
+        description: 'Web Development Workshop',
+        name: 'Web Dev Workshop',
+        class_code: 'WEBDEV101',
+        invite_url: 'https://example.com/invite/webdev101',
+      },
+      {
+        id: 'class7',
+        host_id: '7',
+        description: 'Physics Principles',
+        name: 'Physics 101',
+        class_code: 'PHYSICS101',
+        invite_url: 'https://example.com/invite/physics101',
+      },
+      {
+        id: 'class8',
+        host_id: '11',
+        description: 'Introduction to Psychology',
+        name: 'Psychology 101',
+        class_code: 'PSYCH101',
+        invite_url: 'https://example.com/invite/psych101',
+      },
+      {
+        id: 'class9',
+        host_id: '9',
+        description: 'Computer Networks',
+        name: 'Networking Basics',
+        class_code: 'NETWORK101',
+        invite_url: 'https://example.com/invite/network101',
+      },
+      {
+        id: 'class10',
+        host_id: '11',
+        description: 'Human Anatomy',
+        name: 'Anatomy 101',
+        class_code: 'ANATOMY101',
+        invite_url: 'https://example.com/invite/anatomy101',
+      },
+      {
+        id: 'class11',
+        host_id: '11',
+        description: 'Environmental Science',
+        name: 'Environmental Science',
+        class_code: 'ENVSCI101',
+        invite_url: 'https://example.com/invite/envsci101',
+      },
+      {
+        id: 'class12',
+        host_id: '7',
+        description: 'Data Structures and Algorithms',
+        name: 'DSA Workshop',
+        class_code: 'DSA101',
+        invite_url: 'https://example.com/invite/dsa101',
+      },
+      {
+        id: 'class13',
+        host_id: '3',
+        description: 'Microeconomics Basics',
+        name: 'Microeconomics 101',
+        class_code: 'ECON101',
+        invite_url: 'https://example.com/invite/econ101',
+      },
+      {
+        id: 'class14',
+        host_id: '1',
+        description: 'Introduction to Sociology',
+        name: 'Sociology 101',
+        class_code: 'SOCIO101',
+        invite_url: 'https://example.com/invite/socio101',
+      },
+      {
+        id: 'class15',
+        host_id: '5',
+        description: 'Digital Marketing Strategies',
+        name: 'Marketing 101',
+        class_code: 'MARKETING101',
+        invite_url: 'https://example.com/invite/marketing101',
+      },
+    ];
+    return templateClasses;
+  }
+
+  const deleteClassHandler = (currentUser: any) => {
+    if (!classes) {
+        // Handle the case where classes is still loading or null
+        return;
+    }
+    
+    const updatedClasses = classes.filter((user: any) => {
+        return user.id !== currentUser.id;
+    });
+    setClasses(updatedClasses);
+}
+
+const banClassHandler = (currentUser: any) => {
+    if (!classes) {
+        // Handle the case where classes is still loading or null
+        return;
+    }
+    const updatedClasses = classes.map((user: any) => {
+        if (user.id === currentUser.id && currentUser.status === 'ban') {
+            return {...user, status: 'normal'};
+        }
+        else if (user.id === currentUser.id && currentUser.status === 'normal') {
+            return {...user, status: 'ban'};
+        }
+        return user;
+    });
+    setClasses(updatedClasses);
+}
+
+if (classes === null) {
+    // Render a loading state or return null
+    return <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">Loading...</div>;
+}
+
+  
+  
 
   return (
     <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">
@@ -170,10 +267,12 @@ export default function Classes({
         <div className="col-start-0 col-span-3">
           <Suspense key={query + currentPage}>
             <ClassTable
+              paginatedResult={paginatedResult}
+              totalItems={totalItems}
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
-              fetchClassList={fetchClassList}
-            />
+              deleteClass={deleteClassHandler}
+              banClass={banClassHandler}/>
           </Suspense>
         </div>
       </div>

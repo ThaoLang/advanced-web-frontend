@@ -19,6 +19,7 @@ import {
 import NavBar from "@/component/admin/NavBar";
 import Footer from "@/component/admin/Footer";
 import { AccountProvider } from "@/context/AccountContext";
+import { ClassroomProvider } from "@/context/ClassroomContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,62 +44,65 @@ export default function AdminLayout({
       <body className={inter.className}>
         <AuthProvider>
           <AccountProvider>
-            <div className="drawer lg:drawer-open">
-              <input
-                id="admin-drawer"
-                type="checkbox"
-                className="drawer-toggle"
-              />
-              <div className="drawer-content flex flex-col justify-between dark:bg-boxdark-2 dark:text-bodydark">
-                <NavBar />
-                <main>{children}</main>
-                <Footer />
+            <ClassroomProvider>
+
+              <div className="drawer lg:drawer-open">
+                <input
+                  id="admin-drawer"
+                  type="checkbox"
+                  className="drawer-toggle"
+                />
+                <div className="drawer-content flex flex-col justify-between dark:bg-boxdark-2 dark:text-bodydark">
+                  <NavBar />
+                  <main>{children}</main>
+                  <Footer />
+                </div>
+                <div className="drawer-side">
+                  <label
+                    htmlFor="admin-drawer"
+                    aria-label="close sidebar"
+                    className="drawer-overlay"
+                  ></label>
+                  <aside className="absolute left-0 top-0 z-999999 flex min-h-screen w-72.5 flex-col overflow-y-hidden bg-slate-700 duration-300 ease-linear dark:bg-current lg:static lg:translate-x-0 -translate-x-full">
+                    <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
+                      <Link href="/" className="normal-case text-xl">
+                        <div className="mt-5 flex flex-row items-center gap-3.5">
+                          <img
+                            className="h-8 w-auto"
+                            src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png"
+                            alt="logo"
+                          />
+                          <span className="font-semibold text-slate-200">
+                            LightHub
+                          </span>
+                        </div>
+                      </Link>
+                    </div>
+                    {/* <div className="divider"></div> */}
+                    <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
+                      <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
+                        <div>
+                          {/* <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">MENU</h3> */}
+                          <ul className="mt-5 mb-6 flex flex-col gap-1.5">
+                            {navigation.map((items, index) => (
+                              <li className="cursor-pointer" key={index}>
+                                <Link
+                                  href={items.href}
+                                  className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-normal text-slate-200 duration-300 ease-in-out hover:bg-gray-200 hover:text-black dark:hover:bg-meta-4 false"
+                                >
+                                  {items.icon}
+                                  {items.name}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </nav>
+                    </div>
+                  </aside>
+                </div>
               </div>
-              <div className="drawer-side">
-                <label
-                  htmlFor="admin-drawer"
-                  aria-label="close sidebar"
-                  className="drawer-overlay"
-                ></label>
-                <aside className="absolute left-0 top-0 z-999999 flex min-h-screen w-72.5 flex-col overflow-y-hidden bg-slate-700 duration-300 ease-linear dark:bg-current lg:static lg:translate-x-0 -translate-x-full">
-                  <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-                    <Link href="/" className="normal-case text-xl">
-                      <div className="mt-5 flex flex-row items-center gap-3.5">
-                        <img
-                          className="h-8 w-auto"
-                          src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png"
-                          alt="logo"
-                        />
-                        <span className="font-semibold text-slate-200">
-                          LightHub
-                        </span>
-                      </div>
-                    </Link>
-                  </div>
-                  {/* <div className="divider"></div> */}
-                  <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-                    <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
-                      <div>
-                        {/* <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">MENU</h3> */}
-                        <ul className="mt-5 mb-6 flex flex-col gap-1.5">
-                          {navigation.map((items, index) => (
-                            <li className="cursor-pointer" key={index}>
-                              <Link
-                                href={items.href}
-                                className="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-normal text-slate-200 duration-300 ease-in-out hover:bg-gray-200 hover:text-black dark:hover:bg-meta-4 false"
-                              >
-                                {items.icon}
-                                {items.name}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </nav>
-                  </div>
-                </aside>
-              </div>
-            </div>
+            </ClassroomProvider>
           </AccountProvider>
         </AuthProvider>
       </body>

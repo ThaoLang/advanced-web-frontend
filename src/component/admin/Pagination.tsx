@@ -42,7 +42,7 @@ const Pagination = (props: PaginationBarProp) => {
 
     if (props.current > 1) {
         items.push(
-            <li onClick={() => { props.onChange(props.current - 1); createPageURL(props.current-1); }}>
+            <li key={-1} onClick={() => { props.onChange(props.current - 1); createPageURL(props.current-1); }}>
                 <p className="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700">
                     <span className="sr-only">Previous</span>
                     <FaAngleLeft/>
@@ -54,7 +54,7 @@ const Pagination = (props: PaginationBarProp) => {
     for (let page = minPage; page <= maxPage; page++) {
         items.push(
             page === props.current ? (
-                <li onClick={() => { props.onChange(page); createPageURL(page); }}>
+                <li key={page} onClick={() => { props.onChange(page); createPageURL(page); }}>
                     <p
                         aria-current="page"
                         className="z-10 flex items-center justify-center px-4 h-10 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
@@ -63,7 +63,7 @@ const Pagination = (props: PaginationBarProp) => {
                     </p>
                 </li>
             ) : (
-                <li onClick={() => { props.onChange(page); createPageURL(page); }}>
+                <li key={page} onClick={() => { props.onChange(page); createPageURL(page); }}>
                     <p className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
                         {page}
                     </p>
@@ -74,7 +74,7 @@ const Pagination = (props: PaginationBarProp) => {
 
     if (props.current < props.total) {
         items.push(
-            <li onClick={() => {props.onChange(props.current + 1); createPageURL(props.current + 1)}}>
+            <li key={99} onClick={() => {props.onChange(props.current + 1); createPageURL(props.current + 1)}}>
                 <p className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700">
                     <span className="sr-only">Next</span>
                     <FaAngleRight/>
