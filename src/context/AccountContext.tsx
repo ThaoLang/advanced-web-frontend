@@ -7,11 +7,13 @@ import {
   ReactNode,
 } from "react";
 import { UserType } from "@/model/UserType";
+import { ClassType } from "@/model/ClassType";
 import { ClassListType } from "@/model/ClassListType";
 
 export interface AccountContextType {
   account: UserType | null;
-  classList: ClassListType | null;
+  classList: Array<ClassType> | null;
+  classDetails: Array<ClassListType> | null;
 }
 
 const AccountContext = createContext<AccountContextType | undefined>(undefined);
@@ -30,11 +32,12 @@ export function useAccount() {
 
 export function AccountProvider({ children }: AccountProviderProps) {
   const [account, setAccount] = useState<UserType | null>(null);
-  const [classList, setClassList] = useState<ClassListType | null>(null);
+  const [classList, setClassList] = useState<Array<ClassType> | null>(null);
+  const [classDetails, setClassDetails] = useState<Array<ClassListType> | null>(null);
 
   return (
     <AccountContext.Provider
-      value={{ account, classList }}
+      value={{ account, classList, classDetails }}
     >
       {children}
     </AccountContext.Provider>

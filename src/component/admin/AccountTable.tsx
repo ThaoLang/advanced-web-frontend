@@ -113,7 +113,7 @@ export default async function AccountTable(props: AccountTableProps) {
                                         </div>
                                     </td>
                                     {
-                                        items.role.name === 'admin' ?
+                                        items.role === 'admin' ?
                                             (
                                                 <td>
                                                     <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium text-yellow-800 bg-yellow-200 ring-1 ring-inset ring-yellow-600/20">Admin</span>

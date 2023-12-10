@@ -5,6 +5,7 @@ import AccountTable from '@/component/admin/AccountTable'
 import SearchBar from '@/component/admin/SearchBar'
 import { Suspense } from 'react';
 import { UserType } from "@/model/UserType";
+import { ClassListType } from "@/model/ClassListType";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -69,7 +70,7 @@ export default function Account({
         }
 
         const fetchData = async () => {
-            const response = await paginateAccountData().then((value) => {
+            await paginateAccountData().then((value) => {
                 const { paginatedResult, totalItems } = value;
                 setPaginatedResult(paginatedResult);
                 setTotalItems(totalItems);
@@ -86,10 +87,7 @@ export default function Account({
                 username: 'Nguyễn Minh Quang',
                 email: '20127605@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=1',
-                role: {
-                    id: '2',
-                    name: 'user'
-                },
+                role: 'user',
                 status: 'ban',
                 refresh_token: '',
                 access_token: '',
@@ -99,10 +97,7 @@ export default function Account({
                 username: 'Lê Hoàng Khanh Nguyên',
                 email: '20127679@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=2',
-                role: {
-                    id: '2',
-                    name: 'user'
-                },
+                role: 'user',
                 status: 'ban',
                 refresh_token: '',
                 access_token: '',
@@ -112,10 +107,7 @@ export default function Account({
                 username: 'Lăng Thảo Thảo',
                 email: '20127629@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=3',
-                role: {
-                    id: '1',
-                    name: 'admin'
-                },
+                role: 'admin',
                 status: 'normal',
                 refresh_token: '',
                 access_token: '',
@@ -125,10 +117,7 @@ export default function Account({
                 username: 'Lê Hoài Phương',
                 email: '20127598@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=4',
-                role: {
-                    id: '1',
-                    name: 'admin'
-                },
+                role: 'admin',
                 status: 'normal',
                 refresh_token: '',
                 access_token: '',
@@ -138,10 +127,7 @@ export default function Account({
                 username: 'Hoàng Hữu Minh An',
                 email: '20127102@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=5',
-                role: {
-                    id: '1',
-                    name: 'admin'
-                },
+                role: 'admin',
                 status: 'normal',
                 refresh_token: '',
                 access_token: '',
@@ -151,10 +137,7 @@ export default function Account({
                 username: 'Huỳnh Minh Chiến',
                 email: '20127444@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=6',
-                role: {
-                    id: '2',
-                    name: 'user'
-                },
+                role: 'user',
                 status: 'normal',
                 refresh_token: '',
                 access_token: '',
@@ -164,10 +147,7 @@ export default function Account({
                 username: 'Nguyễn Hoàng Phúc',
                 email: '20127523@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=7',
-                role: {
-                    id: '2',
-                    name: 'user'
-                },
+                role: 'user',
                 status: 'normal',
                 refresh_token: '',
                 access_token: '',
@@ -177,10 +157,7 @@ export default function Account({
                 username: 'Lê Duẩn',
                 email: '20127123@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=8',
-                role: {
-                    id: '2',
-                    name: 'user'
-                },
+                role: 'user',
                 status: 'ban',
                 refresh_token: '',
                 access_token: '',
@@ -190,10 +167,7 @@ export default function Account({
                 username: 'Lê Cung Tiến',
                 email: '20127034@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=9',
-                role: {
-                    id: '2',
-                    name: 'user'
-                },
+                role: 'user',
                 status: 'normal',
                 refresh_token: '',
                 access_token: '',
@@ -203,10 +177,7 @@ export default function Account({
                 username: 'Nguyễn Đăng Khoa',
                 email: '20127528@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=10',
-                role: {
-                    id: '2',
-                    name: 'user'
-                },
+                role: 'user',
                 status: 'normal',
                 refresh_token: '',
                 access_token: '',
@@ -216,10 +187,7 @@ export default function Account({
                 username: 'Bùi Thị Dung',
                 email: '20127349@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=11',
-                role: {
-                    id: '1',
-                    name: 'admin'
-                },
+                role: 'admin',
                 status: 'ban',
                 refresh_token: '',
                 access_token: '',
@@ -229,10 +197,7 @@ export default function Account({
                 username: 'Bành Hảo Toàn',
                 email: '20127646@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=12',
-                role: {
-                    id: '2',
-                    name: 'user'
-                },
+                role: 'user',
                 status: 'ban',
                 refresh_token: '',
                 access_token: '',
