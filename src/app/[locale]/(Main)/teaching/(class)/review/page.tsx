@@ -4,6 +4,8 @@ import { useTranslations } from "next-intl";
 import TeacherReviewForm from "@/component/classItem/review/TeacherReviewForm";
 import { IoMdClose } from "react-icons/io";
 import UpdateReviewModal from "@/component/classItem/review/UpdateReviewModal";
+import { ReviewType } from "@/model/ReviewType";
+import MiniReview from "@/component/classItem/review/MiniReview";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
@@ -13,26 +15,149 @@ export default function ReviewPage() {
     setShowModal(!showModal);
   };
 
+  let reviewList = [
+    {
+      studentId: "auth.user?.student_id",
+      gradeComposition: "Điểm cuối kì",
+      currentGrade: "8",
+      expectationGrade: "10",
+      explanation: "Em đã làm tốt",
+      status: "In Progress",
+    },
+    {
+      studentId: "auth.user?.student_id",
+      gradeComposition: "Điểm cuối kì",
+      currentGrade: "8",
+      expectationGrade: "10",
+      explanation: "Em đã làm tốt",
+      status: "In Progress",
+    },
+    {
+      studentId: "auth.user?.student_id",
+      gradeComposition: "Điểm cuối kì",
+      currentGrade: "8",
+      expectationGrade: "10",
+      explanation: "Em đã làm tốt",
+      status: "In Progress",
+    },
+    {
+      studentId: "auth.user?.student_id",
+      gradeComposition: "Điểm cuối kì",
+      currentGrade: "8",
+      expectationGrade: "10",
+      explanation: "Em đã làm tốt",
+      status: "Completed",
+    },
+    {
+      studentId: "auth.user?.student_id",
+      gradeComposition: "Điểm cuối kì",
+      currentGrade: "8",
+      expectationGrade: "10",
+      explanation: "Em đã làm tốt",
+      status: "Completed",
+    },
+  ];
+
+  // review detail data
+  let selectedReview = {
+    studentId: "student_id",
+    gradeComposition: "Điểm cuối kì",
+    currentGrade: "8",
+    expectationGrade: "10",
+    explanation: "Em đã làm tốt",
+    status: "In Progress", //need to update
+  };
+
+  // const [selectedReview, setSelectedReview] = useState<ReviewType>();
+
+  const [status, setStatus] = useState(selectedReview.status);
+
+  const handleStatus = (currentStatus: string) => {
+    if (currentStatus === "In Progress") {
+      setStatus("Completed");
+    } else if (currentStatus === "Completed") {
+      setStatus("In Progress");
+    }
+  };
+
+  // need to update grade data
+  const [updatedGrade, setUpdatedGrade] = useState("");
+  const [note, setNote] = useState("");
+
   return (
     <div>
       <div className="grid grid-cols-2 mx-20">
-        <div className="hidden lg:block lg:col-span-1">
+        <div className="hidden lg:block lg:col-span-1 mt-2">
           <div className="m-3 mx-10 text-2xl lg:text-3xl text-blue-600">
             {t("all_reviews")}
           </div>
-        </div>
-        <div className="flex-col col-span-2 lg:col-span-1">
-          <div className="p-3 text-2xl lg:text-3xl text-blue-600 flex flex-row items-center justify-between">
-            {t("review_detail")}
-            <button
-              className="btn btn-info max-w-xs bg-blue-500 text-white"
-              onClick={() => handleModal()}
-            >
-              {t("update")}
-            </button>
+          <div className="grid grid-cols-2 mx-20 ml-10 gap-4">
+            <div>
+              <div className="flex text-lg text-blue-600 items-center justify-center py-2">
+                {t("in_progress_status")}
+              </div>
+              <div className="overflow-auto h-96 space-y-2">
+                {reviewList.map((review) => (
+                  // <div onClick={() => setSelectedReview(review)}>
+                  <MiniReview
+                    studentId={review.studentId}
+                    gradeComposition={review.gradeComposition}
+                    currentGrade={review.currentGrade}
+                    expectationGrade={review.expectationGrade}
+                    explanation={review.explanation}
+                    status={review.status}
+                  />
+                  // </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div className="flex text-lg text-blue-600 items-center justify-center py-2">
+                {t("completed_status")}
+              </div>
+              <div className="overflow-auto h-96 space-y-2">
+                {reviewList.map((review) => (
+                  // <div onClick={() => setSelectedReview(review)}>
+                  <MiniReview
+                    studentId={review.studentId}
+                    gradeComposition={review.gradeComposition}
+                    currentGrade={review.currentGrade}
+                    expectationGrade={review.expectationGrade}
+                    explanation={review.explanation}
+                    status={review.status}
+                  />
+                  // </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <TeacherReviewForm />
         </div>
+        {selectedReview && (
+          <div className="flex-col col-span-2 lg:col-span-1">
+            <div className="p-3 text-2xl lg:text-3xl text-blue-600 flex flex-row items-center justify-between">
+              {t("review_detail")}
+              <button
+                className="btn btn-info max-w-xs bg-blue-500 text-white"
+                onClick={() => handleModal()}
+              >
+                {t("update")}
+              </button>
+            </div>
+            <TeacherReviewForm
+              studentId={selectedReview.studentId}
+              gradeComposition={selectedReview.gradeComposition}
+              currentGrade={selectedReview.currentGrade}
+              expectationGrade={selectedReview.expectationGrade}
+              explanation={selectedReview.explanation}
+              // status={selectedReview.status}
+              status={status}
+            />
+            {/* temp */}
+            {/* <div>Updated grade: {updatedGrade}</div>
+          <div>Note: {note}</div> */}
+            {/* temp */}
+          </div>
+        )}
       </div>
 
       {/* Modal */}
@@ -46,7 +171,16 @@ export default function ReviewPage() {
               <IoMdClose />
             </button>
           </div>
-          <UpdateReviewModal />
+          <UpdateReviewModal
+            gradeComposition={selectedReview.gradeComposition}
+            currentGrade={selectedReview.currentGrade}
+            // status={selectedReview.status}
+            status={status}
+            toggleStatus={handleStatus}
+            setUpdatedGrade={setUpdatedGrade}
+            setNote={setNote}
+            closeModal={handleModal}
+          />
         </div>
         <form method="dialog" className="modal-backdrop">
           <button onClick={handleModal}>close</button>

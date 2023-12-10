@@ -1,39 +1,72 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-export default function JoinClassForm() {
-  const [classCodeProxy, setClassCodeProxy] = useState("");
-  const [studentIdProxy, setStudentIdProxy] = useState("");
+interface UpdateReviewProps {
+  gradeComposition: string;
+  currentGrade: string;
+  status: string;
+  toggleStatus: (value: string) => void;
+  setUpdatedGrade: (value: string) => void;
+  setNote: (value: string) => void;
+  closeModal: () => void;
+}
+
+export default function UpdateReviewModal(props: UpdateReviewProps) {
+  const [updatedGradeProxy, setUpdatedGradeProxy] = useState("");
+  const [noteProxy, setNoteProxy] = useState("");
   const t = useTranslations("Review");
+
+  const updateReview = () => {
+    props.setUpdatedGrade(updatedGradeProxy);
+    props.setNote(noteProxy);
+    props.toggleStatus("In Progress");
+    props.closeModal();
+  };
+
+  const updateStatus = () => {
+    props.toggleStatus(props.status);
+    props.closeModal();
+  };
 
   return (
     <div className="flex flex-row m-10 align-middle justify-center">
       <div className="flex flex-col gap-4 w-md">
-        <p className="text-sm text-md ml-4">{t("grade_composition")}: </p>
-        <p className="text-sm text-md ml-4">{t("current_grade")}: </p>
+        <p className="text-sm text-md ml-4">
+          <b>{t("grade_composition")}:</b> {props.gradeComposition}
+        </p>
+        <p className="text-sm text-md ml-4">
+          <b>{t("current_grade")}:</b> {props.currentGrade}
+        </p>
 
         <input
           type="text"
           placeholder={t("updated_grade")}
           className="input input-bordered w-full max-w-xs"
-          value={classCodeProxy}
-          onChange={(e) => setClassCodeProxy(e.target.value)}
+          value={updatedGradeProxy}
+          onChange={(e) => setUpdatedGradeProxy(e.target.value)}
           maxLength={15}
         />
         <input
           type="text"
           placeholder={t("note")}
           className="input input-bordered w-full max-w-xs"
-          value={studentIdProxy}
-          onChange={(e) => setStudentIdProxy(e.target.value)}
+          value={noteProxy}
+          onChange={(e) => setNoteProxy(e.target.value)}
           maxLength={15}
         />
         <div className="flex flex-row gap-4 align-middle justify-center pt-10">
-          <button className="btn btn-info max-w-xs bg-blue-500 text-white">
+          <button
+            className="btn btn-info max-w-xs bg-blue-500 text-white"
+            onClick={() => updateReview()}
+          >
             {t("update_grade")}
           </button>
-          <button className="btn btn-info max-w-xs bg-yellow-400 text-white">
-            {t("mark_as_completed")}
+          <button
+            className="btn btn-info max-w-xs bg-yellow-400 text-white"
+            onClick={() => updateStatus()}
+          >
+            {props.status === "In Progress" && <>{t("mark_as_completed")}</>}
+            {props.status === "Completed" && <>{t("mark_as_in_progress")}</>}
           </button>
         </div>
       </div>

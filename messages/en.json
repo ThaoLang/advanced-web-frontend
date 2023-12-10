@@ -132,6 +132,9 @@
     "updated_grade": "Updated grade",
     "note": "Note (optional)",
     "update_grade": "Update grade",
-    "mark_as_completed": "Mark as completed"
+    "mark_as_completed": "Mark as completed",
+    "mark_as_in_progress": "Mark as in progress",
+    "in_progress_status": "In Progress",
+    "completed_status": "Completed"
   }
 }

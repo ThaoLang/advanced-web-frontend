@@ -130,6 +130,9 @@
     "updated_grade": "Điểm mới",
     "note": "Ghi chú (không bắt buộc)",
     "update_grade": "Cập nhật điểm",
-    "mark_as_completed": "Đánh dấu hoàn thành"
+    "mark_as_completed": "Đánh dấu hoàn thành",
+    "mark_as_in_progress": "Đánh dấu chờ xác nhận",
+    "in_progress_status": "Chờ xác nhận",
+    "completed_status": "Đã hoàn thành"
   }
 }

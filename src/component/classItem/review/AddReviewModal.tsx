@@ -1,11 +1,29 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-export default function JoinClassForm() {
+interface AddReviewProps {
+  addReview: (
+    gradeComposition: string,
+    expectationGrade: string,
+    studentExplanation: string
+  ) => void;
+  closeModal: () => void;
+}
+
+export default function AddReviewModal(props: AddReviewProps) {
   const [gradeCompositionProxy, setGradeCompositionProxy] = useState("");
   const [expectationGradeProxy, setExpectationGradeProxy] = useState("");
   const [studentExplanationProxy, setStudentExplanationProxy] = useState("");
   const t = useTranslations("Review");
+
+  const addReviewTrigger = () => {
+    props.addReview(
+      gradeCompositionProxy,
+      expectationGradeProxy,
+      studentExplanationProxy
+    );
+    props.closeModal();
+  };
 
   return (
     <div className="flex flex-row m-10 align-middle justify-center">
@@ -24,7 +42,9 @@ export default function JoinClassForm() {
             {t("final_exam")}
           </option>
         </select>
-        <p className="text-sm text-md ml-4">{t("current_grade")}: </p>
+        <p className="text-sm text-md ml-4">
+          <b>{t("current_grade")}:</b>{" "}
+        </p>
         <input
           type="text"
           placeholder={t("student_expectation_grade")}
@@ -41,7 +61,10 @@ export default function JoinClassForm() {
           onChange={(e) => setStudentExplanationProxy(e.target.value)}
           maxLength={50}
         />
-        <button className="btn btn-info max-w-xs bg-yellow-400 text-white">
+        <button
+          className="btn btn-info max-w-xs bg-yellow-400 text-white"
+          onClick={() => addReviewTrigger()}
+        >
           {t("create_review")}!
         </button>
       </div>
