@@ -6,6 +6,7 @@ import SearchBar from '@/component/admin/SearchBar'
 import { Suspense } from 'react';
 import { UserType } from "@/model/UserType";
 import { ClassListType } from "@/model/ClassListType";
+import filterAndSortArray from "@/utils/ArrayFilterUtils";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -23,12 +24,47 @@ export default function Account({
     const [paginatedResult, setPaginatedResult] = useState<Array<any>>([]);
     const [totalItems, setTotalItems] = useState(0);
 
+    const [nameSelectOptions, setNameSelectOptions] = useState<Array<string>>([]);
+    const accountTableHeaders = ["ID", "Name", "Role", "Status"];
+    const roleSelectOptions: any[] = ["User", "Admin"];
+    const statusSelectOptions: any[] = ["Normal", "Ban"];
+
+    const [sortBy, setSortBy] = useState<string | null>(null);
+    const [orderBy, setOrderBy] = useState<string>('asc');
+    const [nameFilter, setNameFilter] = useState<string | null>(null);
+    const [roleFilter, setRoleFilter] = useState<string | null>(null);
+    const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
+    const handleSelectChange = (
+        value: string,
+        setter: React.Dispatch<React.SetStateAction<string | null>>
+      ) => {
+        setter(value === 'null' ? null : value);
+      };
+    
+      const handleRadioChange = (
+        value: string,
+        setter: React.Dispatch<React.SetStateAction<string>>
+      ) => {
+        setter(value);
+      };
+
+      const handleClearFilters =  () => {
+        setNameFilter(null);
+        setRoleFilter(null);
+        setStatusFilter(null);
+      }      
+      
+
     useEffect(() => {
         console.log('render page.tsx');
 
         const fetchData = async () => {
             const userData = await fetchAccountsData();
             setAccounts(userData);
+            // Dynamically generate nameSelectOptions based on unique names
+            const uniqueNames = Array.from(new Set(userData.map((user) => user.username)));
+            setNameSelectOptions(uniqueNames);
         }
         fetchData()
             .catch(console.error)
@@ -42,26 +78,18 @@ export default function Account({
                 // Handle the case where accounts is still loading or null
                 return { paginatedResult: [], totalItems: 0 };
             }
-
-            function filterArrayByQuery(array: Array<any>, query: string) {
-                if (query.trim() === '') {
-                    // If query is empty, return the original array
-                    return array;
-                }
-
-                return array.filter(item => {
-                    return Object.values(item).some(value => {
-                        if (typeof value === 'string') {
-                            return value.toLowerCase().includes(query.toLowerCase());
-                        }
-                        return false;
-                    });
-                });
-            }
-
-            const result = filterArrayByQuery(accounts, query);
+            
+            const result = filterAndSortArray(
+                accounts,
+                query,
+                sortBy,
+                orderBy,
+                {
+                    username: nameFilter,
+                    role: roleFilter,
+                    status: statusFilter
+                })
             const totalItems = result.length;
-
             const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
             const endIndex = startIndex + ITEMS_PER_PAGE;
             const paginatedResult = result.slice(startIndex, endIndex);
@@ -78,7 +106,14 @@ export default function Account({
         };
 
         fetchData();
-    }, [query, currentPage, accounts]); // Run this effect when currentPage or accounts changes
+    }, [query, 
+        sortBy, 
+        orderBy, 
+        nameFilter, 
+        roleFilter, 
+        statusFilter, 
+        currentPage, 
+        accounts]); // Run this effect when currentPage or accounts changes
 
     const fetchAccountsData = async () => {
         const templateAccounts: Array<UserType> = [
@@ -211,7 +246,7 @@ export default function Account({
             // Handle the case where accounts is still loading or null
             return;
         }
-        
+
         const updatedUsers = accounts.filter((user: any) => {
             return user.id !== currentUser.id;
         });
@@ -225,10 +260,10 @@ export default function Account({
         }
         const updatedUsers = accounts.map((user: any) => {
             if (user.id === currentUser.id && currentUser.status === 'ban') {
-                return {...user, status: 'normal'};
+                return { ...user, status: 'normal' };
             }
             else if (user.id === currentUser.id && currentUser.status === 'normal') {
-                return {...user, status: 'ban'};
+                return { ...user, status: 'ban' };
             }
             return user;
         });
@@ -240,6 +275,8 @@ export default function Account({
         return <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">Loading...</div>;
     }
 
+
+
     return (
         <React.Fragment>
             <div className="mx-auto max-w-screen-2xl min-h-screen p-4 md:p-6 2xl:p-10 bg-slate-100">
@@ -249,21 +286,107 @@ export default function Account({
                         <li><Link href="/admin/account"><b>Account</b></Link></li>
                     </ul>
                 </div>
-                <div className="grid grid-cols-3 mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-                    <div className="col-start-3 col-end-4">
-                        <SearchBar placeholder="Search user...."
+                <div className="flex flex-col lg:grid lg:grid-cols-3 mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                    <div className="lg:col-start-0 lg:col-end-2">
+                        <label className="form-control w-full max-w-xs">
+                            <div className="label">
+                                <span className="label-text">Sort by</span>
+                            </div>
+                            <select className="select select-bordered"
+                            onChange={(e) => handleSelectChange(e.target.value, setSortBy)}>
+                                <option disabled selected>--Option--</option>
+                                {
+                                    accountTableHeaders.map((items, index) => {
+                                        return (
+                                            <option key={index} value={items.toLowerCase()}>{items}</option>
+                                        )
+                                    })
+                                }
+                            </select>
+                        </label>
+                    </div>
+                    <div className="lg:mx-10 lg:col-start-2 lg:col-end-3">
+                        <div className="form-control">
+                            <div className="label">
+                                <span className="label-text">Order by</span>
+                            </div>
+                            <div className="flex lg:flex-col flex-row space-x-5 lg:space-y-3 lg:space-x-0">
+                                <label className="flex flex-row gap-2 cursor-pointer">
+                                    <input type="radio" name="order-by" 
+                                    className="radio radio-sm checked:bg-red-500" 
+                                    checked={orderBy === 'asc'}
+                                    onChange={() => handleRadioChange('asc', setOrderBy)} />
+                                    <span className="label-text">Ascending</span>
+                                </label>
+                                <label className="flex flex-row gap-2 cursor-pointer">
+                                    <input type="radio" name="order-by" 
+                                    className="radio radio-sm checked:bg-blue-500" 
+                                    checked={orderBy === 'desc'}
+                                    onChange={() => handleRadioChange('desc', setOrderBy)} />
+                                    <span className="label-text">Descending</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="lg:col-start-3 lg:col-end-4 max-w-md">
+                        <SearchBar placeholder="Search anything...."
                             setQuery={setQuery}
                             currentPage={currentPage} />
                     </div>
-                    <div className="col-start-0 col-span-3">
+                    <div className="lg:col-start-0 lg:col-span-3">
+                        <div className="form-control">
+                            <div className="label">
+                                <span className="label-text">Filters</span>
+                            </div>
+                            <div className="flex flex-row space-x-10">
+                                <select className="select select-bordered w-full max-w-sm" value={nameFilter || ''}
+                                onChange={(e) => handleSelectChange(e.target.value, setNameFilter)}>
+                                    <option disabled selected value={''}>Name</option>
+                                    {
+                                        nameSelectOptions.map((items, index) => {
+                                            return (
+                                                    <option key={index} value={items}>{items}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                                <select className="select select-bordered w-full max-w-sm" value={roleFilter || ''}
+                                onChange={(e) => handleSelectChange(e.target.value, setRoleFilter)}>
+                                    <option disabled selected value={""}>Role</option>
+                                    {
+                                        roleSelectOptions.map((items, index) => {
+                                            return (
+                                                    <option key={index} value={items.toLowerCase()}>{items}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                                <select className="select select-bordered w-full max-w-sm" value={statusFilter || ''}
+                                onChange={(e) => handleSelectChange(e.target.value, setStatusFilter)}>
+                                    <option disabled selected value={""}>Status</option>
+                                    {
+                                        statusSelectOptions.map((items, index) => {
+                                            return (
+                                                    <option key={index} value={items.toLowerCase()}>{items}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                                <button className="btn btn-error text-white"
+                                onClick={() => handleClearFilters()}>Clear all filters</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div className="lg:col-start-0 lg:col-span-3">
                         <Suspense key={query + currentPage}>
-                            <AccountTable 
+                            <AccountTable
                                 paginatedResult={paginatedResult}
                                 totalItems={totalItems}
                                 currentPage={currentPage}
                                 setCurrentPage={setCurrentPage}
                                 deleteAccount={deleteAccountHandler}
-                                banAccount={banAccountHandler}/>
+                                banAccount={banAccountHandler} />
                         </Suspense>
                     </div>
                 </div>

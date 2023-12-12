@@ -17,6 +17,18 @@ const templateClassDetails: Array<ClassListType> = [
   },
   {
     class_id: 'class2',
+    user_id: '1',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class14',
+    user_id: '1',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class2',
     user_id: '2',
     role: 'student',
     student_id: '20127679',
@@ -34,6 +46,12 @@ const templateClassDetails: Array<ClassListType> = [
     student_id: '20127598',
   },
   {
+    class_id: 'class4',
+    user_id: '5',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
     class_id: 'class5',
     user_id: '5',
     role: 'teacher',
@@ -44,6 +62,12 @@ const templateClassDetails: Array<ClassListType> = [
     user_id: '6',
     role: 'student',
     student_id: '20127444',
+  },
+  {
+    class_id: 'class6',
+    user_id: '7',
+    role: 'teacher',
+    student_id: '',
   },
   {
     class_id: 'class7',
@@ -82,6 +106,12 @@ const templateClassDetails: Array<ClassListType> = [
     student_id: '20127646',
   },
   {
+    class_id: 'class12',
+    user_id: '7',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
     class_id: 'class13',
     user_id: '3',
     role: 'teacher',
@@ -108,6 +138,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Introduction to Mathematics',
     name: 'Mathematics 101',
     class_code: 'MATH101',
+    status: 'active',
     invite_url: 'https://example.com/invite/math101',
   },
   {
@@ -116,6 +147,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Programming Fundamentals',
     name: 'Programming 101',
     class_code: 'CS101',
+    status: 'active',
     invite_url: 'https://example.com/invite/cs101',
   },
   {
@@ -124,6 +156,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Literature Appreciation',
     name: 'English Literature',
     class_code: 'ENG101',
+    status: 'inactive',
     invite_url: 'https://example.com/invite/eng101',
   },
   {
@@ -132,6 +165,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Chemistry Basics',
     name: 'Chemistry 101',
     class_code: 'CHEM101',
+    status: 'active',
     invite_url: 'https://example.com/invite/chem101',
   },
   {
@@ -140,6 +174,7 @@ const templateClassList: Array<ClassType> = [
     description: 'History of Art',
     name: 'Art History',
     class_code: 'ART101',
+    status: 'active',
     invite_url: 'https://example.com/invite/art101',
   },
   {
@@ -148,6 +183,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Web Development Workshop',
     name: 'Web Dev Workshop',
     class_code: 'WEBDEV101',
+    status: 'active',
     invite_url: 'https://example.com/invite/webdev101',
   },
   {
@@ -156,6 +192,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Physics Principles',
     name: 'Physics 101',
     class_code: 'PHYSICS101',
+    status: 'active',
     invite_url: 'https://example.com/invite/physics101',
   },
   {
@@ -164,6 +201,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Introduction to Psychology',
     name: 'Psychology 101',
     class_code: 'PSYCH101',
+    status: 'active',
     invite_url: 'https://example.com/invite/psych101',
   },
   {
@@ -172,6 +210,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Computer Networks',
     name: 'Networking Basics',
     class_code: 'NETWORK101',
+    status: 'active',
     invite_url: 'https://example.com/invite/network101',
   },
   {
@@ -180,6 +219,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Human Anatomy',
     name: 'Anatomy 101',
     class_code: 'ANATOMY101',
+    status: 'inactive',
     invite_url: 'https://example.com/invite/anatomy101',
   },
   {
@@ -188,6 +228,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Environmental Science',
     name: 'Environmental Science',
     class_code: 'ENVSCI101',
+    status: 'active',
     invite_url: 'https://example.com/invite/envsci101',
   },
   {
@@ -196,6 +237,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Data Structures and Algorithms',
     name: 'DSA Workshop',
     class_code: 'DSA101',
+    status: 'active',
     invite_url: 'https://example.com/invite/dsa101',
   },
   {
@@ -204,6 +246,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Microeconomics Basics',
     name: 'Microeconomics 101',
     class_code: 'ECON101',
+    status: 'inactive',
     invite_url: 'https://example.com/invite/econ101',
   },
   {
@@ -212,6 +255,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Introduction to Sociology',
     name: 'Sociology 101',
     class_code: 'SOCIO101',
+    status: 'active',
     invite_url: 'https://example.com/invite/socio101',
   },
   {
@@ -220,6 +264,7 @@ const templateClassList: Array<ClassType> = [
     description: 'Digital Marketing Strategies',
     name: 'Marketing 101',
     class_code: 'MARKETING101',
+    status: 'active',
     invite_url: 'https://example.com/invite/marketing101',
   },
 ];
@@ -280,7 +325,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     };
     
     loadClassInfo();
-  },[context]);
+  },[context.classList, context.classDetails]);
   const saveInformation = () => {
 
   }

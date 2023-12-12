@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import DeletePopupModal from '@/component/admin/(modal)/DeletePopupModal';
 import BanPopupModal from './(modal)/BanPopupModal';
 import { useClassroom } from '@/context/ClassroomContext';
+import { UserType } from '@/model/UserType';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -97,7 +98,8 @@ export default async function ClassTable(props: ClassTableProps) {
                     </thead>
                     <tbody>
                         {
-                            props.paginatedResult.map((items: any, index: number) => (
+                            props.paginatedResult.map((items: any, index: number) => {
+                                return (
                                 <tr key={index} className="hover:bg-gray-100 cursor-pointer hover:border-1 hover:border-gray-200">
                                     <td>{items.id}</td>
                                     <td>{items.name}</td>
@@ -105,27 +107,27 @@ export default async function ClassTable(props: ClassTableProps) {
                                         <div className="flex items-center gap-3">
                                             <div className="avatar">
                                                 <div className="mask mask-squircle w-12 h-12">
-                                                    <img src={items.avatarUrl} alt="User avatar" />
+                                                    <img src={items.host_avatarUrl} alt="User avatar" />
                                                 </div>
                                             </div>
                                             <div>
-                                                <div className="font-bold">Host name</div>
+                                                <div className="font-bold">{items.host_username}</div>
                                                 {/* <div className="text-sm opacity-50">{items.email}</div> */}
                                             </div>
                                         </div>
                                     </td>
                                     <td>{items.description}</td>
                                     {
-                                        items.status === 'ban' ?
+                                        items.status === 'inactive' ?
                                             (
                                                 <td>
-                                                    <span className="inline-flex items-center rounded-full bg-red-50 px-3 py-1 text-sm font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Ban</span>
+                                                    <span className="inline-flex items-center rounded-full bg-slate-50 px-3 py-1 text-sm font-medium text-slate-700 ring-1 ring-inset ring-slate-600/10">Inactive</span>
                                                 </td>
                                             )
                                             :
                                             (
                                                 <td>
-                                                    <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-sm font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Normal</span>
+                                                    <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-sm font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Active</span>
                                                 </td>
                                             )
                                     }
@@ -149,7 +151,7 @@ export default async function ClassTable(props: ClassTableProps) {
                                         </div>
                                     </th>
                                 </tr>
-                            ))
+                            )})
                         }
                     </tbody>
                 </table>

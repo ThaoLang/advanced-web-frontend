@@ -40,7 +40,7 @@ export default function ForgetPassword(props: ForgetPasswordProps) {
         console.log("RecoveryContext:", context);
 
         try {
-            const response = await axios.post(`http://localhost:4000/auth/send-recovery-email`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/send-recovery-email`, {
                 email: context.email,
                 otp: context.otp
             });

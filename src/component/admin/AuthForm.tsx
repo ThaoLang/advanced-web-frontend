@@ -52,7 +52,7 @@ export default function AuthForm(props: AuthFormProps) {
         if (!isValidAuth(email, password)) return;
 
         try {
-            const response = await axios.post(`http://localhost:4000/auth/login`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/login`, {
                 email: email,
                 password: password,
             });
@@ -77,7 +77,7 @@ export default function AuthForm(props: AuthFormProps) {
         if (!isValidAuth(email, password)) return;
 
         try {
-            const response = await axios.post(`http://localhost:4000/auth/register`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/register`, {
                 email: email,
                 password: password,
                 username: username,

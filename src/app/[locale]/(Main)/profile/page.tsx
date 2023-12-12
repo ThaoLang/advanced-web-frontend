@@ -44,7 +44,7 @@ export default function Profile() {
     try {
       console.log("USE", _username);
       const response = await axios.put(
-        `http://localhost:4000/profile/update`,
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/update`,
         {
           email: _email,
           username: _username,

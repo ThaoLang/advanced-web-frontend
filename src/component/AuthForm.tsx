@@ -26,8 +26,8 @@ export default function AuthForm(props: AuthFormProps) {
   const context = useRecoveryContext();
   const router = useRouter();
   const t = useTranslations("Authentication");
-  context.request = "http://localhost:4000/auth/send-verification";
-  const socket = io("http://localhost:4000");
+  context.request = `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/send-verification`;
+  // const socket = io("http://localhost:4000");
 
   const isEmail = (email: string) => {
     const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -58,7 +58,7 @@ export default function AuthForm(props: AuthFormProps) {
     if (!isValidAuth(email, password)) return;
 
     try {
-      const response = await axios.post(`http://localhost:4000/auth/login`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/login`, {
         email: email,
         password: password,
       });
@@ -83,7 +83,7 @@ export default function AuthForm(props: AuthFormProps) {
     if (!isValidAuth(email, password)) return;
 
     try {
-      const response = await axios.post(`http://localhost:4000/auth/register`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/register`, {
         email: email,
         password: password,
         username: username,
@@ -162,7 +162,7 @@ export default function AuthForm(props: AuthFormProps) {
 
   const handleGoogleLogin = async () => {
     try {
-      router.push("http://localhost:4000/auth/google");
+      router.push(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/google`);
     } catch (error) {
       console.error("Error initiating Google login:", error);
     }
@@ -170,7 +170,7 @@ export default function AuthForm(props: AuthFormProps) {
 
   const handleFacebookLogin = async () => {
     try {
-      router.push("http://localhost:4000/auth/facebook");
+      router.push(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/facebook`);
     } catch (error) {
       console.error("Error initiating Facebook login:", error);
     }

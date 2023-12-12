@@ -32,7 +32,7 @@ export default function NavBar() {
   // const testMessages = ["Hello", "Nice to meet you", "Bye bye"];
   const testMessages = new Array<string>();
 
-  // const socket = io("http://localhost:4000/notification", {
+  // const socket = io("${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification", {
   //   extraHeaders: {
   //     Authorization: `Bearer ${auth.user?.access_token}`,
   //   },

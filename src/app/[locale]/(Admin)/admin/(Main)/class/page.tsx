@@ -5,6 +5,7 @@ import ClassTable from "@/component/admin/ClassTable";
 import SearchBar from "@/component/admin/SearchBar";
 import { Suspense } from "react";
 import { ClassType } from "@/model/ClassType";
+import { UserType } from "@/model/UserType";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -87,6 +88,7 @@ export default function Classes({
         description: 'Introduction to Mathematics',
         name: 'Mathematics 101',
         class_code: 'MATH101',
+        status: 'active',
         invite_url: 'https://example.com/invite/math101',
       },
       {
@@ -95,6 +97,7 @@ export default function Classes({
         description: 'Programming Fundamentals',
         name: 'Programming 101',
         class_code: 'CS101',
+        status: 'active',
         invite_url: 'https://example.com/invite/cs101',
       },
       {
@@ -103,6 +106,7 @@ export default function Classes({
         description: 'Literature Appreciation',
         name: 'English Literature',
         class_code: 'ENG101',
+        status: 'inactive',
         invite_url: 'https://example.com/invite/eng101',
       },
       {
@@ -111,6 +115,7 @@ export default function Classes({
         description: 'Chemistry Basics',
         name: 'Chemistry 101',
         class_code: 'CHEM101',
+        status: 'active',
         invite_url: 'https://example.com/invite/chem101',
       },
       {
@@ -119,6 +124,7 @@ export default function Classes({
         description: 'History of Art',
         name: 'Art History',
         class_code: 'ART101',
+        status: 'active',
         invite_url: 'https://example.com/invite/art101',
       },
       {
@@ -127,6 +133,7 @@ export default function Classes({
         description: 'Web Development Workshop',
         name: 'Web Dev Workshop',
         class_code: 'WEBDEV101',
+        status: 'active',
         invite_url: 'https://example.com/invite/webdev101',
       },
       {
@@ -135,6 +142,7 @@ export default function Classes({
         description: 'Physics Principles',
         name: 'Physics 101',
         class_code: 'PHYSICS101',
+        status: 'active',
         invite_url: 'https://example.com/invite/physics101',
       },
       {
@@ -143,6 +151,7 @@ export default function Classes({
         description: 'Introduction to Psychology',
         name: 'Psychology 101',
         class_code: 'PSYCH101',
+        status: 'active',
         invite_url: 'https://example.com/invite/psych101',
       },
       {
@@ -151,6 +160,7 @@ export default function Classes({
         description: 'Computer Networks',
         name: 'Networking Basics',
         class_code: 'NETWORK101',
+        status: 'active',
         invite_url: 'https://example.com/invite/network101',
       },
       {
@@ -159,6 +169,7 @@ export default function Classes({
         description: 'Human Anatomy',
         name: 'Anatomy 101',
         class_code: 'ANATOMY101',
+        status: 'inactive',
         invite_url: 'https://example.com/invite/anatomy101',
       },
       {
@@ -167,6 +178,7 @@ export default function Classes({
         description: 'Environmental Science',
         name: 'Environmental Science',
         class_code: 'ENVSCI101',
+        status: 'active',
         invite_url: 'https://example.com/invite/envsci101',
       },
       {
@@ -175,6 +187,7 @@ export default function Classes({
         description: 'Data Structures and Algorithms',
         name: 'DSA Workshop',
         class_code: 'DSA101',
+        status: 'active',
         invite_url: 'https://example.com/invite/dsa101',
       },
       {
@@ -183,6 +196,7 @@ export default function Classes({
         description: 'Microeconomics Basics',
         name: 'Microeconomics 101',
         class_code: 'ECON101',
+        status: 'inactive',
         invite_url: 'https://example.com/invite/econ101',
       },
       {
@@ -191,6 +205,7 @@ export default function Classes({
         description: 'Introduction to Sociology',
         name: 'Sociology 101',
         class_code: 'SOCIO101',
+        status: 'active',
         invite_url: 'https://example.com/invite/socio101',
       },
       {
@@ -199,35 +214,172 @@ export default function Classes({
         description: 'Digital Marketing Strategies',
         name: 'Marketing 101',
         class_code: 'MARKETING101',
+        status: 'active',
         invite_url: 'https://example.com/invite/marketing101',
       },
     ];
-    return templateClasses;
+    const templateAccounts: Array<UserType> = [
+      {
+          id: '1',
+          username: 'Nguyễn Minh Quang',
+          email: '20127605@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=1',
+          role: 'user',
+          status: 'ban',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '2',
+          username: 'Lê Hoàng Khanh Nguyên',
+          email: '20127679@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=2',
+          role: 'user',
+          status: 'ban',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '3',
+          username: 'Lăng Thảo Thảo',
+          email: '20127629@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=3',
+          role: 'admin',
+          status: 'normal',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '4',
+          username: 'Lê Hoài Phương',
+          email: '20127598@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=4',
+          role: 'admin',
+          status: 'normal',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '5',
+          username: 'Hoàng Hữu Minh An',
+          email: '20127102@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=5',
+          role: 'admin',
+          status: 'normal',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '6',
+          username: 'Huỳnh Minh Chiến',
+          email: '20127444@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=6',
+          role: 'user',
+          status: 'normal',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '7',
+          username: 'Nguyễn Hoàng Phúc',
+          email: '20127523@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=7',
+          role: 'user',
+          status: 'normal',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '8',
+          username: 'Lê Duẩn',
+          email: '20127123@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=8',
+          role: 'user',
+          status: 'ban',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '9',
+          username: 'Lê Cung Tiến',
+          email: '20127034@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=9',
+          role: 'user',
+          status: 'normal',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '10',
+          username: 'Nguyễn Đăng Khoa',
+          email: '20127528@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=10',
+          role: 'user',
+          status: 'normal',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '11',
+          username: 'Bùi Thị Dung',
+          email: '20127349@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=11',
+          role: 'admin',
+          status: 'ban',
+          refresh_token: '',
+          access_token: '',
+      },
+      {
+          id: '12',
+          username: 'Bành Hảo Toàn',
+          email: '20127646@student.hcmus.edu.vn',
+          avatarUrl: 'https://i.pravatar.cc/150?u=12',
+          role: 'user',
+          status: 'ban',
+          refresh_token: '',
+          access_token: '',
+      },
+    ];
+
+    const addHostInfo = (classes: Array<ClassType>, accounts: Array<UserType>): Array<ClassType> => {
+      return classes.map((cls) => {
+        const host = accounts.find((account) => account.id === cls.host_id);
+        return {
+          ...cls,
+          host_username: host?.username,
+          host_avatarUrl: host?.avatarUrl,
+        };
+      });
+    };
+
+    const classesWithHostInfo: Array<any> = addHostInfo(templateClasses, templateAccounts);
+
+    return classesWithHostInfo;
   }
 
-  const deleteClassHandler = (currentUser: any) => {
+  const deleteClassHandler = (currentClass: any) => {
     if (!classes) {
         // Handle the case where classes is still loading or null
         return;
     }
     
     const updatedClasses = classes.filter((user: any) => {
-        return user.id !== currentUser.id;
+        return user.id !== currentClass.id;
     });
     setClasses(updatedClasses);
 }
 
-const banClassHandler = (currentUser: any) => {
+const banClassHandler = (currentClass: any) => {
     if (!classes) {
         // Handle the case where classes is still loading or null
         return;
     }
     const updatedClasses = classes.map((user: any) => {
-        if (user.id === currentUser.id && currentUser.status === 'ban') {
-            return {...user, status: 'normal'};
+        if (user.id === currentClass.id && currentClass.status === 'inactive') {
+            return {...user, status: 'active'};
         }
-        else if (user.id === currentUser.id && currentUser.status === 'normal') {
-            return {...user, status: 'ban'};
+        else if (user.id === currentClass.id && currentClass.status === 'active') {
+            return {...user, status: 'inactive'};
         }
         return user;
     });
