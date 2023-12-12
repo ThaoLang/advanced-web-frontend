@@ -91,6 +91,7 @@ export default function ReviewPage() {
                         name="radio-1"
                         className="radio"
                         checked={selectedReview === review}
+                        onChange={() => {}}
                       />
                       <MiniReview
                         studentId={review.studentId}
@@ -122,6 +123,7 @@ export default function ReviewPage() {
                         name="radio-1"
                         className="radio"
                         checked={selectedReview === review}
+                        onChange={() => {}}
                       />
                       <MiniReview
                         studentId={review.studentId}
