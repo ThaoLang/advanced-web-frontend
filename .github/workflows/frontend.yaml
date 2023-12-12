@@ -1,7 +1,7 @@
 name: Frontend CI/CD
 
 on:
-  push: branches:[master]
+  push: branches:["master"]
 
 jobs:
   build:
