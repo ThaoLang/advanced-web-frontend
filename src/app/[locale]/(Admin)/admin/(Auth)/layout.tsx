@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+//import { Inter } from "next/font/google";
 import "@/app/[locale]/globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { ReactNode } from "react";
@@ -13,7 +13,7 @@ interface AuthLayoutProps {
 
 const locales = ["en", "vi"];
 
-const inter = Inter({ subsets: ["latin"] });
+//const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "LightHub",
@@ -28,7 +28,8 @@ export default function AuthLayout({
   if (!locales.includes(locale as any)) notFound();
   return (
     <html lang={locale}>
-      <body className={inter.className}>
+      {/* <body className={inter.className}> */}
+      <body className="">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AuthProvider>{children}</AuthProvider>
         </NextIntlClientProvider>
