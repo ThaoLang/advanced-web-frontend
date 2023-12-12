@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface AddReviewProps {
   addReview: (
@@ -16,31 +18,63 @@ export default function AddReviewModal(props: AddReviewProps) {
   const [studentExplanationProxy, setStudentExplanationProxy] = useState("");
   const t = useTranslations("Review");
 
+  const isGrade = (grade: string) => {
+    const regex = /^(\d*\.)?\d+$/;
+    if (regex.test(grade)) {
+      let temp = Number.parseFloat(grade);
+      return temp >= 0 && temp <= 10;
+    } else return regex.test(grade);
+  };
+
   const addReviewTrigger = () => {
-    props.addReview(
-      gradeCompositionProxy,
-      expectationGradeProxy,
-      studentExplanationProxy
-    );
-    props.closeModal();
+    if (
+      gradeCompositionProxy === "" ||
+      studentExplanationProxy === "" ||
+      expectationGradeProxy === ""
+    ) {
+      toast.warn("Invalid info! Please try again...");
+    } else if (!isGrade(expectationGradeProxy)) {
+      console.log(expectationGradeProxy);
+      console.log("isGrade: ", isGrade(expectationGradeProxy));
+      toast.warn("Invalid grade! Please use . for decimal points");
+    } else {
+      props.addReview(
+        gradeCompositionProxy,
+        expectationGradeProxy,
+        studentExplanationProxy
+      );
+
+      setGradeCompositionProxy("");
+      setExpectationGradeProxy("");
+      setStudentExplanationProxy("");
+      props.closeModal();
+    }
+  };
+
+  const handleSelectChange = (
+    value: string,
+    setter: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    setter(value);
   };
 
   return (
     <div className="flex flex-row m-10 align-middle justify-center">
       <div className="flex flex-col gap-4 w-md">
-        <select className="select select-bordered w-full max-w-xs">
-          <option disabled selected>
-            {t("select_composition")}
-          </option>
-          <option onClick={() => setGradeCompositionProxy(t("mock_quizzes"))}>
-            {t("mock_quizzes")}
-          </option>
-          <option onClick={() => setGradeCompositionProxy(t("mid_term_exam"))}>
-            {t("mid_term_exam")}
-          </option>
-          <option onClick={() => setGradeCompositionProxy(t("final_exam"))}>
-            {t("final_exam")}
-          </option>
+        <p className="text-sm text-md ml-4">
+          <b>{t("select_composition")}</b>
+        </p>
+        <select
+          className="select select-bordered w-full max-w-xs"
+          onChange={(e) =>
+            handleSelectChange(e.target.value, setGradeCompositionProxy)
+          }
+          value={gradeCompositionProxy}
+        >
+          <option value="" />
+          <option value={t("mock_quizzes")}>{t("mock_quizzes")}</option>
+          <option value={t("mid_term_exam")}>{t("mid_term_exam")}</option>
+          <option value={t("final_exam")}>{t("final_exam")}</option>
         </select>
         <p className="text-sm text-md ml-4">
           <b>{t("current_grade")}:</b>{" "}

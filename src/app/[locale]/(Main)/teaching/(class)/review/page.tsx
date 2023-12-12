@@ -6,6 +6,8 @@ import { IoMdClose } from "react-icons/io";
 import UpdateReviewModal from "@/component/classItem/review/UpdateReviewModal";
 import { ReviewType } from "@/model/ReviewType";
 import MiniReview from "@/component/classItem/review/MiniReview";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
@@ -15,7 +17,7 @@ export default function ReviewPage() {
     setShowModal(!showModal);
   };
 
-  let reviewList = [
+  let tempReviewList = [
     {
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
@@ -31,22 +33,6 @@ export default function ReviewPage() {
       expectationGrade: "10",
       explanation: "Em đã làm tốt",
       status: "In Progress",
-    },
-    {
-      studentId: "auth.user?.student_id",
-      gradeComposition: "Điểm cuối kì",
-      currentGrade: "8",
-      expectationGrade: "10",
-      explanation: "Em đã làm tốt",
-      status: "In Progress",
-    },
-    {
-      studentId: "auth.user?.student_id",
-      gradeComposition: "Điểm cuối kì",
-      currentGrade: "8",
-      expectationGrade: "10",
-      explanation: "Em đã làm tốt",
-      status: "Completed",
     },
     {
       studentId: "auth.user?.student_id",
@@ -57,30 +43,25 @@ export default function ReviewPage() {
       status: "Completed",
     },
   ];
+  const [reviewList, setReviewList] = useState<ReviewType[]>(tempReviewList);
 
-  // review detail data
-  let selectedReview = {
-    studentId: "student_id",
-    gradeComposition: "Điểm cuối kì",
-    currentGrade: "8",
-    expectationGrade: "10",
-    explanation: "Em đã làm tốt",
-    status: "In Progress", //need to update
-  };
-
-  // const [selectedReview, setSelectedReview] = useState<ReviewType>();
-
-  const [status, setStatus] = useState(selectedReview.status);
+  const [selectedReview, setSelectedReview] = useState<ReviewType>();
 
   const handleStatus = (currentStatus: string) => {
-    if (currentStatus === "In Progress") {
-      setStatus("Completed");
-    } else if (currentStatus === "Completed") {
-      setStatus("In Progress");
+    if (selectedReview) {
+      if (currentStatus === "In Progress") {
+        selectedReview.status = "Completed";
+      } else if (currentStatus === "Completed") {
+        selectedReview.status = "In Progress";
+      }
+      setSelectedReview(selectedReview);
+
+      // update selected review to review list
+      setReviewList(reviewList);
     }
   };
 
-  // need to update grade data
+  // TODO: need to update grade data
   const [updatedGrade, setUpdatedGrade] = useState("");
   const [note, setNote] = useState("");
 
@@ -97,18 +78,30 @@ export default function ReviewPage() {
                 {t("in_progress_status")}
               </div>
               <div className="overflow-auto h-96 space-y-2">
-                {reviewList.map((review) => (
-                  // <div onClick={() => setSelectedReview(review)}>
-                  <MiniReview
-                    studentId={review.studentId}
-                    gradeComposition={review.gradeComposition}
-                    currentGrade={review.currentGrade}
-                    expectationGrade={review.expectationGrade}
-                    explanation={review.explanation}
-                    status={review.status}
-                  />
-                  // </div>
-                ))}
+                {reviewList
+                  .filter((review) => review.status === "In Progress")
+                  .map((review, index) => (
+                    <div
+                      key={index}
+                      onClick={() => setSelectedReview(review)}
+                      className="flex flex-row"
+                    >
+                      <input
+                        type="radio"
+                        name="radio-1"
+                        className="radio"
+                        checked={selectedReview === review}
+                      />
+                      <MiniReview
+                        studentId={review.studentId}
+                        gradeComposition={review.gradeComposition}
+                        currentGrade={review.currentGrade}
+                        expectationGrade={review.expectationGrade}
+                        explanation={review.explanation}
+                        status={review.status}
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
             <div>
@@ -116,18 +109,30 @@ export default function ReviewPage() {
                 {t("completed_status")}
               </div>
               <div className="overflow-auto h-96 space-y-2">
-                {reviewList.map((review) => (
-                  // <div onClick={() => setSelectedReview(review)}>
-                  <MiniReview
-                    studentId={review.studentId}
-                    gradeComposition={review.gradeComposition}
-                    currentGrade={review.currentGrade}
-                    expectationGrade={review.expectationGrade}
-                    explanation={review.explanation}
-                    status={review.status}
-                  />
-                  // </div>
-                ))}
+                {reviewList
+                  .filter((review) => review.status === "Completed")
+                  .map((review, index) => (
+                    <div
+                      key={index}
+                      onClick={() => setSelectedReview(review)}
+                      className="flex flex-row"
+                    >
+                      <input
+                        type="radio"
+                        name="radio-1"
+                        className="radio"
+                        checked={selectedReview === review}
+                      />
+                      <MiniReview
+                        studentId={review.studentId}
+                        gradeComposition={review.gradeComposition}
+                        currentGrade={review.currentGrade}
+                        expectationGrade={review.expectationGrade}
+                        explanation={review.explanation}
+                        status={review.status}
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
@@ -149,43 +154,53 @@ export default function ReviewPage() {
               currentGrade={selectedReview.currentGrade}
               expectationGrade={selectedReview.expectationGrade}
               explanation={selectedReview.explanation}
-              // status={selectedReview.status}
-              status={status}
+              status={selectedReview.status}
             />
             {/* temp */}
-            {/* <div>Updated grade: {updatedGrade}</div>
-          <div>Note: {note}</div> */}
+            <div>Updated grade: {updatedGrade}</div>
+            <div>Note: {note}</div>
             {/* temp */}
+
+            {/* Modal */}
+            <dialog className={`modal ${showModal ? "modal-open" : ""}`}>
+              <div className="modal-box">
+                <div className="flex flex-row justify-between">
+                  <p className="text-sm text-gray-500">
+                    {/* Press X or click outside to close */}
+                  </p>
+                  <button onClick={handleModal}>
+                    <IoMdClose />
+                  </button>
+                </div>
+                <UpdateReviewModal
+                  gradeComposition={selectedReview.gradeComposition}
+                  currentGrade={selectedReview.currentGrade}
+                  status={selectedReview.status}
+                  toggleStatus={handleStatus}
+                  setUpdatedGrade={setUpdatedGrade}
+                  setNote={setNote}
+                  closeModal={handleModal}
+                />
+              </div>
+              <form method="dialog" className="modal-backdrop">
+                <button onClick={handleModal}>close</button>
+              </form>
+            </dialog>
           </div>
         )}
       </div>
-
-      {/* Modal */}
-      <dialog className={`modal ${showModal ? "modal-open" : ""}`}>
-        <div className="modal-box">
-          <div className="flex flex-row justify-between">
-            <p className="text-sm text-gray-500">
-              {/* Press X or click outside to close */}
-            </p>
-            <button onClick={handleModal}>
-              <IoMdClose />
-            </button>
-          </div>
-          <UpdateReviewModal
-            gradeComposition={selectedReview.gradeComposition}
-            currentGrade={selectedReview.currentGrade}
-            // status={selectedReview.status}
-            status={status}
-            toggleStatus={handleStatus}
-            setUpdatedGrade={setUpdatedGrade}
-            setNote={setNote}
-            closeModal={handleModal}
-          />
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button onClick={handleModal}>close</button>
-        </form>
-      </dialog>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

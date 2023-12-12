@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { FiSend } from "react-icons/fi";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
@@ -6,6 +7,7 @@ import CommentForm from "./CommentForm";
 import { AffectedCommentType, CommentType } from "@/model/CommentType";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 
 interface CommentProps {
   comment: CommentType;
@@ -48,6 +50,8 @@ const Comment = (props: CommentProps) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState("");
+  const { locale } = useParams();
+  const language = locale === "en" ? "en-EN" : "vi-VN";
 
   const openModal = (comment: any) => {
     setCommentToDelete(comment);
@@ -91,16 +95,18 @@ const Comment = (props: CommentProps) => {
                 {props.comment.user.name}
               </h5>
               <span className="text-xs text-dark-light">
-                {/* {new Date(props.comment.createdAt).toLocaleDateString("vi-VN", { */}
-                {new Date(props.comment.createdAt).toLocaleDateString("en-EN", {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                  second: "numeric",
-                })}
+                {new Date(props.comment.createdAt).toLocaleDateString(
+                  language,
+                  {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    second: "numeric",
+                  }
+                )}
               </span>
               <p className="font-roboto mt-[10px] text-dark-light">
                 {props.comment.desc}

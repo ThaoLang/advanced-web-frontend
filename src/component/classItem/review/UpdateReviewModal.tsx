@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface UpdateReviewProps {
   gradeComposition: string;
@@ -16,11 +18,30 @@ export default function UpdateReviewModal(props: UpdateReviewProps) {
   const [noteProxy, setNoteProxy] = useState("");
   const t = useTranslations("Review");
 
+  const isGrade = (grade: string) => {
+    const regex = /^(\d*\.)?\d+$/;
+    if (regex.test(grade)) {
+      let temp = Number.parseFloat(grade);
+      return temp >= 0 && temp <= 10;
+    } else return regex.test(grade);
+  };
+
   const updateReview = () => {
-    props.setUpdatedGrade(updatedGradeProxy);
-    props.setNote(noteProxy);
-    props.toggleStatus("In Progress");
-    props.closeModal();
+    if (updatedGradeProxy === "") {
+      toast.warn("Please update grade...");
+    } else if (!isGrade(updatedGradeProxy)) {
+      console.log(updatedGradeProxy);
+      console.log("isGrade: ", isGrade(updatedGradeProxy));
+      toast.warn("Invalid grade! Please use . for decimal points");
+    } else {
+      props.setUpdatedGrade(updatedGradeProxy);
+      props.setNote(noteProxy);
+      props.toggleStatus("In Progress");
+
+      setUpdatedGradeProxy("");
+      setNoteProxy("");
+      props.closeModal();
+    }
   };
 
   const updateStatus = () => {

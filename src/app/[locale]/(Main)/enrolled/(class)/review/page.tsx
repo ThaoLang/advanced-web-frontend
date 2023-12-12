@@ -7,6 +7,8 @@ import AddReviewModal from "@/component/classItem/review/AddReviewModal";
 import { useAuth } from "@/context/AuthContext";
 import MiniReview from "@/component/classItem/review/MiniReview";
 import { ReviewType } from "@/model/ReviewType";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
@@ -16,8 +18,9 @@ export default function ReviewPage() {
     setShowModal(!showModal);
   };
   const auth = useAuth();
+  const studentId = "auth.user?.student_id"; // TODO: need to change this
+
   const [selectedReview, setSelectedReview] = useState<ReviewType>();
-  const [newReview, setNewReview] = useState<ReviewType>();
 
   const addReview = (
     gradeComposition: string,
@@ -25,18 +28,20 @@ export default function ReviewPage() {
     studentExplanation: string
   ) => {
     let tempReview = {
-      studentId: "auth.user?.student_id",
+      studentId: studentId,
       gradeComposition: gradeComposition,
-      currentGrade: "8", //query the current grade
+      currentGrade: "8", // TODO: query the current grade
       expectationGrade: expectationGrade,
       explanation: studentExplanation,
       status: "In Progress",
-    };
-    setNewReview(tempReview);
+    } as ReviewType;
+
     reviewList.push(tempReview);
+    setReviewList(reviewList);
+    toast.success("Add review successfully!");
   };
 
-  let reviewList = [
+  let tempReviewList = [
     {
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
@@ -52,22 +57,6 @@ export default function ReviewPage() {
       expectationGrade: "10",
       explanation: "Em đã làm tốt",
       status: "In Progress",
-    },
-    {
-      studentId: "auth.user?.student_id",
-      gradeComposition: "Điểm cuối kì",
-      currentGrade: "8",
-      expectationGrade: "10",
-      explanation: "Em đã làm tốt",
-      status: "In Progress",
-    },
-    {
-      studentId: "auth.user?.student_id",
-      gradeComposition: "Điểm cuối kì",
-      currentGrade: "8",
-      expectationGrade: "10",
-      explanation: "Em đã làm tốt",
-      status: "Completed",
     },
     {
       studentId: "auth.user?.student_id",
@@ -78,11 +67,16 @@ export default function ReviewPage() {
       status: "Completed",
     },
   ];
+  const [reviewList, setReviewList] = useState<ReviewType[]>(tempReviewList);
 
   return (
     <div>
       <div className="grid grid-cols-2 mx-20">
-        <div className="hidden lg:block lg:col-span-1">
+        <div
+          className={`${
+            selectedReview ? "hidden lg:block" : "col-span-2"
+          } lg:col-span-1`}
+        >
           <div className="m-3 mx-10 text-2xl lg:text-3xl text-yellow-500 flex flex-row items-center justify-between">
             {t("my_review")}
             <button
@@ -99,18 +93,30 @@ export default function ReviewPage() {
                 {t("in_progress_status")}
               </div>
               <div className="overflow-auto h-96 space-y-2">
-                {reviewList.map((review) => (
-                  <div onClick={() => setSelectedReview(review)}>
-                    <MiniReview
-                      studentId={review.studentId}
-                      gradeComposition={review.gradeComposition}
-                      currentGrade={review.currentGrade}
-                      expectationGrade={review.expectationGrade}
-                      explanation={review.explanation}
-                      status={review.status}
-                    />
-                  </div>
-                ))}
+                {reviewList
+                  .filter((review) => review.status === "In Progress")
+                  .map((review, index) => (
+                    <div
+                      key={index}
+                      onClick={() => setSelectedReview(review)}
+                      className="flex flex-row"
+                    >
+                      <input
+                        type="radio"
+                        name="radio-1"
+                        className="radio"
+                        checked={selectedReview === review}
+                      />
+                      <MiniReview
+                        studentId={review.studentId}
+                        gradeComposition={review.gradeComposition}
+                        currentGrade={review.currentGrade}
+                        expectationGrade={review.expectationGrade}
+                        explanation={review.explanation}
+                        status={review.status}
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
             <div>
@@ -118,18 +124,30 @@ export default function ReviewPage() {
                 {t("completed_status")}
               </div>
               <div className="overflow-auto h-96 space-y-2">
-                {reviewList.map((review) => (
-                  <div onClick={() => setSelectedReview(review)}>
-                    <MiniReview
-                      studentId={review.studentId}
-                      gradeComposition={review.gradeComposition}
-                      currentGrade={review.currentGrade}
-                      expectationGrade={review.expectationGrade}
-                      explanation={review.explanation}
-                      status={review.status}
-                    />
-                  </div>
-                ))}
+                {reviewList
+                  .filter((review) => review.status === "Completed")
+                  .map((review, index) => (
+                    <div
+                      key={index}
+                      onClick={() => setSelectedReview(review)}
+                      className="flex flex-row"
+                    >
+                      <input
+                        type="radio"
+                        name="radio-1"
+                        className="radio"
+                        checked={selectedReview === review}
+                      />
+                      <MiniReview
+                        studentId={review.studentId}
+                        gradeComposition={review.gradeComposition}
+                        currentGrade={review.currentGrade}
+                        expectationGrade={review.expectationGrade}
+                        explanation={review.explanation}
+                        status={review.status}
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
@@ -168,6 +186,19 @@ export default function ReviewPage() {
           <button onClick={handleModal}>close</button>
         </form>
       </dialog>
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

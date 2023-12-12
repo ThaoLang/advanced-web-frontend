@@ -6,7 +6,7 @@ const MiniReview = (review: ReviewType) => {
   const t = useTranslations("Review");
 
   return (
-    <div className="bg-white hover:bg-slate-50 border p-2 rounded-xl shadow-md overflow-hidden relative cursor-pointer">
+    <div className="bg-white hover:bg-slate-100 border p-2 rounded-xl shadow-md overflow-hidden relative cursor-pointer">
       <div className="flex flex-col">
         <div>
           <b>{t("grade_composition")}:</b> {review.gradeComposition}
