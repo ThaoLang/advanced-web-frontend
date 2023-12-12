@@ -16,7 +16,7 @@ export default function ForgetPasswordPage() {
   const isRouting = false;
   const otpNextPage = "reset-password";
   const t = useTranslations("Authentication");
-  context.request = "http://localhost:4000/auth/send-recovery-email";
+  context.request = "${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/send-recovery-email";
 
   useEffect(() => {
     setPage(context.page);

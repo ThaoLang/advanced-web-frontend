@@ -3,11 +3,7 @@ import { Inter } from "next/font/google";
 import "@/app/[locale]/globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { ReactNode } from "react";
-import {
-  NextIntlClientProvider,
-  useMessages,
-  useTranslations,
-} from "next-intl";
+import { NextIntlClientProvider, useMessages } from "next-intl";
 import { notFound } from "next/navigation";
 
 interface AuthLayoutProps {

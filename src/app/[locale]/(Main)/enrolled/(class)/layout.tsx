@@ -12,7 +12,7 @@ export default function EnrolledLayout({
     { name: t("about"), href: "/enrolled/detail" },
     { name: t("members"), href: "/enrolled/members" },
     { name: t("grades"), href: "/enrolled/grades" },
-    { name: t("settings"), href: "/enrolled/settings" },
+    { name: t("review"), href: "/enrolled/review" },
   ];
 
   let option = "About";

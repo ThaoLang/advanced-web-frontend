@@ -62,7 +62,7 @@ export default function ResetPassword(props: ResetPasswordProps) {
 
     context.password = password;
     try {
-      const response = await axios.post(`http://localhost:4000/auth/reset-password`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/reset-password`, {
         email: context.email,
         password: context.password,
       });

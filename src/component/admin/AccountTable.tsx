@@ -81,7 +81,7 @@ export default async function AccountTable(props: AccountTableProps) {
                     onBan={handleBan}
                 />
             )}
-            <div className="overflow-x-auto mt-5 bg-white">
+            <div className="overflow-x-auto mt-5 bg-white border shadow-lg">
                 <table className="table">
                     {/* head */}
                     <thead>
@@ -91,7 +91,6 @@ export default async function AccountTable(props: AccountTableProps) {
                             <th>Role</th>
                             <th>Status</th>
                             <th>Actions</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -113,7 +112,7 @@ export default async function AccountTable(props: AccountTableProps) {
                                         </div>
                                     </td>
                                     {
-                                        items.role.name === 'admin' ?
+                                        items.role === 'admin' ?
                                             (
                                                 <td>
                                                     <span className="inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium text-yellow-800 bg-yellow-200 ring-1 ring-inset ring-yellow-600/20">Admin</span>
@@ -166,7 +165,7 @@ export default async function AccountTable(props: AccountTableProps) {
                         }
                     </tbody>
                 </table>
-                <div className="mt-10 w-full flex flex-col lg:flex-row justify-center items-center lg:justify-between">
+                <div className="lg:mt-10 w-full flex flex-col lg:flex-row justify-center items-center lg:justify-between">
                     <div className="mx-5 my-5">Showing {startIndex} to {endIndex} of {props.totalItems} entries</div>
                     <div className="mx-10 my-5">
                         <Pagination

@@ -1,46 +1,307 @@
 "use client";
 import { useAccount } from "@/context/AccountContext";
+import { ClassListType } from "@/model/ClassListType";
+import { ClassType } from "@/model/ClassType";
 // import { mapStudentId, unmapStudentId } from "@/utils/IdMappingUtils";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaUser, FaAngleDown } from 'react-icons/fa6'
+
+//Assume loading state...
+const templateClassDetails: Array<ClassListType> = [
+  {
+    class_id: 'class1',
+    user_id: '1',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class2',
+    user_id: '1',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class14',
+    user_id: '1',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class2',
+    user_id: '2',
+    role: 'student',
+    student_id: '20127679',
+  },
+  {
+    class_id: 'class3',
+    user_id: '3',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class4',
+    user_id: '4',
+    role: 'student',
+    student_id: '20127598',
+  },
+  {
+    class_id: 'class4',
+    user_id: '5',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class5',
+    user_id: '5',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class6',
+    user_id: '6',
+    role: 'student',
+    student_id: '20127444',
+  },
+  {
+    class_id: 'class6',
+    user_id: '7',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class7',
+    user_id: '7',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class8',
+    user_id: '8',
+    role: 'student',
+    student_id: '20127523',
+  },
+  {
+    class_id: 'class9',
+    user_id: '9',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class10',
+    user_id: '10',
+    role: 'student',
+    student_id: '20127528',
+  },
+  {
+    class_id: 'class11',
+    user_id: '11',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class12',
+    user_id: '12',
+    role: 'student',
+    student_id: '20127646',
+  },
+  {
+    class_id: 'class12',
+    user_id: '7',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class13',
+    user_id: '3',
+    role: 'teacher',
+    student_id: '',
+  },
+  {
+    class_id: 'class14',
+    user_id: '4',
+    role: 'student',
+    student_id: '20127679',
+  },
+  {
+    class_id: 'class15',
+    user_id: '5',
+    role: 'teacher',
+    student_id: '',
+  },
+];
+
+const templateClassList: Array<ClassType> = [
+  {
+    id: 'class1',
+    host_id: '1',
+    description: 'Introduction to Mathematics',
+    name: 'Mathematics 101',
+    class_code: 'MATH101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/math101',
+  },
+  {
+    id: 'class2',
+    host_id: '1',
+    description: 'Programming Fundamentals',
+    name: 'Programming 101',
+    class_code: 'CS101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/cs101',
+  },
+  {
+    id: 'class3',
+    host_id: '3',
+    description: 'Literature Appreciation',
+    name: 'English Literature',
+    class_code: 'ENG101',
+    status: 'inactive',
+    invite_url: 'https://example.com/invite/eng101',
+  },
+  {
+    id: 'class4',
+    host_id: '5',
+    description: 'Chemistry Basics',
+    name: 'Chemistry 101',
+    class_code: 'CHEM101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/chem101',
+  },
+  {
+    id: 'class5',
+    host_id: '5',
+    description: 'History of Art',
+    name: 'Art History',
+    class_code: 'ART101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/art101',
+  },
+  {
+    id: 'class6',
+    host_id: '7',
+    description: 'Web Development Workshop',
+    name: 'Web Dev Workshop',
+    class_code: 'WEBDEV101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/webdev101',
+  },
+  {
+    id: 'class7',
+    host_id: '7',
+    description: 'Physics Principles',
+    name: 'Physics 101',
+    class_code: 'PHYSICS101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/physics101',
+  },
+  {
+    id: 'class8',
+    host_id: '11',
+    description: 'Introduction to Psychology',
+    name: 'Psychology 101',
+    class_code: 'PSYCH101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/psych101',
+  },
+  {
+    id: 'class9',
+    host_id: '9',
+    description: 'Computer Networks',
+    name: 'Networking Basics',
+    class_code: 'NETWORK101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/network101',
+  },
+  {
+    id: 'class10',
+    host_id: '11',
+    description: 'Human Anatomy',
+    name: 'Anatomy 101',
+    class_code: 'ANATOMY101',
+    status: 'inactive',
+    invite_url: 'https://example.com/invite/anatomy101',
+  },
+  {
+    id: 'class11',
+    host_id: '11',
+    description: 'Environmental Science',
+    name: 'Environmental Science',
+    class_code: 'ENVSCI101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/envsci101',
+  },
+  {
+    id: 'class12',
+    host_id: '7',
+    description: 'Data Structures and Algorithms',
+    name: 'DSA Workshop',
+    class_code: 'DSA101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/dsa101',
+  },
+  {
+    id: 'class13',
+    host_id: '3',
+    description: 'Microeconomics Basics',
+    name: 'Microeconomics 101',
+    class_code: 'ECON101',
+    status: 'inactive',
+    invite_url: 'https://example.com/invite/econ101',
+  },
+  {
+    id: 'class14',
+    host_id: '1',
+    description: 'Introduction to Sociology',
+    name: 'Sociology 101',
+    class_code: 'SOCIO101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/socio101',
+  },
+  {
+    id: 'class15',
+    host_id: '5',
+    description: 'Digital Marketing Strategies',
+    name: 'Marketing 101',
+    class_code: 'MARKETING101',
+    status: 'active',
+    invite_url: 'https://example.com/invite/marketing101',
+  },
+];
+
+async function getClassListByUserId(user_id: string) {
+  const matchingClasses: Array<ClassType> = [];
+
+  templateClassDetails.forEach((items) => {
+    if (items.user_id === user_id) {
+      const classList = templateClassList.find(
+        (classItem) => classItem.id === items.class_id
+      );
+      if (classList) {
+        console.log(classList);
+        matchingClasses.push(classList);
+      }
+    }
+  });
+
+  return matchingClasses;
+}
+
+async function getClassDetailsByUserId(user_id: string) {
+  const matchingClassDetails: Array<ClassListType> = templateClassDetails.filter(
+    (classListItem) => classListItem.user_id === user_id
+  );
+
+  return matchingClassDetails;
+}
+
 
 export default function Page({ params }: { params: { slug: string } }) {
   const context = useAccount();
-  console.log('Account Context: ', context);
-  const classes = [
-    {
-      id: 2,
-      imageUrl:
-        "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-      name: "My Class Name",
-      description: "This is the class",
-      inviteUrl: "inviteurl",
-      page: "enrolled",
-    },
-    {
-      id: 2,
-      imageUrl:
-        "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-      name: "My Class Name",
-      description: "This is the class",
-      inviteUrl: "inviteurl",
-      page: "enrolled",
-    },
-    {
-      id: 2,
-      imageUrl:
-        "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-      name: "My Class Name",
-      description: "This is the class",
-      inviteUrl: "inviteurl",
-      page: "enrolled",
-    },
-  ];
-  
+
   const [isEditable, setIsEditable] = useState(false);
   const [username, setUsername] = useState(context.account?.username);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [studentId, setStudentId] = useState('');
   const [email, setEmail] = useState(context.account?.email);
   const [role, setRole] = useState(context.account?.role);
   const roles = [
@@ -52,8 +313,19 @@ export default function Page({ params }: { params: { slug: string } }) {
       id: "2",
       name: "User"
     },
-
+    
   ];
+
+  useEffect(() => {
+    const loadClassInfo = async() => {
+      context.classList = await getClassListByUserId(context.account?.id ?? '');
+      context.classDetails = await getClassDetailsByUserId(context.account?.id ?? '');
+      setStudentId(context.classDetails.find(items => items.student_id !== '')?.student_id ?? '');
+      console.log('Account Context: ', context);
+    };
+    
+    loadClassInfo();
+  },[context.classList, context.classDetails]);
   const saveInformation = () => {
 
   }
@@ -90,7 +362,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                       dark:bg-form-input dark:focus:border-primary" />
 
                   <label className="mt-5 block text-lg text-black dark:text-white">
-                    Phone Number
+                    StudentId
                   </label>
                   <input type="text" disabled={!isEditable}
                     className="mt-3 w-full rounded-lg border-[1.5px] 
@@ -99,7 +371,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                       outline-none transition focus:border-primary active:border-primary 
                       disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark 
                       dark:bg-form-input dark:focus:border-primary"
-                    value={phoneNumber} />
+                    value={studentId} />
                   <label className="mt-5 block text-lg text-black dark:text-white">
                     Email Address
                   </label>
@@ -125,7 +397,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 focus:border-primary active:border-primary dark:border-form-strokedark 
                 dark:bg-form-input disabled:bg-gray-100"
                     disabled={!isEditable}
-                    value={role?.id}>
+                    value={role}>
                     {
                       roles.map((items, index) => (
                         <option key={index} value={items.id}>{items.name}</option>
@@ -225,22 +497,13 @@ export default function Page({ params }: { params: { slug: string } }) {
               </div>
               <div className="p-7">
                   {
-                    classes.map((items, index) =>
+                      context.classList?.map((items, index) =>
                       <div key={index} className="mb-5 card card-side bg-base-100 shadow-lg">
                         {/* <figure><img src={items.imageUrl}></img></figure> */}
                          <div className="card-body">
                             <h2 className="card-title">{items.name}</h2>
                             <p>{items.description}</p>
-                            {/* <p>
-                              {
-                                mapStudentId('HIS', context.account?.id as string)
-                              }
-                            </p>
-                            <p>
-                              {
-                                unmapStudentId(mapStudentId('HIS', context.account?.id as string))
-                              }
-                            </p> */}
+                            <p className="">Role: {context.classDetails?.at(0)?.role}</p>
                         </div>
                       </div>
                     )

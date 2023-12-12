@@ -1,9 +1,7 @@
-import { RoleAccountType } from "./RoleAccount";
-
 export type ClassListType = {
     class_id: string;
     user_id: string;
-    role: RoleAccountType;
+    role: string;
     student_id: string;
 };
   

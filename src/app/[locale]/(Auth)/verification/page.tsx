@@ -11,7 +11,7 @@ export default function AuthVerificationPage() {
     const [showErrorMsg, setShowErrorMsg] = useState(false);
     const context = useRecoveryContext();
     const [page, setPage] = useState(context.page);
-    context.request = "http://localhost:4000/auth/send-verification";
+    context.request = "${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/send-verification";
     const isRouting = true;
     const otpNextPage = "/auth";
     const t = useTranslations("Authentication");

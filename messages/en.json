@@ -21,7 +21,7 @@
     "calendar": "Calendar",
     "teaching": "Teaching",
     "enrolled": "Enrolled",
-    "setting": "Setting",
+    "settings": "Settings",
     "hi": "Hi",
     "manage_account": "Manage your account",
     "logout": "Logout",
@@ -87,6 +87,7 @@
     "members": "Members",
     "grades": "Grades",
     "settings": "Settings",
+    "review": "Reviews",
     "create_class_btn": "Create class",
     "create_class_name": "Class name (required)",
     "create_class_desc": "Description",
@@ -104,5 +105,36 @@
     "delete_class": "Delete class",
     "remove": "Remove",
     "edit": "Edit"
+  },
+  "Comment": {
+    "comments": " comment(s)",
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "leave_a_comment": "Leave a comment..."
+  },
+  "Review": {
+    "review_detail": "Review details",
+    "my_review": "My Reviews",
+    "all_reviews": "All Reviews",
+    "student": "Student",
+    "grade_composition": "Grade composition",
+    "current_grade": "Current grade",
+    "student_expectation_grade": "Expectation grade",
+    "student_explanation": "Student explanation",
+    "status": "Review status",
+    "update": "Update",
+    "create_review": "Create review",
+    "select_composition": "Select grade composition",
+    "mock_quizzes": "Mock Quizzes",
+    "mid_term_exam": "Mid-term Exam",
+    "final_exam": "Final Exam",
+    "updated_grade": "Updated grade",
+    "note": "Note (optional)",
+    "update_grade": "Update grade",
+    "mark_as_completed": "Mark as completed",
+    "mark_as_in_progress": "Mark as in progress",
+    "in_progress_status": "In Progress",
+    "completed_status": "Completed"
   }
 }
