@@ -132,6 +132,7 @@ export default function Account({
         const templateAccounts: Array<UserType> = [
             {
                 id: '1',
+                student_id: '',
                 username: 'Nguyễn Minh Quang',
                 email: '20127605@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=1',
@@ -142,6 +143,7 @@ export default function Account({
             },
             {
                 id: '2',
+                student_id: '',
                 username: 'Lê Hoàng Khanh Nguyên',
                 email: '20127679@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=2',
@@ -152,6 +154,7 @@ export default function Account({
             },
             {
                 id: '3',
+                student_id: '',
                 username: 'Lăng Thảo Thảo',
                 email: '20127629@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=3',
@@ -162,6 +165,7 @@ export default function Account({
             },
             {
                 id: '4',
+                student_id: '',
                 username: 'Lê Hoài Phương',
                 email: '20127598@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=4',
@@ -172,6 +176,7 @@ export default function Account({
             },
             {
                 id: '5',
+                student_id: '',
                 username: 'Hoàng Hữu Minh An',
                 email: '20127102@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=5',
@@ -182,6 +187,7 @@ export default function Account({
             },
             {
                 id: '6',
+                student_id: '',
                 username: 'Huỳnh Minh Chiến',
                 email: '20127444@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=6',
@@ -192,6 +198,7 @@ export default function Account({
             },
             {
                 id: '7',
+                student_id: '',
                 username: 'Nguyễn Hoàng Phúc',
                 email: '20127523@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=7',
@@ -202,6 +209,7 @@ export default function Account({
             },
             {
                 id: '8',
+                student_id: '',
                 username: 'Lê Duẩn',
                 email: '20127123@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=8',
@@ -212,6 +220,7 @@ export default function Account({
             },
             {
                 id: '9',
+                student_id: '',
                 username: 'Lê Cung Tiến',
                 email: '20127034@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=9',
@@ -222,6 +231,7 @@ export default function Account({
             },
             {
                 id: '10',
+                student_id: '',
                 username: 'Nguyễn Đăng Khoa',
                 email: '20127528@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=10',
@@ -232,6 +242,7 @@ export default function Account({
             },
             {
                 id: '11',
+                student_id: '',
                 username: 'Bùi Thị Dung',
                 email: '20127349@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=11',
@@ -242,6 +253,7 @@ export default function Account({
             },
             {
                 id: '12',
+                student_id: '',
                 username: 'Bành Hảo Toàn',
                 email: '20127646@student.hcmus.edu.vn',
                 avatarUrl: 'https://i.pravatar.cc/150?u=12',
