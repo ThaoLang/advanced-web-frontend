@@ -62,7 +62,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser({
         ...user,
         username: username ?? user.username,
-        avatarUrl: avatarUrl ?? user.avatarUrl,
+        avatar_url: avatarUrl ?? user.avatar_url,
       });
     }
   };

@@ -64,6 +64,7 @@
     "profile": "Your Profile",
     "username": "Username",
     "email": "Email",
+    "student_id": "Student ID",
     "update_btn": "Update Profile",
     "bio_tab": "Bio",
     "comment_tab": "Comment",

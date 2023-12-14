@@ -19,7 +19,8 @@ export default function Profile() {
 
   const updateProfile = async (
     _username: string,
-    _email: string,
+    // _email: string,
+    _studentId: string,
     _profilePicture: string
   ) => {
     // setUser((prevUser: UserType | null) => {
@@ -46,9 +47,10 @@ export default function Profile() {
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/update`,
         {
-          email: _email,
+          // email: _email,
           username: _username,
-          // avatarUrl: _profilePicture,
+          // avatar_url: _profilePicture,
+          student_id: _studentId,
         },
         {
           headers: {
@@ -72,15 +74,17 @@ export default function Profile() {
 
   const handleSaveInfo = async (
     _username: string | undefined,
-    _email: string | undefined,
+    // _email: string | undefined,
+    _studentId: string | undefined,
     _profilePicture: string | undefined
   ) => {
     auth.updateUser(_username, _profilePicture);
     if (auth.user)
       await updateProfile(
         _username ? _username : "",
-        _email ? _email : "",
-        auth.user.avatarUrl
+        // _email ? _email : "",
+        _studentId ? _studentId : "",
+        auth.user.avatar_url
       );
   };
 

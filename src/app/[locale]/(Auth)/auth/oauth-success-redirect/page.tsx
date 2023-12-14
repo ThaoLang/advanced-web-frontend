@@ -9,11 +9,14 @@ export default function OAuthSuccessRedirect() {
   const searchParams = useSearchParams();
 
   const getCurrentUser = async (access_token: string) => {
-    const response = await axios.get("http://localhost:4000/auth/user", {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/user`,
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
     if (response.status === 200) {
       const cur_user: UserType = response.data;
 
