@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function CreateClassForm() {
   const [nameProxy, setNameProxy] = useState("");
   const [descriptionProxy, setDescriptionProxy] = useState("");
   const t = useTranslations("Tabs");
+
+  const checkInput = () => {
+    if (nameProxy === "") {
+      toast.error(t("invalid_info"));
+    }
+  };
 
   return (
     <div className="flex flex-row m-10 align-middle justify-center">
@@ -26,8 +34,10 @@ export default function CreateClassForm() {
           onChange={(e) => setDescriptionProxy(e.target.value)}
           maxLength={15}
         />
-        <button className="btn btn-info w-full max-w-xs">
-          {" "}
+        <button
+          className="btn btn-info w-full max-w-xs"
+          onClick={() => checkInput()}
+        >
           {t("create_class_btn")}!
         </button>
       </div>

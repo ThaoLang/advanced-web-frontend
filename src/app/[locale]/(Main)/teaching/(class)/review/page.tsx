@@ -58,6 +58,7 @@ export default function ReviewPage() {
 
       // update selected review to review list
       setReviewList(reviewList);
+      toast.success(t("update_review_success"));
     }
   };
 

@@ -6,6 +6,8 @@ import { FaPlus } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { useTranslations } from "next-intl";
 import NewClass from "@/component/classItem/NewClass";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const classes = [
   {
@@ -214,6 +216,18 @@ export default function HomePage() {
           onChange={(page) => setPage(page)}
         />
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   ) : (
     <div></div>

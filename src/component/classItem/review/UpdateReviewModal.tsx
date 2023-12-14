@@ -28,11 +28,11 @@ export default function UpdateReviewModal(props: UpdateReviewProps) {
 
   const updateReview = () => {
     if (updatedGradeProxy === "") {
-      toast.warn("Please update grade...");
+      toast.warn(t("please_update_grade"));
     } else if (!isGrade(updatedGradeProxy)) {
       console.log(updatedGradeProxy);
       console.log("isGrade: ", isGrade(updatedGradeProxy));
-      toast.warn("Invalid grade! Please use . for decimal points");
+      toast.warn(t("invalid_grade"));
     } else {
       props.setUpdatedGrade(updatedGradeProxy);
       props.setNote(noteProxy);

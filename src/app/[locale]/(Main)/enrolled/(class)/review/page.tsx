@@ -38,7 +38,7 @@ export default function ReviewPage() {
 
     reviewList.push(tempReview);
     setReviewList(reviewList);
-    toast.success("Add review successfully!");
+    toast.success(t("add_review_success"));
   };
 
   let tempReviewList = [

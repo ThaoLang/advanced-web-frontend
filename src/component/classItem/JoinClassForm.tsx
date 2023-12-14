@@ -1,10 +1,20 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function JoinClassForm() {
   const [classCodeProxy, setClassCodeProxy] = useState("");
-  const [studentIdProxy, setStudentIdProxy] = useState("");
   const t = useTranslations("Tabs");
+
+  const checkInput = () => {
+    if (classCodeProxy == "") {
+      toast.error(t("invalid_info"));
+    } else if (classCodeProxy !== "") {
+      //update logic into checking if class code exists
+      toast.error(t("unavailable_class_code"));
+    }
+  };
 
   return (
     <div className="flex flex-row m-10 align-middle justify-center">
@@ -19,15 +29,10 @@ export default function JoinClassForm() {
           onChange={(e) => setClassCodeProxy(e.target.value)}
           maxLength={15}
         />
-        <input
-          type="text"
-          placeholder={t("join_class_id")}
-          className="input input-bordered w-full max-w-xs"
-          value={studentIdProxy}
-          onChange={(e) => setStudentIdProxy(e.target.value)}
-          maxLength={15}
-        />
-        <button className="btn btn-info w-full max-w-xs">
+        <button
+          className="btn btn-info w-full max-w-xs"
+          onClick={() => checkInput()}
+        >
           {t("join_class_btn")}!
         </button>
       </div>

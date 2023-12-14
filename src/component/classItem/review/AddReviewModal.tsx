@@ -32,11 +32,11 @@ export default function AddReviewModal(props: AddReviewProps) {
       studentExplanationProxy === "" ||
       expectationGradeProxy === ""
     ) {
-      toast.warn("Invalid info! Please try again...");
+      toast.warn(t("invalid_info"));
     } else if (!isGrade(expectationGradeProxy)) {
       console.log(expectationGradeProxy);
       console.log("isGrade: ", isGrade(expectationGradeProxy));
-      toast.warn("Invalid grade! Please use . for decimal points");
+      toast.warn(t("invalid_grade"));
     } else {
       props.addReview(
         gradeCompositionProxy,
