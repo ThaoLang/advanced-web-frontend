@@ -79,44 +79,51 @@ const Banner = (classInfo: BannerProp) => {
             {classInfo.name}
           </div>
 
-          <div className="mt-5 flex flex-row justify-between align-middle">
-            <span className="flex flex-row text-sm">
-              <div onClick={() => setIsActive(!isActive)}>
-                {isActive ? (
-                  <IoIosArrowDropdown className="mt-0.5 text-xl text-gray-500 ml-1 cursor-pointer" />
-                ) : (
-                  <IoIosArrowDropup className="mt-0.5 text-xl text-gray-500 ml-1 cursor-pointer" />
-                )}
-              </div>
-            </span>
-          </div>
-
-          {isActive && (
-            <div className="grid grid-cols-6 items-center justify-center">
-              <div className="hidden md:block md:col-span-1 lg:col-span-1">
-                <p className="m-3 text-sm lg:text-md">{t("class_code")}:</p>
-                <p className="m-3 text-sm lg:text-md">{t("invite_url")}:</p>
-              </div>
-              <div className="col-span-5 md:col-span-4 lg:col-span-3 text-blue-500">
-                <p className="m-3 text-lg">{classInfo.classCode}</p>
-                <p className="m-3 text-lg">{classInfo.inviteUrl}</p>
-              </div>
-              <div className="text-lg gap-4">
-                <div
-                  className="row-end-2 p-2 cursor-pointer"
-                  onClick={() => CopyText(classInfo.classCode)}
-                >
-                  <FaRegCopy />
+          <div className="collapse collapse-arrow">
+            <input type="checkbox" onChange={() => setIsActive(!isActive)} />
+            <div className="collapse-title flex flex-row justify-between align-middle">
+              <span className="absolute text-sm align-bottom end-10">
+                <div>
+                  {isActive ? (
+                    <div className="mt-0.5 text-gray-500 ml-1 cursor-pointer">
+                      {t("hide")}
+                    </div>
+                  ) : (
+                    <div className="mt-0.5 text-gray-500 ml-1 cursor-pointer">
+                      {t("view_details")}
+                    </div>
+                  )}
                 </div>
-                <div
-                  className="row-start-2 p-2 cursor-pointer"
-                  onClick={() => CopyText(classInfo.inviteUrl)}
-                >
-                  <FaRegCopy />
+              </span>
+            </div>
+
+            <div className="collapse-content">
+              <div className="grid grid-cols-6 items-center justify-center">
+                <div className="hidden md:block md:col-span-1 lg:col-span-1">
+                  <p className="m-2 text-sm lg:text-md">{t("class_code")}:</p>
+                  <p className="m-2 text-sm lg:text-md">{t("invite_url")}:</p>
+                </div>
+                <div className="col-span-5 md:col-span-4 lg:col-span-3 text-blue-500">
+                  <p className="m-2 text-lg">{classInfo.classCode}</p>
+                  <p className="m-2 text-lg">{classInfo.inviteUrl}</p>
+                </div>
+                <div className="text-lg gap-4">
+                  <div
+                    className="row-end-2 p-2 cursor-pointer"
+                    onClick={() => CopyText(classInfo.classCode)}
+                  >
+                    <FaRegCopy />
+                  </div>
+                  <div
+                    className="row-start-2 p-2 cursor-pointer"
+                    onClick={() => CopyText(classInfo.inviteUrl)}
+                  >
+                    <FaRegCopy />
+                  </div>
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
       {isCopied && (

@@ -4,25 +4,23 @@ import DragNDrop from "./DragNDrop";
 import { GrCircleInformation } from "react-icons/gr";
 import { GoChecklist } from "react-icons/go";
 import { VscFeedback } from "react-icons/vsc";
-// import { useAuth } from "@/context/AuthContext";
 import { UserType } from "@/model/UserType";
 import { useTranslations } from "next-intl";
 // import Image from 'next/image'
 
 interface ProfileFormProp {
-  // username: string;
-  // email: string;
-  // profilePicture: string;
   user: UserType | null;
   saveInfo: (
     username: string | undefined,
-    email: string | undefined,
+    // email: string | undefined,
+    studentId: string | undefined,
     profilePicture: string | any
   ) => void;
 }
 
 export default function ProfileForm(props: ProfileFormProp) {
-  const [emailProxy, setEmailProxy] = useState(props.user?.email);
+  // const [emailProxy, setEmailProxy] = useState(props.user?.email);
+  const [studentIdProxy, setStudentIdProxy] = useState(props.user?.student_id);
   const [usernameProxy, setUsernameProxy] = useState(props.user?.username);
   const [profilePictureProxy, setProfilePictureProxy] = useState(
     props.user?.avatarUrl
@@ -36,11 +34,10 @@ export default function ProfileForm(props: ProfileFormProp) {
   };
 
   const saveChanges = async () => {
-    props.saveInfo(usernameProxy, emailProxy, profilePictureProxy);
+    props.saveInfo(usernameProxy, studentIdProxy, profilePictureProxy);
     setIsEditable(!isEditable);
   };
 
-  // use effect to change section?
   const handleOptionClick = async (option: string) => {
     setOption(option);
   };
@@ -74,7 +71,7 @@ export default function ProfileForm(props: ProfileFormProp) {
           </div>
         </div>
         <div className="grid grid-rows-4">
-          <div className="row-span-3 flex flex-col p-4 m-8 w-96 h-72 mx-auto my-auto bg-white">
+          <div className="row-span-3 flex flex-col p-4 m-8 w-96 h-80 mx-auto my-auto bg-white">
             <label className="font-semibold h-fit text-2xl text-center my-10 mx-auto">
               {t("profile")}
             </label>
@@ -101,6 +98,37 @@ export default function ProfileForm(props: ProfileFormProp) {
             </div>
             <div className="grid grid-cols-3 h-24 w-full">
               <label className="font-semibold text-md text-left inline-block align-bottom mt-2 ml-4">
+                {t("student_id")}:
+              </label>
+              <div className="col-span-2">
+                {(isEditable && (
+                  <>
+                    {(!props.user?.student_id && (
+                      <input
+                        type="text"
+                        placeholder={t("student_id")}
+                        className="input input-bordered w-full max-w-xs"
+                        value={studentIdProxy}
+                        onChange={(e) => setStudentIdProxy(e.target.value)}
+                      />
+                    )) || (
+                      <input
+                        type="text"
+                        placeholder={t("student_id")}
+                        className="input input-bordered w-full max-w-xs input-disabled"
+                        value={studentIdProxy}
+                      />
+                    )}
+                  </>
+                )) || (
+                  <label className="text-md text-left inline-block align-bottom mt-2">
+                    {props.user?.student_id}
+                  </label>
+                )}
+              </div>
+            </div>
+            <div className="grid grid-cols-3 h-24 w-full">
+              <label className="font-semibold text-md text-left inline-block align-bottom mt-2 ml-4">
                 {t("email")}:
               </label>
               <div className="col-span-2">
@@ -108,9 +136,8 @@ export default function ProfileForm(props: ProfileFormProp) {
                   <input
                     type="text"
                     placeholder={t("email")}
-                    className="input input-bordered w-full max-w-xs"
-                    value={emailProxy}
-                    onChange={(e) => setEmailProxy(e.target.value)}
+                    className="input input-bordered w-full max-w-xs input-disabled"
+                    value={props.user?.email}
                   />
                 )) || (
                   <label className="text-md text-left inline-block align-bottom mt-2">

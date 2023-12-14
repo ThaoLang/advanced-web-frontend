@@ -65,6 +65,7 @@
     "profile": "Hồ sơ của bạn",
     "username": "Tên người dùng",
     "email": "Email",
+    "student_id": "Mã học sinh",
     "update_btn": "Cập nhật",
     "bio_tab": "Tiểu sử",
     "comment_tab": "Bình luận",
@@ -97,12 +98,16 @@
     "invite_url": "Link mời",
     "copy_invite_url": "Sao chép link mời",
     "copied": "Sao chép thành công",
+    "view_details": "Xem chi tiết",
+    "hide": "Ẩn bớt",
     "teachers": "Giáo viên",
     "students": "Học sinh",
     "leave_class": "Rời lớp",
     "delete_class": "Xóa lớp",
     "remove": "Loại bỏ",
-    "edit": "Chỉnh sửa"
+    "edit": "Chỉnh sửa",
+    "invalid_info": "Thông tin không hợp lệ! Vui lòng điền các thông tin bắt buộc...",
+    "unavailable_class_code": "Mã lớp không tồn tại! Xin hãy thử lại..."
   },
   "Comment": {
     "comments": " bình luận",
@@ -133,6 +138,11 @@
     "mark_as_completed": "Đánh dấu hoàn thành",
     "mark_as_in_progress": "Đánh dấu chờ xác nhận",
     "in_progress_status": "Chờ xác nhận",
-    "completed_status": "Đã hoàn thành"
+    "completed_status": "Đã hoàn thành",
+    "add_review_success": "Thêm phúc khảo thành công!",
+    "invalid_grade": "Điểm không hợp lệ! Vui lòng dùng . cho số thập phân, điểm trên thang 10",
+    "invalid_info": "Thông tin không hợp lệ! Vui lòng thử lại...",
+    "please_update_grade": "Xin hãy cập nhật điểm...",
+    "update_review_success": "Cập nhật phúc khảo thành công!"
   }
 }

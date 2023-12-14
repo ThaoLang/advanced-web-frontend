@@ -32,18 +32,6 @@ export default function NavBar() {
   // const testMessages = ["Hello", "Nice to meet you", "Bye bye"];
   const testMessages = new Array<string>();
 
-  // const socket = io("${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification", {
-  //   extraHeaders: {
-  //     Authorization: `Bearer ${auth.user?.access_token}`,
-  //   },
-  // });
-
-  // socket.on("connect", () => {
-  //   testMessages.push(`Welcome ${socket.id}`);
-  // });
-
-  // socket.emit("notification", "parameters");
-
   const handleLanguageChange = (locale: string) => {
     setIsDropdownOpen(false);
     router.replace(pathname, { locale: locale });
@@ -54,38 +42,24 @@ export default function NavBar() {
     auth.logout();
   };
 
-  //   useEffect(() => {
-  //     const cur_user = localStorage.getItem("user");
-  //     if (cur_user) {
-  //       //   const loggedUser = JSON.parse(cur_user);
-  //       //   if (!loggedUser.avatarUrl) {
-  //       //     auth.login({
-  //       //       ...loggedUser,
-  //       //       avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-  //       //     });
-  //       //   } else {
-  //       //     auth.login(loggedUser);
-  //       //   }
-  //       auth.login(JSON.parse(cur_user));
-  //     }
-  //   }, []);
+  // avatar url
 
-  //   useEffect(() => {
-  //     const cur_user = localStorage.getItem("user");
-  //     if (cur_user) {
-  //       const loggedUser = JSON.parse(cur_user);
-  //       if (!loggedUser.avatarUrl) {
-  //         const updatedUser = {
-  //           ...loggedUser,
-  //           avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-  //         };
-  //         localStorage.setItem("user", JSON.stringify(updatedUser));
-  //         auth.login(updatedUser);
-  //       } else {
-  //         auth.login(loggedUser);
-  //       }
-  //     }
-  //   }, []);
+  // useEffect(() => {
+  //   const cur_user = localStorage.getItem("user");
+  //   if (cur_user) {
+  //     //   const loggedUser = JSON.parse(cur_user);
+  //     //   if (!loggedUser.avatarUrl) {
+  //     //     auth.login({
+  //     //       ...loggedUser,
+  //     //       avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
+  //     //     });
+  //     //   } else {
+  //     //     auth.login(loggedUser);
+  //     //   }
+  //     auth.login(JSON.parse(cur_user));
+  //   }
+  // }, []);
+
   useEffect(() => {
     const cur_user = localStorage.getItem("user");
     if (cur_user) {
@@ -103,7 +77,42 @@ export default function NavBar() {
         auth.login(loggedUser);
       }
 
-      async () => {};
+      // socket io notification
+      let accessToken = localStorage.getItem("access_token");
+      if (accessToken) {
+        try {
+          // var connectionOptions = {
+          //   "force new connection": true,
+          //   reconnectionAttempts: "Infinity",
+          //   timeout: 10000,
+          //   transports: ["websocket"],
+          // };
+
+          console.log("Trying to connect to server");
+
+          const socket = io(
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification`,
+            {
+              auth: { token: accessToken },
+              transports: ["websocket", "polling", "flashsocket"],
+              // reconnectionAttempts: 10,
+              // timeout: 10000,
+            }
+          );
+
+          console.log("Is connected: " + socket.connected.toString());
+
+          socket.on("connect", () => {
+            testMessages.push("Welcome");
+          });
+
+          // socket.emit("notification", "parameters");
+
+          console.log("Finished");
+        } catch (err) {
+          //
+        }
+      }
     }
   }, []);
 

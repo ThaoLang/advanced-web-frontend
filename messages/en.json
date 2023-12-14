@@ -64,6 +64,7 @@
     "profile": "Your Profile",
     "username": "Username",
     "email": "Email",
+    "student_id": "Student ID",
     "update_btn": "Update Profile",
     "bio_tab": "Bio",
     "comment_tab": "Comment",
@@ -99,12 +100,16 @@
     "invite_url": "Invite link",
     "copy_invite_url": "Copy invite link",
     "copied": "Copied",
+    "view_details": "View details",
+    "hide": "Hide",
     "teachers": "Teacher(s)",
     "students": "Student(s)",
     "leave_class": "Leave class",
     "delete_class": "Delete class",
     "remove": "Remove",
-    "edit": "Edit"
+    "edit": "Edit",
+    "invalid_info": "Invalid info! Please try again...",
+    "unavailable_class_code": "Unavailable class code! Please try again..."
   },
   "Comment": {
     "comments": " comment(s)",
@@ -135,6 +140,11 @@
     "mark_as_completed": "Mark as completed",
     "mark_as_in_progress": "Mark as in progress",
     "in_progress_status": "In Progress",
-    "completed_status": "Completed"
+    "completed_status": "Completed",
+    "add_review_success": "Add review successfully!",
+    "invalid_grade": "Invalid grade! Please use . for decimal points, score between 0 and 10",
+    "invalid_info": "Invalid info! Please try again...",
+    "please_update_grade": "Please update grade...",
+    "update_review_success": "Update review successfully!"
   }
 }

@@ -40,9 +40,7 @@ const students = [
   },
 ];
 
-
 export default function MembersPage() {
-  
   // copy
   const [isCopied, setIsCopied] = useState(false);
   const t = useTranslations("Tabs");

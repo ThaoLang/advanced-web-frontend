@@ -39,7 +39,6 @@ const students = [
   },
 ];
 
-
 export default function MemberPage() {
   // copy
   const [isCopied, setIsCopied] = useState(false);
@@ -159,7 +158,7 @@ export default function MemberPage() {
       {isCopied && (
         <div className="toast toast-bottom toast-end">
           <div className="alert alert-info">
-            <span>{"copied"}!</span>
+            <span>{t("copied")}!</span>
           </div>
         </div>
       )}
