@@ -23,7 +23,7 @@ export default function ProfileForm(props: ProfileFormProp) {
   const [studentIdProxy, setStudentIdProxy] = useState(props.user?.student_id);
   const [usernameProxy, setUsernameProxy] = useState(props.user?.username);
   const [profilePictureProxy, setProfilePictureProxy] = useState(
-    props.user?.avatar_url
+    props.user?.avatarUrl
   );
   const [isEditable, setIsEditable] = useState(false);
   const [option, setOption] = useState("tab_1");
@@ -50,7 +50,7 @@ export default function ProfileForm(props: ProfileFormProp) {
           <div className="justify-center">
             {isEditable || (
               <img
-                src={props.user?.avatar_url ?? ""}
+                src={props.user?.avatarUrl ?? ""}
                 className="rounded-full w-40 m-5 mx-5"
                 alt="profile picture"
               />

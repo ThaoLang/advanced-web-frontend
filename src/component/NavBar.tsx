@@ -65,10 +65,10 @@ export default function NavBar() {
     if (cur_user) {
       const loggedUser = JSON.parse(cur_user);
 
-      if (!loggedUser || !loggedUser.avatar_url) {
+      if (!loggedUser || !loggedUser.avatarUrl) {
         const updatedUser = {
           ...loggedUser,
-          avatar_url: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
+          avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
         };
 
         localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -106,7 +106,7 @@ export default function NavBar() {
             testMessages.push("Welcome");
           });
 
-          socket.emit("notification", "parameters");
+          // socket.emit("notification", "parameters");
 
           console.log("Finished");
         } catch (err) {
@@ -220,7 +220,7 @@ export default function NavBar() {
             <div className="dropdown dropdown-end dropdown-hover">
               <div tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
-                  <img alt="avatar" src={auth.user.avatar_url} />
+                  <img alt="avatar" src={auth.user.avatarUrl} />
                 </div>
               </div>
               <ul
@@ -234,7 +234,7 @@ export default function NavBar() {
                 <li className="items-center">
                   <label className="btn btn-ghost btn-circle avatar">
                     <div className="w-24 rounded-full">
-                      <img alt="avatar" src={auth.user.avatar_url} />
+                      <img alt="avatar" src={auth.user.avatarUrl} />
                     </div>
                   </label>
                 </li>

@@ -49,7 +49,7 @@ export default function Profile() {
         {
           // email: _email,
           username: _username,
-          // avatar_url: _profilePicture,
+          // avatarUrl: _profilePicture,
           student_id: _studentId,
         },
         {
@@ -84,7 +84,7 @@ export default function Profile() {
         _username ? _username : "",
         // _email ? _email : "",
         _studentId ? _studentId : "",
-        auth.user.avatar_url
+        auth.user.avatarUrl
       );
   };
 

@@ -2,7 +2,7 @@ export type UserType = {
   id: string;
   username: string;
   email: string;
-  avatar_url: string;
+  avatarUrl: string;
   role: string;
   status: string;
   refresh_token: string;
