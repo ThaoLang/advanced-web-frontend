@@ -3,6 +3,9 @@ const nextConfig = {
   env: {
     customKey: "my-value",
   },
+  experimental: {
+    scrollRestoration: true,
+  },
 };
 
 const withNextIntl = require("next-intl/plugin")();

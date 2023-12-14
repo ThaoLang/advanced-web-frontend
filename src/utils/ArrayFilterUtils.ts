@@ -7,7 +7,7 @@ export default function filterAndSortArray(
 
     const normalizedQuery = query.trim().toLowerCase();
 
-    console.log("Filter Props:", array, query, sortBy, filterBy);
+    // console.log("Filter Props:", array, query, sortBy, filterBy);
 
     const filteredArray = array.filter(item => {
         const includesQuery = Object.values(item).some(value =>
@@ -21,7 +21,7 @@ export default function filterAndSortArray(
         return includesQuery && passesFilters;
     });
 
-    console.log("Filter before sort: ", filteredArray);
+    // console.log("Filter before sort: ", filteredArray);
 
     if (sortBy) {
         // Sort the filtered array based on the specified sortBy field and orderBy
@@ -38,7 +38,7 @@ export default function filterAndSortArray(
         });
     }
 
-    console.log("Filter after sort: ", filteredArray);
+    // console.log("Filter after sort: ", filteredArray);
 
     return filteredArray;
 }

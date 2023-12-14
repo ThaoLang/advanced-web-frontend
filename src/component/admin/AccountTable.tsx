@@ -30,6 +30,14 @@ export default async function AccountTable(props: AccountTableProps) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isBanModalOpen, setIsBanModalOpen] = useState(false);
     const [affectedAccount, setAffectedAccount] = useState<any>(null);
+    const definedStatus = {ban: "ban", normal: "normal"};
+    const messages = {
+        to_ban: "Are you sure you want to ban your presence?", 
+        to_normal: "Are you sure you want to unban your presence?"
+    };
+    const btn_switch_messages = {ban: "Ban", unban: "Unban"};
+    
+
 
     const openDeleteModal = (currentUser: any) => {
         setAffectedAccount(currentUser);
@@ -74,12 +82,13 @@ export default async function AccountTable(props: AccountTableProps) {
             )}
             {isBanModalOpen && (
                 <BanPopupModal
-                    banStatus={affectedAccount.status}
+                    currentBanStatus={affectedAccount.status}
                     title="Change Account Ban Status"
-                    description=""
                     onClose={closeBanModal}
-                    onBan={handleBan}
-                />
+                    onBan={handleBan} 
+                    definedStatus={definedStatus} 
+                    messages={messages} 
+                    btn_switch_messages={btn_switch_messages}                />
             )}
             <div className="overflow-x-auto mt-5 bg-white border shadow-lg">
                 <table className="table">
@@ -87,7 +96,7 @@ export default async function AccountTable(props: AccountTableProps) {
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
+                            <th>Username</th>
                             <th>Role</th>
                             <th>Status</th>
                             <th>Actions</th>

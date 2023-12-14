@@ -298,7 +298,7 @@ async function getClassDetailsByUserId(user_id: string) {
 
 export default function Page({ params }: { params: { slug: string } }) {
   const context = useAccount();
-
+  
   const [isEditable, setIsEditable] = useState(false);
   const [username, setUsername] = useState(context.account?.username);
   const [studentId, setStudentId] = useState('');
@@ -315,17 +315,19 @@ export default function Page({ params }: { params: { slug: string } }) {
     },
     
   ];
+  const [userClassList, setUserClassList] = useState(context.classList);
 
   useEffect(() => {
     const loadClassInfo = async() => {
       context.classList = await getClassListByUserId(context.account?.id ?? '');
       context.classDetails = await getClassDetailsByUserId(context.account?.id ?? '');
       setStudentId(context.classDetails.find(items => items.student_id !== '')?.student_id ?? '');
+      setUserClassList(context.classList);
       console.log('Account Context: ', context);
     };
     
     loadClassInfo();
-  },[context.classList, context.classDetails]);
+  },[context]);
   const saveInformation = () => {
 
   }
@@ -497,7 +499,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               </div>
               <div className="p-7">
                   {
-                      context.classList?.map((items, index) =>
+                      userClassList?.map((items, index) =>
                       <div key={index} className="mb-5 card card-side bg-base-100 shadow-lg">
                         {/* <figure><img src={items.imageUrl}></img></figure> */}
                          <div className="card-body">

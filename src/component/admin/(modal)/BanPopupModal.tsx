@@ -2,13 +2,15 @@ import React from 'react';
 
 interface BanPopupProps {
     title: string,
-    description: string,
-    banStatus: any,
+    description?: string | undefined,
+    currentBanStatus: any,
+    definedStatus: any,
+    messages: any,
+    btn_switch_messages: any,
     onClose: () => void,
     onBan: () => void,
 }
 export default function BanPopupModal(props: BanPopupProps) {
-    console.log(props.banStatus);
     return (
         <React.Fragment>
             <div id="popup-modal"
@@ -30,9 +32,9 @@ export default function BanPopupModal(props: BanPopupProps) {
                             </svg>
                             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                                 {
-                                    props.banStatus === 'normal' ? 
-                                    <span>Are you sure you want to ban your presence?</span> : 
-                                    <span>Are you sure you want to unban your presence?</span>
+                                    props.currentBanStatus === props.definedStatus.normal ? 
+                                    <span>{props.messages.to_ban}</span> : 
+                                    <span>{props.messages.to_normal}</span>
                                 }
                             </h3>
                             <div className="flex flex-row justify-center">
@@ -42,19 +44,19 @@ export default function BanPopupModal(props: BanPopupProps) {
                                     onClick={props.onClose}>
                                     Cancel
                                 </button>
-                                {props.banStatus === 'normal' ?
-                                    <button data-modal-hide="popup-modal"
+                                {props.currentBanStatus === props.definedStatus.normal ?
+                                    <button data-modal-hide="popup-modal"   
                                         type="button"
                                         className="mx-5 text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
                                         onClick={props.onBan}>
-                                        Ban
+                                        {props.btn_switch_messages.ban}
                                     </button>
                                     :
                                     <button data-modal-hide="popup-modal"
                                         type="button"
                                         className="mx-5 text-white bg-sky-500 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 dark:focus:ring-sky-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
                                         onClick={props.onBan}>
-                                        Unban
+                                        {props.btn_switch_messages.unban}
                                     </button>
                                 }
                             </div>

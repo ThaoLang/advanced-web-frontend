@@ -1,11 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import Link from "next/link";
 import ClassTable from "@/component/admin/ClassTable";
 import SearchBar from "@/component/admin/SearchBar";
 import { Suspense } from "react";
 import { ClassType } from "@/model/ClassType";
 import { UserType } from "@/model/UserType";
+import filterAndSortArray from "@/utils/ArrayFilterUtils";
+import LoadingIndicator from "@/component/admin/LoadingIndicator";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -24,61 +26,110 @@ export default function Classes({
   );
   const [paginatedResult, setPaginatedResult] = useState<Array<any>>([]);
   const [totalItems, setTotalItems] = useState(0);
-  
+
+  const [idSelectOptions, setIdSelectOptions] = useState<Array<string>>([]);
+  const [nameSelectOptions, setNameSelectOptions] = useState<Array<string>>([]);
+  const [hostNameSelectOptions, setHostNameSelectOptions] = useState<Array<string>>([]);
+  const classroomTableHeaders = [
+    { header_name: "ID", key: "id" },
+    { header_name: "Name", key: "name" },
+    { header_name: "Host name", key: "host_username" },
+    { header_name: "Description", key: "description" },
+    { header_name: "Status", key: "status" }
+  ];
+  const statusSelectOptions: any[] = ["Active", "Inactive"];
+
+  const [sortBy, setSortBy] = useState<string | null>("id");
+  const [orderBy, setOrderBy] = useState<string>('asc');
+  const [idFilter, setIdFilter] = useState<string | null>(null);
+  const [nameFilter, setNameFilter] = useState<string | null>(null);
+  const [hostNameFilter, setHostNameFilter] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
+  const handleSelectChange = (
+    value: string,
+    setter: React.Dispatch<React.SetStateAction<string | null>>
+  ) => {
+    setter(value === 'null' ? null : value);
+  };
+
+  const handleRadioChange = (
+    value: string,
+    setter: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    setter(value);
+  };
+
+  const handleClearFilters = () => {
+    setIdFilter(null);
+    setNameFilter(null);
+    setHostNameFilter(null);
+    setStatusFilter(null);
+  }
+
   useEffect(() => {
     console.log('render page.tsx');
 
     const fetchData = async () => {
-        const classData = await fetchClassesData();
-        setClasses(classData);
+      const classData = await fetchClassesData();
+      setClasses(classData);
+      // Dynamically generate nameSelectOptions based on unique names
+      const uniqueIds = Array.from(new Set(classData.map((classroom) => classroom.id)));
+      setIdSelectOptions(uniqueIds);
+      const uniqueNames = Array.from(new Set(classData.map((classroom) => classroom.name)));
+      setNameSelectOptions(uniqueNames);
+      const uniqueHostNames = Array.from(new Set(classData.map((classroom) => classroom.host_username)));
+      setHostNameSelectOptions(uniqueHostNames);
     }
     fetchData()
-        .catch(console.error)
-}, []);
+      .catch(console.error)
 
-  useEffect(() => {
+  }, []);
+
+    useEffect(() => {
     const paginateClassesData = async () => {
+
       if (!classes) {
-            // Handle the case where classes is still loading or null
-            return { paginatedResult: [], totalItems: 0 };
+        // Handle the case where classes is still loading or null
+        return { paginatedResult: [], totalItems: 0 };
       }
 
-      function filterArrayByQuery(array: Array<any>, query: string) {
-        if (query.trim() === '') {
-            // If query is empty, return the original array
-            return array;
-        }
+      const result = filterAndSortArray(
+        classes,
+        query,
+        sortBy,
+        orderBy,
+        {
+          id: idFilter,
+          name: nameFilter,
+          host_username: hostNameFilter,
+          status: statusFilter
+        })
+      const totalItems = result.length;
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      const paginatedResult = result.slice(startIndex, endIndex);
 
-        return array.filter(item => {
-            return Object.values(item).some(value => {
-                if (typeof value === 'string') {
-                    return value.toLowerCase().includes(query.toLowerCase());
-                }
-                return false;
-            });
-        });
-    }
-
-    const result = filterArrayByQuery(classes, query);
-    const totalItems = result.length;
-
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    const paginatedResult = result.slice(startIndex, endIndex);
-
-    return { paginatedResult, totalItems };
+      return { paginatedResult, totalItems };
     }
     const fetchData = async () => {
       await paginateClassesData().then((value) => {
-          const { paginatedResult, totalItems } = value;
-          setPaginatedResult(paginatedResult);
-          setTotalItems(totalItems);
+        const { paginatedResult, totalItems } = value;
+        setPaginatedResult(paginatedResult);
+        setTotalItems(totalItems);
       })
-  };
-  fetchData();
+    };
+    fetchData();
 
-
-    },[query, currentPage, classes]);
+  }, [query,
+    sortBy,
+    orderBy,
+    nameFilter,
+    hostNameFilter,
+    idFilter,
+    statusFilter,
+    currentPage,
+    classes]);
 
   const fetchClassesData = async () => {
     const templateClasses: Array<ClassType> = [
@@ -220,124 +271,124 @@ export default function Classes({
     ];
     const templateAccounts: Array<UserType> = [
       {
-          id: '1',
-          username: 'Nguyễn Minh Quang',
-          email: '20127605@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=1',
-          role: 'user',
-          status: 'ban',
-          refresh_token: '',
-          access_token: '',
+        id: '1',
+        username: 'Nguyễn Minh Quang',
+        email: '20127605@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=1',
+        role: 'user',
+        status: 'ban',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '2',
-          username: 'Lê Hoàng Khanh Nguyên',
-          email: '20127679@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=2',
-          role: 'user',
-          status: 'ban',
-          refresh_token: '',
-          access_token: '',
+        id: '2',
+        username: 'Lê Hoàng Khanh Nguyên',
+        email: '20127679@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=2',
+        role: 'user',
+        status: 'ban',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '3',
-          username: 'Lăng Thảo Thảo',
-          email: '20127629@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=3',
-          role: 'admin',
-          status: 'normal',
-          refresh_token: '',
-          access_token: '',
+        id: '3',
+        username: 'Lăng Thảo Thảo',
+        email: '20127629@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=3',
+        role: 'admin',
+        status: 'normal',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '4',
-          username: 'Lê Hoài Phương',
-          email: '20127598@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=4',
-          role: 'admin',
-          status: 'normal',
-          refresh_token: '',
-          access_token: '',
+        id: '4',
+        username: 'Lê Hoài Phương',
+        email: '20127598@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=4',
+        role: 'admin',
+        status: 'normal',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '5',
-          username: 'Hoàng Hữu Minh An',
-          email: '20127102@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=5',
-          role: 'admin',
-          status: 'normal',
-          refresh_token: '',
-          access_token: '',
+        id: '5',
+        username: 'Hoàng Hữu Minh An',
+        email: '20127102@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=5',
+        role: 'admin',
+        status: 'normal',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '6',
-          username: 'Huỳnh Minh Chiến',
-          email: '20127444@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=6',
-          role: 'user',
-          status: 'normal',
-          refresh_token: '',
-          access_token: '',
+        id: '6',
+        username: 'Huỳnh Minh Chiến',
+        email: '20127444@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=6',
+        role: 'user',
+        status: 'normal',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '7',
-          username: 'Nguyễn Hoàng Phúc',
-          email: '20127523@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=7',
-          role: 'user',
-          status: 'normal',
-          refresh_token: '',
-          access_token: '',
+        id: '7',
+        username: 'Nguyễn Hoàng Phúc',
+        email: '20127523@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=7',
+        role: 'user',
+        status: 'normal',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '8',
-          username: 'Lê Duẩn',
-          email: '20127123@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=8',
-          role: 'user',
-          status: 'ban',
-          refresh_token: '',
-          access_token: '',
+        id: '8',
+        username: 'Lê Duẩn',
+        email: '20127123@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=8',
+        role: 'user',
+        status: 'ban',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '9',
-          username: 'Lê Cung Tiến',
-          email: '20127034@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=9',
-          role: 'user',
-          status: 'normal',
-          refresh_token: '',
-          access_token: '',
+        id: '9',
+        username: 'Lê Cung Tiến',
+        email: '20127034@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=9',
+        role: 'user',
+        status: 'normal',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '10',
-          username: 'Nguyễn Đăng Khoa',
-          email: '20127528@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=10',
-          role: 'user',
-          status: 'normal',
-          refresh_token: '',
-          access_token: '',
+        id: '10',
+        username: 'Nguyễn Đăng Khoa',
+        email: '20127528@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=10',
+        role: 'user',
+        status: 'normal',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '11',
-          username: 'Bùi Thị Dung',
-          email: '20127349@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=11',
-          role: 'admin',
-          status: 'ban',
-          refresh_token: '',
-          access_token: '',
+        id: '11',
+        username: 'Bùi Thị Dung',
+        email: '20127349@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=11',
+        role: 'admin',
+        status: 'ban',
+        refresh_token: '',
+        access_token: '',
       },
       {
-          id: '12',
-          username: 'Bành Hảo Toàn',
-          email: '20127646@student.hcmus.edu.vn',
-          avatarUrl: 'https://i.pravatar.cc/150?u=12',
-          role: 'user',
-          status: 'ban',
-          refresh_token: '',
-          access_token: '',
+        id: '12',
+        username: 'Bành Hảo Toàn',
+        email: '20127646@student.hcmus.edu.vn',
+        avatarUrl: 'https://i.pravatar.cc/150?u=12',
+        role: 'user',
+        status: 'ban',
+        refresh_token: '',
+        access_token: '',
       },
     ];
 
@@ -359,40 +410,38 @@ export default function Classes({
 
   const deleteClassHandler = (currentClass: any) => {
     if (!classes) {
-        // Handle the case where classes is still loading or null
-        return;
+      // Handle the case where classes is still loading or null
+      return;
     }
-    
+
     const updatedClasses = classes.filter((user: any) => {
-        return user.id !== currentClass.id;
+      return user.id !== currentClass.id;
     });
     setClasses(updatedClasses);
-}
+  }
 
-const banClassHandler = (currentClass: any) => {
+  const banClassHandler = (currentClass: any) => {
     if (!classes) {
-        // Handle the case where classes is still loading or null
-        return;
+      // Handle the case where classes is still loading or null
+      return;
     }
     const updatedClasses = classes.map((user: any) => {
-        if (user.id === currentClass.id && currentClass.status === 'inactive') {
-            return {...user, status: 'active'};
-        }
-        else if (user.id === currentClass.id && currentClass.status === 'active') {
-            return {...user, status: 'inactive'};
-        }
-        return user;
+      if (user.id === currentClass.id && currentClass.status === 'inactive') {
+        return { ...user, status: 'active' };
+      }
+      else if (user.id === currentClass.id && currentClass.status === 'active') {
+        return { ...user, status: 'inactive' };
+      }
+      return user;
     });
     setClasses(updatedClasses);
-}
+  }
 
-if (classes === null) {
+  if (classes === null) {
     // Render a loading state or return null
-    return <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">Loading...</div>;
-}
+    return <LoadingIndicator/>
+  }
 
-  
-  
 
   return (
     <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">
@@ -408,13 +457,108 @@ if (classes === null) {
           </li>
         </ul>
       </div>
-      <div className="grid grid-cols-3 mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-        <div className="col-start-3 col-end-4">
-          <SearchBar
-            placeholder="Search user...."
+      <div className="flex flex-col lg:grid lg:grid-cols-3 mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+        <div className="lg:col-start-0 lg:col-end-2">
+          <label className="form-control w-full max-w-xs">
+            <div className="label">
+              <span className="label-text">Sort by</span>
+            </div>
+            <select className="select select-bordered"
+              onChange={(e) => handleSelectChange(e.target.value, setSortBy)}>
+              {/* <option disabled selected>--Option--</option> */}
+              {
+                classroomTableHeaders.map((items, index) => {
+                  return (
+                    <option key={index} value={items.key}>{items.header_name}</option>
+                  )
+                })
+              }
+            </select>
+          </label>
+        </div>
+        <div className="lg:mx-10 lg:col-start-2 lg:col-end-3">
+          <div className="form-control">
+            <div className="label">
+              <span className="label-text">Order by</span>
+            </div>
+            <div className="flex lg:flex-col flex-row space-x-5 lg:space-y-3 lg:space-x-0">
+              <label className="flex flex-row gap-2 cursor-pointer">
+                <input type="radio" name="order-by"
+                  className="radio radio-sm checked:bg-red-500"
+                  checked={orderBy === 'asc'}
+                  onChange={() => handleRadioChange('asc', setOrderBy)} />
+                <span className="label-text">Ascending</span>
+              </label>
+              <label className="flex flex-row gap-2 cursor-pointer">
+                <input type="radio" name="order-by"
+                  className="radio radio-sm checked:bg-blue-500"
+                  checked={orderBy === 'desc'}
+                  onChange={() => handleRadioChange('desc', setOrderBy)} />
+                <span className="label-text">Descending</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div className="lg:col-start-3 lg:col-end-4 max-w-md">
+          <SearchBar placeholder="Search anything...."
             setQuery={setQuery}
-            currentPage={currentPage}
-          />
+            currentPage={currentPage} />
+        </div>
+        <div className="lg:col-start-0 lg:col-span-3">
+          <div className="form-control">
+            <div className="label">
+              <span className="label-text">Filters</span>
+            </div>
+            <div className="flex flex-row space-x-10">
+              <select className="select select-bordered w-full max-w-sm" value={nameFilter || ''}
+                onChange={(e) => handleSelectChange(e.target.value, setIdFilter)}>
+                <option disabled selected value={''}>ID</option>
+                {
+                  idSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items}>{items}</option>
+                    )
+                  })
+                }
+              </select>
+              <select className="select select-bordered w-full max-w-sm" value={nameFilter || ''}
+                onChange={(e) => handleSelectChange(e.target.value, setNameFilter)}>
+                <option disabled selected value={''}>Name</option>
+                {
+                  nameSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items}>{items}</option>
+                    )
+                  })
+                }
+              </select>
+              <select className="select select-bordered w-full max-w-sm" value={hostNameFilter || ''}
+                onChange={(e) => handleSelectChange(e.target.value, setHostNameFilter)}>
+                <option disabled selected value={""}>Host Name</option>
+                {
+                  hostNameSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items}>{items}</option>
+                    )
+                  })
+                }
+              </select>
+              <select className="select select-bordered w-full max-w-sm" value={statusFilter || ''}
+                onChange={(e) => handleSelectChange(e.target.value, setStatusFilter)}>
+                <option disabled selected value={""}>Status</option>
+                {
+                  statusSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items.toLowerCase()}>{items}</option>
+                    )
+                  })
+                }
+              </select>
+              <button className="btn btn-error text-white"
+                onClick={() => handleClearFilters()}>Clear all filters</button>
+            </div>
+
+          </div>
         </div>
         <div className="col-start-0 col-span-3">
           <Suspense key={query + currentPage}>
@@ -424,7 +568,7 @@ if (classes === null) {
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               deleteClass={deleteClassHandler}
-              banClass={banClassHandler}/>
+              banClass={banClassHandler} />
           </Suspense>
         </div>
       </div>

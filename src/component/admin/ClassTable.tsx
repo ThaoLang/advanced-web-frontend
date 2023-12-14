@@ -11,7 +11,7 @@ const ITEMS_PER_PAGE = 5;
 
 interface ClassTableProps {
     paginatedResult: any;
-    totalItems: number;
+    totalItems: any;
     currentPage: number;
     setCurrentPage: (value: number) => void
     deleteClass: (Class: any) => void;
@@ -31,6 +31,19 @@ export default async function ClassTable(props: ClassTableProps) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isBanModalOpen, setIsBanModalOpen] = useState(false);
     const [affectedClass, setAffectedClass] = useState<any>(null);
+    const definedStatus = {ban: "inactive", normal: "active"};
+    const messages = {
+        to_ban: 
+        `Are you sure you want to inactive this class?
+        Students and teachers will no longer be able to enter this class.
+        `, 
+        to_normal:  
+        `
+        "Are you sure you want to activate this class again? 
+        Students and teachers will now have access to enter this class.
+        `
+    };
+    const btn_switch_messages = {ban: "Inactive", unban: "Active"};
 
     const openDeleteModal = (currentUser: any) => {
         setAffectedClass(currentUser);
@@ -75,12 +88,14 @@ export default async function ClassTable(props: ClassTableProps) {
             )}
             {isBanModalOpen && (
                 <BanPopupModal
-                    banStatus={affectedClass.status}
+                    currentBanStatus={affectedClass.status}
                     title="Change Class Ban Status"
                     description=""
                     onClose={closeBanModal}
-                    onBan={handleBan}
-                />
+                    onBan={handleBan} 
+                    definedStatus={definedStatus} 
+                    messages={messages} 
+                    btn_switch_messages={btn_switch_messages}/>
             )}
             <div className="overflow-x-auto mt-5 bg-white">
                 <table className="table">
