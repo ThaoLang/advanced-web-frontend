@@ -1,4 +1,5 @@
 export type ReviewType = {
+  id: string;
   studentId: string;
   gradeComposition: string;
   currentGrade: string;

@@ -29,24 +29,24 @@ const Comment = (props: CommentProps) => {
   const auth = useAuth();
   const logginedUser = {
     userId: auth.user?.id,
-    avatar: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
+    avatar: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png", //auth.user?.avatarUrl,
   };
 
   const t = useTranslations("Comment");
 
   // const isUserLoggined = Boolean(logginedUser.userId);
   const isUserLoggined = true;
-  const isCommentBelongsToUser = logginedUser.userId === props.comment.user._id;
+  const isCommentBelongsToUser = logginedUser.userId === props.comment.user.id;
   const isReplying =
     props.affectedComment &&
     props.affectedComment.type === "replying" &&
-    props.affectedComment._id === props.comment._id;
+    props.affectedComment.id === props.comment.id;
   const isEditing =
     props.affectedComment &&
     props.affectedComment.type === "editing" &&
-    props.affectedComment._id === props.comment._id;
-  const repliedCommentId = props.parentId ? props.parentId : props.comment._id;
-  const replyOnUserId = props.comment.user._id;
+    props.affectedComment.id === props.comment.id;
+  const repliedCommentId = props.parentId ? props.parentId : props.comment.id;
+  const replyOnUserId = props.comment.user.id;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState("");
@@ -64,7 +64,7 @@ const Comment = (props: CommentProps) => {
   };
 
   const handleDelete = () => {
-    if (commentToDelete !== "") props.deleteComment(props.comment._id);
+    if (commentToDelete !== "") props.deleteComment(props.comment.id);
     closeModal();
   };
 
@@ -118,7 +118,7 @@ const Comment = (props: CommentProps) => {
             <CommentForm
               btnLabel={<FiSend />}
               formSubmitHandler={(value) =>
-                props.updateComment(value, props.comment._id)
+                props.updateComment(value, props.comment.id)
               }
               formCancelHandler={() => props.setAffectedComment(null)}
               initialText={props.comment.desc}
@@ -132,7 +132,7 @@ const Comment = (props: CommentProps) => {
                 onClick={() =>
                   props.setAffectedComment({
                     type: "replying",
-                    _id: props.comment._id,
+                    id: props.comment.id,
                   })
                 }
               >
@@ -148,7 +148,7 @@ const Comment = (props: CommentProps) => {
                   onClick={() =>
                     props.setAffectedComment({
                       type: "editing",
-                      _id: props.comment._id,
+                      id: props.comment.id,
                     })
                   }
                 >
@@ -171,7 +171,7 @@ const Comment = (props: CommentProps) => {
             <div className="bg-white w-auto rounded-full flex flex-row">
               <button
                 className="text-[#CC3333] ml-1 cursor-pointer"
-                onClick={() => props.likeComment(props.comment._id)}
+                onClick={() => props.likeComment(props.comment.id)}
               >
                 {props.comment.like_status ? (
                   <span>
@@ -202,7 +202,7 @@ const Comment = (props: CommentProps) => {
             <div>
               {props.replies.map((reply) => (
                 <Comment
-                  key={reply._id}
+                  key={reply.id}
                   addComment={props.addComment}
                   comment={reply}
                   deleteComment={props.deleteComment}
@@ -210,7 +210,7 @@ const Comment = (props: CommentProps) => {
                   affectedComment={props.affectedComment}
                   setAffectedComment={props.setAffectedComment}
                   likeComment={props.likeComment}
-                  parentId={props.comment._id}
+                  parentId={props.comment.id}
                   replies={[]}
                 />
               ))}

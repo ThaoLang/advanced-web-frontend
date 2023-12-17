@@ -1,6 +1,7 @@
 export type CommentType = {
-  _id: string;
-  user: { _id: string; name: string; avatar: string };
+  id: string;
+  reviewId: string;
+  user: { id: string; name: string; avatar: string };
   desc: string;
   post: string;
   parent: string | null;
@@ -12,5 +13,5 @@ export type CommentType = {
 
 export type AffectedCommentType = {
   type: string;
-  _id: string;
+  id: string;
 };
