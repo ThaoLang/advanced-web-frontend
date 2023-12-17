@@ -59,9 +59,9 @@ export default function NavBar() {
 
   const auth = useAuth();
 
-  const [notifications, setNotifications] = useState<Array<NotificationType>>([
-    // "Welcome",
-  ]);
+  const [notifications, setNotifications] = useState<Array<NotificationType>>(
+    []
+  );
   useEffect(() => {
     (async () => {
       const notificationsData = await getNotificationsData();
@@ -192,7 +192,9 @@ export default function NavBar() {
                   <div>
                     <FaRegBell size={20} />
                   </div>
-                  {notifications.length !== 0 && (
+                  {notifications.filter(
+                    (notification) => notification.isRead === false
+                  ).length !== 0 && (
                     <span className="badge badge-xs badge-primary indicator-item" />
                   )}
                 </div>

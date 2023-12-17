@@ -73,7 +73,9 @@
     "save_btn": "Lưu",
     "cancel_btn": "Hủy",
     "dropping": "Kéo thả hình ảnh ở đây...",
-    "drop_area": "Kéo thả hình ảnh ở đây, hoặc tải ảnh lên"
+    "drop_area": "Kéo thả hình ảnh ở đây, hoặc tải ảnh lên",
+    "update_success": "Cập nhật hồ sơ thành công!",
+    "update_error": "Cập nhật hồ sơ thất bại!"
   },
   "EnrolledPage": {
     "title": "Lớp đăng ký"

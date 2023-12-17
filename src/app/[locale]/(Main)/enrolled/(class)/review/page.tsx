@@ -28,6 +28,7 @@ export default function ReviewPage() {
     studentExplanation: string
   ) => {
     let tempReview = {
+      id: "",
       studentId: studentId,
       gradeComposition: gradeComposition,
       currentGrade: "8", // TODO: query the current grade
@@ -43,6 +44,7 @@ export default function ReviewPage() {
 
   let tempReviewList = [
     {
+      id: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -51,6 +53,7 @@ export default function ReviewPage() {
       status: "In Progress",
     },
     {
+      id: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -59,6 +62,7 @@ export default function ReviewPage() {
       status: "In Progress",
     },
     {
+      id: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -109,6 +113,7 @@ export default function ReviewPage() {
                         onChange={() => {}}
                       />
                       <MiniReview
+                        id={review.id}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
                         currentGrade={review.currentGrade}
@@ -141,6 +146,7 @@ export default function ReviewPage() {
                         onChange={() => {}}
                       />
                       <MiniReview
+                        id={review.id}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
                         currentGrade={review.currentGrade}
@@ -160,6 +166,7 @@ export default function ReviewPage() {
               {t("review_detail")}
             </div>
             <ReviewForm
+              id={selectedReview.id}
               studentId={selectedReview.studentId}
               gradeComposition={selectedReview.gradeComposition}
               currentGrade={selectedReview.currentGrade}

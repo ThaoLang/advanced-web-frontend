@@ -72,7 +72,9 @@
     "save_btn": "Save",
     "cancel_btn": "Cancel",
     "dropping": "Drop the image here...",
-    "drop_area": "Drop an image here, or click to upload image"
+    "drop_area": "Drop an image here, or click to upload image",
+    "update_success": "Update profile successfully!",
+    "update_error": "Fail to update profile!"
   },
   "Setting": {
     "language": "Language"
