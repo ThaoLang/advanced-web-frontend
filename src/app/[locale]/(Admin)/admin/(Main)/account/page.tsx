@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from 'next/link';
-import AccountTable from '@/component/admin/AccountTable'
+import AccountTable from '@/component/admin/(table)/AccountTable'
 import SearchBar from '@/component/admin/SearchBar'
 import { Suspense } from 'react';
 import { UserType } from "@/model/UserType";
@@ -43,6 +43,9 @@ export default function Account({
     const [roleFilter, setRoleFilter] = useState<string | null>(null);
     const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
+    // Create a ref to store the scroll position
+    const scrollRef = useRef<number>(0);
+
     const handleSelectChange = (
         value: string,
         setter: React.Dispatch<React.SetStateAction<string | null>>
@@ -83,8 +86,10 @@ export default function Account({
 
     useEffect(() => {
         console.log("Account Table Render");
+        // Save the current scroll position
+        scrollRef.current = window.scrollY;
+        
         const paginateAccountData = async () => {
-
             if (!accounts) {
                 // Handle the case where accounts is still loading or null
                 return { paginatedResult: [], totalItems: 0 };
@@ -117,7 +122,9 @@ export default function Account({
             })
         };
 
-        fetchData();
+        fetchData().catch(console.error);
+        // Restore the scroll position after the component updates
+        window.scrollTo(0, scrollRef.current);
     }, [query,
         sortBy,
         orderBy,
