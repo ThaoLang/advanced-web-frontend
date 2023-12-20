@@ -1,7 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+export const getClassRubric = async () => {
+  return [
+    // {t("mock_quizzes")},
+    // {t("mid_term_exam")},
+    // {t("final_exam")},
+    "Mock Quizzes",
+    "Mid-term Exam",
+    "Final Exam",
+  ];
+};
+// return Rubric[];  later if necessary
 
 interface AddReviewProps {
   addReview: (
@@ -16,6 +28,14 @@ export default function AddReviewModal(props: AddReviewProps) {
   const [gradeCompositionProxy, setGradeCompositionProxy] = useState("");
   const [expectationGradeProxy, setExpectationGradeProxy] = useState("");
   const [studentExplanationProxy, setStudentExplanationProxy] = useState("");
+  const [rubrics, setRubrics] = useState<string[]>([]);
+  useEffect(() => {
+    (async () => {
+      const classRubrics = await getClassRubric();
+      setRubrics(classRubrics);
+    })();
+  }, []);
+
   const t = useTranslations("Review");
 
   const isGrade = (grade: string) => {
@@ -72,9 +92,15 @@ export default function AddReviewModal(props: AddReviewProps) {
           value={gradeCompositionProxy}
         >
           <option value="" />
-          <option value={t("mock_quizzes")}>{t("mock_quizzes")}</option>
+          {/* <option value={t("mock_quizzes")}>{t("mock_quizzes")}</option>
           <option value={t("mid_term_exam")}>{t("mid_term_exam")}</option>
-          <option value={t("final_exam")}>{t("final_exam")}</option>
+          <option value={t("final_exam")}>{t("final_exam")}</option> */}
+          {rubrics.length > 0 &&
+            rubrics.map((rubric, index) => (
+              <option key={index} value={rubric}>
+                {rubric}
+              </option>
+            ))}
         </select>
         <p className="text-sm text-md ml-4">
           <b>{t("current_grade")}:</b>{" "}

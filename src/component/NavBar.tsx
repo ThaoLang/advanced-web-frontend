@@ -45,6 +45,67 @@ export const getNotificationsData = async () => {
       createdAt: "2022-12-31T17:22:05.092+0000",
       isRead: false,
     },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
   ];
 };
 
@@ -202,12 +263,12 @@ export default function NavBar() {
 
               <ul
                 tabIndex={0}
-                className="relative z-[1] menu dropdown-content h-96 w-60 space-y-5 overflow-y-auto overflow-x-hidden"
+                className="relative z-[1] menu dropdown-content max-h-[550px] w-80 overflow-y-auto overflow-clip overflow-x-hidden shadow bg-white border-1 border-gray-300 rounded-box"
               >
                 {isNotificationVisible && (
                   <>
                     {(notifications.length === 0 && (
-                      <div className="flex align-center justify-center pt-2 h-10 text-md shadow bg-white border-1 border-gray-300 rounded-box">
+                      <div className="flex align-center justify-center pt-2 h-10 text-md">
                         {t("no_notification")}
                       </div>
                     )) || (

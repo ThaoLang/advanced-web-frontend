@@ -8,6 +8,7 @@ import { ReviewType } from "@/model/ReviewType";
 import MiniReview from "@/component/classItem/review/MiniReview";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { actions } from "../../../state";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
@@ -20,6 +21,7 @@ export default function ReviewPage() {
   let tempReviewList = [
     {
       id: "",
+      classId: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -29,6 +31,7 @@ export default function ReviewPage() {
     },
     {
       id: "",
+      classId: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -38,6 +41,7 @@ export default function ReviewPage() {
     },
     {
       id: "",
+      classId: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -62,6 +66,8 @@ export default function ReviewPage() {
       // update selected review to review list
       setReviewList(reviewList);
       toast.success(t("update_review_success"));
+
+      actions.notify("A grade review is finalized");
     }
   };
 
@@ -99,6 +105,7 @@ export default function ReviewPage() {
                       />
                       <MiniReview
                         id={review.id}
+                        classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
                         currentGrade={review.currentGrade}
@@ -132,6 +139,7 @@ export default function ReviewPage() {
                       />
                       <MiniReview
                         id={review.id}
+                        classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
                         currentGrade={review.currentGrade}
@@ -158,6 +166,7 @@ export default function ReviewPage() {
             </div>
             <TeacherReviewForm
               id={selectedReview.id}
+              classId={selectedReview.classId}
               studentId={selectedReview.studentId}
               gradeComposition={selectedReview.gradeComposition}
               currentGrade={selectedReview.currentGrade}

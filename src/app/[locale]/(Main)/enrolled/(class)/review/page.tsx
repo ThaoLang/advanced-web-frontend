@@ -45,6 +45,7 @@ export default function ReviewPage() {
   let tempReviewList = [
     {
       id: "",
+      classId: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -54,6 +55,7 @@ export default function ReviewPage() {
     },
     {
       id: "",
+      classId: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -63,6 +65,7 @@ export default function ReviewPage() {
     },
     {
       id: "",
+      classId: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -114,6 +117,7 @@ export default function ReviewPage() {
                       />
                       <MiniReview
                         id={review.id}
+                        classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
                         currentGrade={review.currentGrade}
@@ -147,6 +151,7 @@ export default function ReviewPage() {
                       />
                       <MiniReview
                         id={review.id}
+                        classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
                         currentGrade={review.currentGrade}
@@ -167,6 +172,7 @@ export default function ReviewPage() {
             </div>
             <ReviewForm
               id={selectedReview.id}
+              classId={selectedReview.classId}
               studentId={selectedReview.studentId}
               gradeComposition={selectedReview.gradeComposition}
               currentGrade={selectedReview.currentGrade}
