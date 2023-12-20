@@ -16,8 +16,8 @@ import { FaRegBell } from "react-icons/fa";
 import { createSharedPathnamesNavigation } from "next-intl/navigation";
 
 import NotificationList from "./NotificationList";
-import { MySocketIO } from "@/app/[locale]/(Main)/socketio";
 import { NotificationType } from "@/model/NotificationType";
+import { actions } from "@/app/[locale]/(Main)/state";
 
 export const getNotificationsData = async () => {
   return [
@@ -107,8 +107,8 @@ export default function NavBar() {
       let user = JSON.parse(cur_user);
       let accessToken = user.access_token;
       if (accessToken) {
-        const socket = MySocketIO({ accessToken });
-        //
+        actions.setAccessToken(accessToken);
+        actions.initializeSocket(accessToken);
       }
     }
   }, []);
@@ -202,7 +202,7 @@ export default function NavBar() {
 
               <ul
                 tabIndex={0}
-                className="relative z-[1] menu dropdown-content h-auto w-60 space-y-5"
+                className="relative z-[1] menu dropdown-content h-96 w-60 space-y-5 overflow-y-auto overflow-x-hidden"
               >
                 {isNotificationVisible && (
                   <>
@@ -211,10 +211,12 @@ export default function NavBar() {
                         {t("no_notification")}
                       </div>
                     )) || (
-                      <NotificationList
-                        notifications={notifications}
-                        isClickedNotification={isNotificationClicked}
-                      />
+                      <div onClick={() => setIsNotificationVisible(false)}>
+                        <NotificationList
+                          notifications={notifications}
+                          isClickedNotification={isNotificationClicked}
+                        />
+                      </div>
                     )}
                   </>
                 )}
