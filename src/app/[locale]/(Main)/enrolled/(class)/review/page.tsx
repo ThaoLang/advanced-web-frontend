@@ -18,7 +18,7 @@ export default function ReviewPage() {
     setShowModal(!showModal);
   };
   const auth = useAuth();
-  const studentId = "auth.user?.student_id"; // TODO: need to change this
+  const studentId = auth.user?.studentId ? auth.user.studentId : "";
 
   const [selectedReview, setSelectedReview] = useState<ReviewType>();
 
@@ -46,7 +46,7 @@ export default function ReviewPage() {
     {
       id: "",
       classId: "",
-      studentId: "auth.user?.student_id",
+      studentId: studentId,
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
       expectationGrade: "10",
@@ -56,7 +56,7 @@ export default function ReviewPage() {
     {
       id: "",
       classId: "",
-      studentId: "auth.user?.student_id",
+      studentId: studentId,
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
       expectationGrade: "10",
@@ -66,7 +66,7 @@ export default function ReviewPage() {
     {
       id: "",
       classId: "",
-      studentId: "auth.user?.student_id",
+      studentId: studentId,
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
       expectationGrade: "10",

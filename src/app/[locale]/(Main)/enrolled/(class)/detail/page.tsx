@@ -1,5 +1,5 @@
 "use client";
-import Banner from "@/component/classItem/Banner";
+import Banner from "@/component/classItem/detail/Banner";
 import React from "react";
 
 const classInfo = {

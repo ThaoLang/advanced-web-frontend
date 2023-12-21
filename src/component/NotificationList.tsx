@@ -18,7 +18,6 @@ interface NotificationProps {
   isRead: boolean;
 }
 
-//need redesign
 export function Notification(props: NotificationProps) {
   const { locale } = useParams();
   const language = locale === "en" ? "en-EN" : "vi-VN";

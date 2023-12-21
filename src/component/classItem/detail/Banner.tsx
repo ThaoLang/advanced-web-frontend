@@ -50,7 +50,7 @@ const Banner = (classInfo: BannerProp) => {
   // end copy
 
   return (
-    <div className="w-1/2 lg:w-2/5 bg-white rounded-xl shadow-md overflow-hidden relative">
+    <div className="w-full md:w-1/2 lg:w-2/5 bg-white rounded-xl shadow-md overflow-hidden relative">
       <div className="md:flex flex-col">
         <div className="md:shrink-0 ">
           <img

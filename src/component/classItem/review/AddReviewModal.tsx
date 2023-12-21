@@ -81,7 +81,7 @@ export default function AddReviewModal(props: AddReviewProps) {
   return (
     <div className="flex flex-row m-10 align-middle justify-center">
       <div className="flex flex-col gap-4 w-md">
-        <p className="text-sm text-md ml-4">
+        <p className="text-sm ml-4">
           <b>{t("select_composition")}</b>
         </p>
         <select
@@ -102,7 +102,7 @@ export default function AddReviewModal(props: AddReviewProps) {
               </option>
             ))}
         </select>
-        <p className="text-sm text-md ml-4">
+        <p className="text-sm ml-4">
           <b>{t("current_grade")}:</b>{" "}
         </p>
         <input

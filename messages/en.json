@@ -111,7 +111,15 @@
     "remove": "Remove",
     "edit": "Edit",
     "invalid_info": "Invalid info! Please try again...",
-    "unavailable_class_code": "Unavailable class code! Please try again..."
+    "unavailable_class_code": "Unavailable class code! Please try again...",
+    "get_started": "Get Started with Class",
+    "download_help": "1. You can download sample csv here",
+    "download": "download",
+    "import_help": "2. Import/Export student list here",
+    "import": "import/export .csv",
+    "view_help_1": "3. Please import to view your student list!",
+    "view_help_2": "3. View your student list now!",
+    "view": "view"
   },
   "Comment": {
     "comments": " comment(s)",

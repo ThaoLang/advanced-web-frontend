@@ -52,7 +52,7 @@ export default function Profile() {
           // email: _email,
           username: _username,
           // avatarUrl: _profilePicture,
-          student_id: _studentId,
+          studentId: _studentId,
         },
         {
           headers: {
@@ -80,7 +80,7 @@ export default function Profile() {
     _studentId: string | undefined,
     _profilePicture: string | undefined
   ) => {
-    auth.updateUser(_username, _profilePicture);
+    auth.updateUser(_username, _profilePicture, _studentId);
     if (auth.user)
       await updateProfile(
         _username ? _username : "",

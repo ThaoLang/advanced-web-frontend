@@ -109,7 +109,15 @@
     "remove": "Loại bỏ",
     "edit": "Chỉnh sửa",
     "invalid_info": "Thông tin không hợp lệ! Vui lòng điền các thông tin bắt buộc...",
-    "unavailable_class_code": "Mã lớp không tồn tại! Xin hãy thử lại..."
+    "unavailable_class_code": "Mã lớp không tồn tại! Xin hãy thử lại...",
+    "get_started": "Chuẩn bị cho lớp",
+    "download_help": "1. Bạn có thể tải bản file csv mẫu tại đây",
+    "download": "tải xuống",
+    "import_help": "2. Quản lí danh sách học sinh tại đây",
+    "import": "đăng/tải .csv",
+    "view_help_1": "3. Bạn chưa thêm danh sách học sinh!",
+    "view_help_2": "3. Xem danh sách học sinh tại đây!",
+    "view": "xem"
   },
   "Comment": {
     "comments": " bình luận",

@@ -20,7 +20,7 @@ interface ProfileFormProp {
 
 export default function ProfileForm(props: ProfileFormProp) {
   // const [emailProxy, setEmailProxy] = useState(props.user?.email);
-  const [studentIdProxy, setStudentIdProxy] = useState(props.user?.student_id);
+  const [studentIdProxy, setStudentIdProxy] = useState(props.user?.studentId);
   const [usernameProxy, setUsernameProxy] = useState(props.user?.username);
   const [profilePictureProxy, setProfilePictureProxy] = useState(
     props.user?.avatarUrl
@@ -103,7 +103,7 @@ export default function ProfileForm(props: ProfileFormProp) {
               <div className="col-span-2">
                 {(isEditable && (
                   <>
-                    {(!props.user?.student_id && (
+                    {(!props.user?.studentId && (
                       <input
                         type="text"
                         placeholder={t("student_id")}
@@ -122,7 +122,7 @@ export default function ProfileForm(props: ProfileFormProp) {
                   </>
                 )) || (
                   <label className="text-md text-left inline-block align-bottom mt-2">
-                    {props.user?.student_id}
+                    {props.user?.studentId}
                   </label>
                 )}
               </div>
