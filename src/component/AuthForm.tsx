@@ -27,7 +27,6 @@ export default function AuthForm(props: AuthFormProps) {
   const router = useRouter();
   const t = useTranslations("Authentication");
   context.request = `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/send-verification`;
-  // const socket = io("http://localhost:4000");
 
   const isEmail = (email: string) => {
     const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -58,10 +57,13 @@ export default function AuthForm(props: AuthFormProps) {
     if (!isValidAuth(email, password)) return;
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/login`, {
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/login`,
+        {
+          email: email,
+          password: password,
+        }
+      );
       if (response.status === 201) {
         const cur_user: UserType = response.data;
 
@@ -83,12 +85,15 @@ export default function AuthForm(props: AuthFormProps) {
     if (!isValidAuth(email, password)) return;
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/register`, {
-        email: email,
-        password: password,
-        username: username,
-        avatarUrl: `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/register`,
+        {
+          email: email,
+          password: password,
+          username: username,
+          avatarUrl: `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`,
+        }
+      );
 
       if (response.status === 201) {
         props.showSuccessMsg(true);
@@ -219,12 +224,6 @@ export default function AuthForm(props: AuthFormProps) {
           {validAuthMsg}
         </label>
       )}
-      {/* {validAuthMsg === "password" && (
-        <label className="flex text-center items-center justify-center my-3 text-red-700">
-          Password must be at least 8 characters with at least one uppercase
-          letter, one special character, and one digit.
-        </label>
-      )} */}
 
       {isSigninOpeneded && (
         <button

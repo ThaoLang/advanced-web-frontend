@@ -107,7 +107,19 @@
     "remove": "Loại bỏ",
     "edit": "Chỉnh sửa",
     "invalid_info": "Thông tin không hợp lệ! Vui lòng điền các thông tin bắt buộc...",
-    "unavailable_class_code": "Mã lớp không tồn tại! Xin hãy thử lại..."
+    "unavailable_class_code": "Mã lớp không tồn tại! Xin hãy thử lại...",
+    "grade_description": "Tên cột điểm (mô tả)",
+    "grade_scale": "Tỷ lệ",
+    "add_grade_btn": "Thêm cột điểm",
+    "add_grade_title": "THÊM CỘT ĐIỂM",
+    "update_grade_btn": "Cập nhật",
+    "edit_grade_title": "CHỈNH SỬA CỘT ĐIỂM",
+    "delete_grade_title": "Bạn có chắc muốn xóa cột điểm này không ?",
+    "delete_btn": "Xóa",
+    "cancel_btn": "Hủy",
+    "rubric_title_empty_error": "Tên cột điểm không được để trống",
+    "rubric_scale_error": "Vui lòng nhập tỉ lệ hợp lệ (1-100)",
+    "rubric_scale_empty_error":"Tên cột điểm không được để trống"
   },
   "Comment": {
     "comments": " bình luận",

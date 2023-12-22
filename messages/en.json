@@ -109,7 +109,18 @@
     "remove": "Remove",
     "edit": "Edit",
     "invalid_info": "Invalid info! Please try again...",
-    "unavailable_class_code": "Unavailable class code! Please try again..."
+    "unavailable_class_code": "Unavailable class code! Please try again...",
+    "grade_description": " Grade criteria (description)",
+    "grade_scale": "Scale",
+    "add_grade_btn": "Add",
+    "add_grade_title": "ADD GRADE SCALE",
+    "update_grade_btn": "Update",
+    "edit_grade_title": "EDIT GRADE SCALE",
+    "delete_grade_title": "Are you sure to delete this grade scale ?",
+    "delete_btn": "Delete",
+    "cancel_btn": "Cancel",
+    "rubric_title_error": "Grade criteria must not be empty",
+    "rubric_scale_error": "Please enter valid grade scale (1-100)"
   },
   "Comment": {
     "comments": " comment(s)",

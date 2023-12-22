@@ -8,12 +8,6 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function Profile() {
   const auth = useAuth();
-  // const [email, setEmail] = useState("nguyen@gmail.com");
-  // const [username, setUsername] = useState("Khanh");
-  // const [profilePicture, setProfilePicture] = useState(
-  //   "https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe"
-  // );
-  // const [user, setUser] = useState<UserType | null>(null);
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   const [showFailedMsg, setShowFailedMsg] = useState(false);
 
