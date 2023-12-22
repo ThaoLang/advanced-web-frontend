@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Link as LinkIntl,
@@ -7,16 +7,107 @@ import {
   useRouter,
 } from "../language_navigation";
 
-import { FaBars, FaArrowRightFromBracket, FaGear } from "react-icons/fa6";
+import { FaBars, FaArrowRightFromBracket } from "react-icons/fa6";
 import "../app/[locale]/page.module.css";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslations } from "next-intl";
 import { IoLanguage } from "react-icons/io5";
 import { FaRegBell } from "react-icons/fa";
-import NotificationList from "./NotificationList";
-import { io } from "socket.io-client";
-
 import { createSharedPathnamesNavigation } from "next-intl/navigation";
+
+import NotificationList from "./NotificationList";
+import { NotificationType } from "@/model/NotificationType";
+import { actions } from "@/app/[locale]/(Main)/state";
+
+export const getNotificationsData = async () => {
+  return [
+    {
+      id: "",
+      classId: "class-name",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "teacher",
+      receiverIdList: [],
+      message: "A grade composition is finalized",
+      redirectUrl: "/enrolled/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+  ];
+};
 
 export default function NavBar() {
   const t = useTranslations("Navbar");
@@ -29,8 +120,20 @@ export default function NavBar() {
 
   const auth = useAuth();
 
-  // const testMessages = ["Hello", "Nice to meet you", "Bye bye"];
-  const testMessages = new Array<string>();
+  const [notifications, setNotifications] = useState<Array<NotificationType>>(
+    []
+  );
+  useEffect(() => {
+    (async () => {
+      const notificationsData = await getNotificationsData();
+      setNotifications(notificationsData);
+    })();
+  }, []);
+
+  const isNotificationClicked = (notification: NotificationType) => {
+    notification.isRead = true;
+    setNotifications(notifications);
+  };
 
   const handleLanguageChange = (locale: string) => {
     setIsDropdownOpen(false);
@@ -43,22 +146,6 @@ export default function NavBar() {
   };
 
   // avatar url
-
-  // useEffect(() => {
-  //   const cur_user = localStorage.getItem("user");
-  //   if (cur_user) {
-  //     //   const loggedUser = JSON.parse(cur_user);
-  //     //   if (!loggedUser.avatarUrl) {
-  //     //     auth.login({
-  //     //       ...loggedUser,
-  //     //       avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-  //     //     });
-  //     //   } else {
-  //     //     auth.login(loggedUser);
-  //     //   }
-  //     auth.login(JSON.parse(cur_user));
-  //   }
-  // }, []);
 
   useEffect(() => {
     const cur_user = localStorage.getItem("user");
@@ -78,40 +165,11 @@ export default function NavBar() {
       }
 
       // socket io notification
-      let accessToken = localStorage.getItem("access_token");
+      let user = JSON.parse(cur_user);
+      let accessToken = user.access_token;
       if (accessToken) {
-        try {
-          // var connectionOptions = {
-          //   "force new connection": true,
-          //   reconnectionAttempts: "Infinity",
-          //   timeout: 10000,
-          //   transports: ["websocket"],
-          // };
-
-          console.log("Trying to connect to server");
-
-          const socket = io(
-            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification`,
-            {
-              auth: { token: accessToken },
-              transports: ["websocket", "polling", "flashsocket"],
-              // reconnectionAttempts: 10,
-              // timeout: 10000,
-            }
-          );
-
-          console.log("Is connected: " + socket.connected.toString());
-
-          socket.on("connect", () => {
-            testMessages.push("Welcome");
-          });
-
-          // socket.emit("notification", "parameters");
-
-          console.log("Finished");
-        } catch (err) {
-          //
-        }
+        actions.setAccessToken(accessToken);
+        actions.initializeSocket(accessToken);
       }
     }
   }, []);
@@ -191,11 +249,13 @@ export default function NavBar() {
                 className="btn btn-ghost btn-circle"
                 onClick={() => setIsNotificationVisible(true)}
               >
-                <div className={`${testMessages.length !== 0 && "indicator"}`}>
+                <div className={`${notifications.length !== 0 && "indicator"}`}>
                   <div>
                     <FaRegBell size={20} />
                   </div>
-                  {testMessages.length !== 0 && (
+                  {notifications.filter(
+                    (notification) => notification.isRead === false
+                  ).length !== 0 && (
                     <span className="badge badge-xs badge-primary indicator-item" />
                   )}
                 </div>
@@ -203,15 +263,22 @@ export default function NavBar() {
 
               <ul
                 tabIndex={0}
-                className="relative mt-3 z-[1] p-2 menu dropdown-content h-auto w-60 space-y-10"
+                className="relative z-[1] menu dropdown-content max-h-[550px] w-80 overflow-y-auto overflow-clip overflow-x-hidden shadow bg-white border-1 border-gray-300 rounded-box"
               >
                 {isNotificationVisible && (
                   <>
-                    {(testMessages.length === 0 && (
-                      <div className="flex align-center justify-center pt-2 h-10 text-md shadow bg-white border-1 border-gray-300 rounded-box">
+                    {(notifications.length === 0 && (
+                      <div className="flex align-center justify-center pt-2 h-10 text-md">
                         {t("no_notification")}
                       </div>
-                    )) || <NotificationList messages={testMessages} />}
+                    )) || (
+                      <div onClick={() => setIsNotificationVisible(false)}>
+                        <NotificationList
+                          notifications={notifications}
+                          isClickedNotification={isNotificationClicked}
+                        />
+                      </div>
+                    )}
                   </>
                 )}
               </ul>
@@ -225,8 +292,8 @@ export default function NavBar() {
               </div>
               <ul
                 tabIndex={0}
-                className="relative mt-3 z-[1] p-2 shadow menu dropdown-content bg-slate-100 border-1
-				border-gray-300 rounded-box h-auto w-80 space-y-10"
+                className="relative mt-3 z-[1] p-5 shadow menu dropdown-content bg-white border-2
+				border-slate-200 rounded-box h-auto w-80 space-y-10"
               >
                 <li className="text-center font-semibold text-lg font-sans pointer-events-none">
                   {auth.user.email}

@@ -72,7 +72,9 @@
     "save_btn": "Save",
     "cancel_btn": "Cancel",
     "dropping": "Drop the image here...",
-    "drop_area": "Drop an image here, or click to upload image"
+    "drop_area": "Drop an image here, or click to upload image",
+    "update_success": "Update profile successfully!",
+    "update_error": "Fail to update profile!"
   },
   "Setting": {
     "language": "Language"
@@ -120,7 +122,15 @@
     "delete_btn": "Delete",
     "cancel_btn": "Cancel",
     "rubric_title_error": "Grade criteria must not be empty",
-    "rubric_scale_error": "Please enter valid grade scale (1-100)"
+    "rubric_scale_error": "Please enter valid grade scale (1-100)",
+    "get_started": "Get Started with Class",
+    "download_help": "1. You can download sample csv here",
+    "download": "download",
+    "import_help": "2. Import/Export student list here",
+    "import": "import/export .csv",
+    "view_help_1": "3. Please import to view your student list!",
+    "view_help_2": "3. View your student list now!",
+    "view": "view"
   },
   "Comment": {
     "comments": " comment(s)",

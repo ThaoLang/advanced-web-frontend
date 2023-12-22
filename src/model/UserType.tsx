@@ -7,5 +7,5 @@ export type UserType = {
   status: string;
   refresh_token: string;
   access_token: string;
-  student_id: string;
+  studentId: string;
 };

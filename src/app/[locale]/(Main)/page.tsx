@@ -3,7 +3,7 @@
 import styles from "./page.module.css";
 import Hero from "@/component/Hero";
 import { UserType } from "@/model/UserType";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import LandingPage from "@/component/LandingPage";
 import HomePage from "@/component/HomePage";
 import { useAuth } from "@/context/AuthContext";

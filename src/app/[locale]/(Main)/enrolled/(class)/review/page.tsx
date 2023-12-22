@@ -18,7 +18,7 @@ export default function ReviewPage() {
     setShowModal(!showModal);
   };
   const auth = useAuth();
-  const studentId = "auth.user?.student_id"; // TODO: need to change this
+  const studentId = auth.user?.studentId ? auth.user.studentId : "";
 
   const [selectedReview, setSelectedReview] = useState<ReviewType>();
 
@@ -28,6 +28,7 @@ export default function ReviewPage() {
     studentExplanation: string
   ) => {
     let tempReview = {
+      id: "",
       studentId: studentId,
       gradeComposition: gradeComposition,
       currentGrade: "8", // TODO: query the current grade
@@ -43,7 +44,9 @@ export default function ReviewPage() {
 
   let tempReviewList = [
     {
-      studentId: "auth.user?.student_id",
+      id: "",
+      classId: "",
+      studentId: studentId,
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
       expectationGrade: "10",
@@ -51,7 +54,9 @@ export default function ReviewPage() {
       status: "In Progress",
     },
     {
-      studentId: "auth.user?.student_id",
+      id: "",
+      classId: "",
+      studentId: studentId,
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
       expectationGrade: "10",
@@ -59,7 +64,9 @@ export default function ReviewPage() {
       status: "In Progress",
     },
     {
-      studentId: "auth.user?.student_id",
+      id: "",
+      classId: "",
+      studentId: studentId,
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
       expectationGrade: "10",
@@ -109,6 +116,8 @@ export default function ReviewPage() {
                         onChange={() => {}}
                       />
                       <MiniReview
+                        id={review.id}
+                        classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
                         currentGrade={review.currentGrade}
@@ -141,6 +150,8 @@ export default function ReviewPage() {
                         onChange={() => {}}
                       />
                       <MiniReview
+                        id={review.id}
+                        classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
                         currentGrade={review.currentGrade}
@@ -160,6 +171,8 @@ export default function ReviewPage() {
               {t("review_detail")}
             </div>
             <ReviewForm
+              id={selectedReview.id}
+              classId={selectedReview.classId}
               studentId={selectedReview.studentId}
               gradeComposition={selectedReview.gradeComposition}
               currentGrade={selectedReview.currentGrade}

@@ -5,11 +5,13 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useTranslations } from "next-intl";
 
 export default function Profile() {
   const auth = useAuth();
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   const [showFailedMsg, setShowFailedMsg] = useState(false);
+  const t = useTranslations("Profile");
 
   const updateProfile = async (
     _username: string,
@@ -44,7 +46,7 @@ export default function Profile() {
           // email: _email,
           username: _username,
           // avatarUrl: _profilePicture,
-          student_id: _studentId,
+          studentId: _studentId,
         },
         {
           headers: {
@@ -72,7 +74,7 @@ export default function Profile() {
     _studentId: string | undefined,
     _profilePicture: string | undefined
   ) => {
-    auth.updateUser(_username, _profilePicture);
+    auth.updateUser(_username, _profilePicture, _studentId);
     if (auth.user)
       await updateProfile(
         _username ? _username : "",
@@ -108,7 +110,7 @@ export default function Profile() {
               d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>Update profile successfully!</span>
+          <span>{t("update_success")}</span>
         </div>
       )}
       {showFailedMsg && (
@@ -126,7 +128,7 @@ export default function Profile() {
               d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>Fail to update profile!</span>
+          <span>{t("update_error")}</span>
         </div>
       )}
       {auth.user && <ProfileForm user={auth.user} saveInfo={handleSaveInfo} />}

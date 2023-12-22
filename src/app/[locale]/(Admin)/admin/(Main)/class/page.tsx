@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
-import ClassTable from "@/component/admin/ClassTable";
+import ClassTable from "@/component/admin/(table)/ClassTable";
 import SearchBar from "@/component/admin/SearchBar";
 import { Suspense } from "react";
 import { ClassType } from "@/model/ClassType";
@@ -46,6 +46,9 @@ export default function Classes({
   const [hostNameFilter, setHostNameFilter] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
+  // Create a ref to store the scroll position
+  const scrollRef = useRef<number>(0);
+
   const handleSelectChange = (
     value: string,
     setter: React.Dispatch<React.SetStateAction<string | null>>
@@ -87,6 +90,9 @@ export default function Classes({
   }, []);
 
     useEffect(() => {
+    // Save the current scroll position
+    scrollRef.current = window.scrollY;
+
     const paginateClassesData = async () => {
 
       if (!classes) {
@@ -119,7 +125,9 @@ export default function Classes({
         setTotalItems(totalItems);
       })
     };
-    fetchData();
+    fetchData().catch(console.error);
+    // Restore the scroll position after the component updates
+    window.scrollTo(0, scrollRef.current);
 
   }, [query,
     sortBy,
@@ -488,6 +496,7 @@ export default function Classes({
             </select>
           </label>
         </div>
+        
         <div className="lg:mx-10 lg:col-start-2 lg:col-end-3">
           <div className="form-control">
             <div className="label">

@@ -73,7 +73,9 @@
     "save_btn": "Lưu",
     "cancel_btn": "Hủy",
     "dropping": "Kéo thả hình ảnh ở đây...",
-    "drop_area": "Kéo thả hình ảnh ở đây, hoặc tải ảnh lên"
+    "drop_area": "Kéo thả hình ảnh ở đây, hoặc tải ảnh lên",
+    "update_success": "Cập nhật hồ sơ thành công!",
+    "update_error": "Cập nhật hồ sơ thất bại!"
   },
   "EnrolledPage": {
     "title": "Lớp đăng ký"
@@ -119,7 +121,15 @@
     "cancel_btn": "Hủy",
     "rubric_title_empty_error": "Tên cột điểm không được để trống",
     "rubric_scale_error": "Vui lòng nhập tỉ lệ hợp lệ (1-100)",
-    "rubric_scale_empty_error":"Tên cột điểm không được để trống"
+    "rubric_scale_empty_error": "Tên cột điểm không được để trống",
+    "get_started": "Chuẩn bị cho lớp",
+    "download_help": "1. Bạn có thể tải bản file csv mẫu tại đây",
+    "download": "tải xuống",
+    "import_help": "2. Quản lí danh sách học sinh tại đây",
+    "import": "đăng/tải .csv",
+    "view_help_1": "3. Bạn chưa thêm danh sách học sinh!",
+    "view_help_2": "3. Xem danh sách học sinh tại đây!",
+    "view": "xem"
   },
   "Comment": {
     "comments": " bình luận",

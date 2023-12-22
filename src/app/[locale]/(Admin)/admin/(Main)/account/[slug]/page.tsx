@@ -13,120 +13,140 @@ const templateClassDetails: Array<ClassListType> = [
     class_id: 'class1',
     user_id: '1',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class2',
     user_id: '1',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class14',
     user_id: '1',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class2',
     user_id: '2',
     role: 'student',
+    fullname: 'Lê Hoàng Khanh Nguyên',
     student_id: '20127679',
   },
   {
     class_id: 'class3',
     user_id: '3',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class4',
     user_id: '4',
     role: 'student',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '20127598',
   },
   {
     class_id: 'class4',
     user_id: '5',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class5',
     user_id: '5',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class6',
     user_id: '6',
     role: 'student',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '20127444',
   },
   {
     class_id: 'class6',
     user_id: '7',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class7',
     user_id: '7',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class8',
     user_id: '8',
     role: 'student',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '20127523',
   },
   {
     class_id: 'class9',
     user_id: '9',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class10',
     user_id: '10',
     role: 'student',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '20127528',
   },
   {
     class_id: 'class11',
     user_id: '11',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class12',
     user_id: '12',
     role: 'student',
+    fullname: 'Bành Hảo Toàn',
     student_id: '20127646',
   },
   {
     class_id: 'class12',
     user_id: '7',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class13',
     user_id: '3',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
   {
     class_id: 'class14',
     user_id: '4',
     role: 'student',
+    fullname: 'Lăng Thảo Thảo',
     student_id: '20127679',
   },
   {
     class_id: 'class15',
     user_id: '5',
     role: 'teacher',
+    fullname: 'Nguyễn Minh Quang',
     student_id: '',
   },
 ];
@@ -298,7 +318,7 @@ async function getClassDetailsByUserId(user_id: string) {
 
 export default function Page({ params }: { params: { slug: string } }) {
   const context = useAccount();
-  
+
   const [isEditable, setIsEditable] = useState(false);
   const [username, setUsername] = useState(context.account?.username);
   const [studentId, setStudentId] = useState('');
@@ -306,28 +326,27 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [role, setRole] = useState(context.account?.role);
   const roles = [
     {
-      id: "1",
-      name: "Admin"
+      name: "Admin",
+      key: "admin"
     },
     {
-      id: "2",
-      name: "User"
+      name: "User",
+      key: "user"
     },
-    
   ];
   const [userClassList, setUserClassList] = useState(context.classList);
 
   useEffect(() => {
-    const loadClassInfo = async() => {
+    const loadClassInfo = async () => {
       context.classList = await getClassListByUserId(context.account?.id ?? '');
       context.classDetails = await getClassDetailsByUserId(context.account?.id ?? '');
       setStudentId(context.classDetails.find(items => items.student_id !== '')?.student_id ?? '');
       setUserClassList(context.classList);
       console.log('Account Context: ', context);
     };
-    
+
     loadClassInfo();
-  },[context]);
+  }, [context]);
   const saveInformation = () => {
 
   }
@@ -355,6 +374,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                     Username
                   </label>
                   <input type="text" disabled={!isEditable}
+                    onChange={(e) => setUsername(e.target.value)}
                     value={username}
                     className="mt-3 w-full rounded-lg border-[1.5px]
                       disabled:bg-gray-100 
@@ -367,6 +387,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                     StudentId
                   </label>
                   <input type="text" disabled={!isEditable}
+                    onChange={(e) => setStudentId(e.target.value)}
                     className="mt-3 w-full rounded-lg border-[1.5px] 
                       disabled:bg-gray-100 
                       border-stroke bg-transparent py-3 px-5 
@@ -379,6 +400,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                   </label>
                   <input type="text" disabled
                     placeholder="example@domain.com"
+                    onChange={(e) => setEmail(e.target.value)}
                     value={email}
                     className="mt-3 w-full rounded-lg border-[1.5px] 
                       disabled:bg-gray-100 
@@ -399,10 +421,12 @@ export default function Page({ params }: { params: { slug: string } }) {
                 focus:border-primary active:border-primary dark:border-form-strokedark 
                 dark:bg-form-input disabled:bg-gray-100"
                     disabled={!isEditable}
-                    value={role}>
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    >
                     {
                       roles.map((items, index) => (
-                        <option key={index} value={items.id}>{items.name}</option>
+                        <option key={index} value={items.key}>{items.name}</option>
                       ))
                     }
                   </select>
@@ -443,50 +467,15 @@ export default function Page({ params }: { params: { slug: string } }) {
               </div>
               <div className="p-7">
                 <div>
-                  <div className="mb-4 flex flex-col items-center justify-center space-y-2">        
-                      <img className="h-48 w-48 border rounded-full" 
-                            src={context.account?.avatarUrl} alt="User" />
-                  <div>
-                  <span className="font-medium text-lg text-black dark:text-white">
-                          {username}
-                    </span>
-                      {isEditable && (<>
-                        
-                        <span className="flex gap-2.5 justify-center">
-                          <button className="font-medium text-sm hover:text-primary">
-                            Delete
-                          </button>
-                          <button className="font-medium text-sm hover:text-primary">
-                            Update
-                          </button>
-                        </span>
-                      </>
-
-                      )}
+                  <div className="mb-4 flex flex-col items-center justify-center space-y-2">
+                    <img className="h-48 w-48 border rounded-full"
+                      src={context.account?.avatarUrl} alt="User" />
+                    <div>
+                      <span className="font-medium text-lg text-black dark:text-white">
+                        {username}
+                      </span>
                     </div>
                   </div>
-
-                  {isEditable ? (
-                    <div className="flex justify-end gap-4.5 space-x-5">
-                      <button className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                        onClick={() => setIsEditable(false)}>
-                        Cancel
-                      </button>
-                      <button className="flex justify-center rounded bg-info py-2 px-6 font-medium text-gray hover:bg-opacity-90"
-                        onClick={() => setIsEditable(false)}>
-                        Save
-                      </button>
-                    </div>
-                  ) :
-                    (
-                      <div className="flex justify-end gap-4.5 space-x-5">
-                        <button className="flex justify-center rounded bg-info py-2 px-6 font-medium text-gray hover:bg-opacity-90"
-                          onClick={() => setIsEditable(true)}>
-                          Edit
-                        </button>
-                      </div>
-                    )
-                  }
                 </div>
               </div>
             </div>
@@ -498,18 +487,18 @@ export default function Page({ params }: { params: { slug: string } }) {
                 </h3>
               </div>
               <div className="p-7">
-                  {
-                      userClassList?.map((items, index) =>
-                      <div key={index} className="mb-5 card card-side bg-base-100 shadow-lg">
-                        {/* <figure><img src={items.imageUrl}></img></figure> */}
-                         <div className="card-body">
-                            <h2 className="card-title">{items.name}</h2>
-                            <p>{items.description}</p>
-                            <p className="">Role: {context.classDetails?.at(0)?.role}</p>
-                        </div>
+                {
+                  userClassList?.map((items, index) =>
+                    <div key={index} className="mb-5 card card-side bg-base-100 shadow-lg">
+                      {/* <figure><img src={items.imageUrl}></img></figure> */}
+                      <div className="card-body">
+                        <h2 className="card-title">{items.name}</h2>
+                        <p>{items.description}</p>
+                        <p className="">Role: {context.classDetails?.at(0)?.role}</p>
                       </div>
-                    )
-                  }
+                    </div>
+                  )
+                }
               </div>
             </div>
 

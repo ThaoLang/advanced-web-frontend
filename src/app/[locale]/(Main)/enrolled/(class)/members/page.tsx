@@ -24,18 +24,21 @@ const teachers = [
 const students = [
   {
     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Name",
-    email: "name@flaticon.com",
+    name: "Nguyen Minh Quang",
+    email: "nmq@flaticon.com",
+    studentId: "20127605",
   },
   {
     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Name",
-    email: "name@flaticon.com",
+    name: "Lang Thao Thao",
+    email: "ltt@flaticon.com",
+    studentId: "20127629",
   },
   {
     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Name",
-    email: "name@flaticon.com",
+    name: "Le Hoang Khanh Nguyen",
+    email: "lhkn@flaticon.com",
+    studentId: "20127679",
   },
 ];
 
@@ -129,7 +132,12 @@ export default function MemberPage() {
                   <img alt="avatar" src={student.avatarUrl} />
                 </div>
               </div>
-              {student.name}
+              <div className="flex flex-col">
+                {student.name}
+                <div className="text-xs font-extralight">
+                  {student.studentId}
+                </div>
+              </div>
               <span className="badge badge-sm">Email: {student.email}</span>
 
               <div className="dropdown">

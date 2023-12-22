@@ -1,16 +1,16 @@
 export type CommentType = {
-  _id: string;
-  user: { _id: string; name: string; avatar: string };
+  id: string;
+  reviewId: string;
+  user: { id: string; name: string; avatar: string };
   desc: string;
-  post: string;
   parent: string | null;
   replyOnUser: string | null;
   createdAt: string;
   like: number;
-  like_status: boolean;
+  like_status: boolean; // save locally?
 };
 
 export type AffectedCommentType = {
   type: string;
-  _id: string;
+  id: string;
 };
