@@ -93,7 +93,7 @@ export default function Profile() {
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
 
-    if (savedUser) {
+    if (savedUser != null) {
       const curUser: UserType = JSON.parse(savedUser);
       auth.login(curUser);
     }

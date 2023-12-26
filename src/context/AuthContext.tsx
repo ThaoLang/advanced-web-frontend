@@ -10,8 +10,9 @@ import { UserType } from "@/model/UserType";
 
 export interface AuthContextType {
   user: UserType | null;
+  admin: UserType | null;
   login: (userData: UserType) => void;
-  logout: () => void;
+  logout: (role: string) => void;
   isAuthModalOpen: boolean;
   updateUser: (
     username: string | undefined,
@@ -35,15 +36,20 @@ export function useAuth() {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserType | null>(null);
+  const [admin, setAdmin] = useState<UserType | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const login = async (userData: UserType) => {
     console.log("Login", userData);
-    setUser(userData);
+    if (userData.role === "user") {
+      setUser(userData);
+    }
+    else setAdmin(userData);
   };
 
-  const logout = () => {
-    setUser(null);
+  const logout = (role: string) => {
+    if (role === "user") setUser(null);
+    else setAdmin(null);
   };
   // const login = async (userData: User) => {
   //   console.log("Login", userData)
@@ -69,7 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, updateUser, isAuthModalOpen }}
+      value={{ user, admin, login, logout, updateUser, isAuthModalOpen }}
     >
       {children}
     </AuthContext.Provider>
