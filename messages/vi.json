@@ -143,6 +143,7 @@
     "my_review": "Danh sách Phúc khảo",
     "all_reviews": "Danh sách Phúc khảo",
     "student": "Học sinh",
+    "student_id": "Mã học sinh",
     "grade_composition": "Tên cột điểm",
     "current_grade": "Điểm hiện tại",
     "student_expectation_grade": "Điểm mong muốn",
@@ -166,5 +167,18 @@
     "invalid_info": "Thông tin không hợp lệ! Vui lòng thử lại...",
     "please_update_grade": "Xin hãy cập nhật điểm...",
     "update_review_success": "Cập nhật phúc khảo thành công!"
+  },
+  "GradePage": {
+    "add": "Tạo",
+    "update": "Cập nhật",
+    "import": "Đăng bảng điểm",
+    "export": "Xuất bảng điểm",
+    "download_help": "Tải file csv mẫu",
+    "email": "Email",
+    "fullname": "Tên đầy đủ",
+    "student_id": "Mã học sinh",
+    "available": "Tồn tại",
+    "unavailable": "Không tồn tại",
+    "number": "STT"
   }
 }
