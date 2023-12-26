@@ -18,14 +18,13 @@ interface NotificationProps {
   isRead: boolean;
 }
 
-//need redesign
 export function Notification(props: NotificationProps) {
   const { locale } = useParams();
   const language = locale === "en" ? "en-EN" : "vi-VN";
 
   return (
     <Link href={props.redirectUrl}>
-      <div className="flex flex-col bg-white border-2 border-slate-200 rounded-xl shadow-md overflow-hidden p-5 cursor-pointer">
+      <div className="flex flex-col bg-white border-b-2 border-slate-200 overflow-hidden p-5 cursor-pointer">
         <div className=" flex flex-row justify-between">
           <div className="text-lg font-semibold">{props.classId}</div>
           {!props.isRead && (
@@ -35,7 +34,7 @@ export function Notification(props: NotificationProps) {
         <div className="text-xs">
           {props.senderRole}: <b>{props.senderId}</b>
         </div>
-        <div className="my-4">{props.message}</div>
+        <div className="my-2">{props.message}</div>
         <div className="text-xs font-extralight">
           {new Date(props.createdAt).toLocaleDateString(language, {
             weekday: "short",
@@ -55,25 +54,23 @@ export function Notification(props: NotificationProps) {
 export default function NotificationList(props: NotificationListProps) {
   return (
     <div>
-      <div className="mt-2 space-y-2">
-        {props.notifications &&
-          props.notifications.map((notification, index) => (
-            <div
-              key={index}
-              onClick={() => props.isClickedNotification(notification)}
-            >
-              <Notification
-                classId={notification.classId}
-                senderId={notification.senderId}
-                senderRole={notification.senderRole}
-                message={notification.message}
-                createdAt={notification.createdAt}
-                redirectUrl={notification.redirectUrl}
-                isRead={notification.isRead}
-              />
-            </div>
-          ))}
-      </div>
+      {props.notifications &&
+        props.notifications.map((notification, index) => (
+          <div
+            key={index}
+            onClick={() => props.isClickedNotification(notification)}
+          >
+            <Notification
+              classId={notification.classId}
+              senderId={notification.senderId}
+              senderRole={notification.senderRole}
+              message={notification.message}
+              createdAt={notification.createdAt}
+              redirectUrl={notification.redirectUrl}
+              isRead={notification.isRead}
+            />
+          </div>
+        ))}
     </div>
   );
 }

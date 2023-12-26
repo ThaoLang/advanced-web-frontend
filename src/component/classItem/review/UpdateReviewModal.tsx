@@ -52,10 +52,10 @@ export default function UpdateReviewModal(props: UpdateReviewProps) {
   return (
     <div className="flex flex-row m-10 align-middle justify-center">
       <div className="flex flex-col gap-4 w-md">
-        <p className="text-sm text-md ml-4">
+        <p className="text-sm ml-4">
           <b>{t("grade_composition")}:</b> {props.gradeComposition}
         </p>
-        <p className="text-sm text-md ml-4">
+        <p className="text-sm ml-4">
           <b>{t("current_grade")}:</b> {props.currentGrade}
         </p>
 

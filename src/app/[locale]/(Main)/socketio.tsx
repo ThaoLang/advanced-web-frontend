@@ -1,13 +1,14 @@
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import "react-toastify/dist/ReactToastify.css";
+import { AppState, AppActions } from "./state";
 
 export const socketIOUrl = `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification`;
 
 interface MySocketIOProps {
   accessToken: string;
-  // state: AppState;
-  // actions: AppActions;
+  state: AppState;
+  actions: AppActions;
 }
 
 export const MySocketIO = (props: MySocketIOProps) => {
@@ -32,9 +33,6 @@ export const MySocketIO = (props: MySocketIOProps) => {
     socket.once("connect", () => {
       console.log("[Inside] Is connected: " + socket.connected.toString());
       toast("Socket is connected!!");
-
-      // send notifications when trigger event
-      socket.emit("notification", "parameters"); // test emit
 
       // toast received messages from server
       socket.on("onMessage", (message: string) => {

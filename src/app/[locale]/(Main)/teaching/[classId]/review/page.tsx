@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
-import ReviewForm from "@/component/classItem/review/ReviewForm";
+import TeacherReviewForm from "@/component/classItem/review/TeacherReviewForm";
 import { IoMdClose } from "react-icons/io";
-import AddReviewModal from "@/component/classItem/review/AddReviewModal";
-import { useAuth } from "@/context/AuthContext";
-import MiniReview from "@/component/classItem/review/MiniReview";
+import UpdateReviewModal from "@/component/classItem/review/UpdateReviewModal";
 import { ReviewType } from "@/model/ReviewType";
+import MiniReview from "@/component/classItem/review/MiniReview";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { actions } from "../../../state";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
@@ -17,34 +17,11 @@ export default function ReviewPage() {
     console.log("Modal changed");
     setShowModal(!showModal);
   };
-  const auth = useAuth();
-  const studentId = "auth.user?.student_id"; // TODO: need to change this
-
-  const [selectedReview, setSelectedReview] = useState<ReviewType>();
-
-  const addReview = (
-    gradeComposition: string,
-    expectationGrade: string,
-    studentExplanation: string
-  ) => {
-    let tempReview = {
-      id: "",
-      studentId: studentId,
-      gradeComposition: gradeComposition,
-      currentGrade: "8", // TODO: query the current grade
-      expectationGrade: expectationGrade,
-      explanation: studentExplanation,
-      status: "In Progress",
-    } as ReviewType;
-
-    reviewList.push(tempReview);
-    setReviewList(reviewList);
-    toast.success(t("add_review_success"));
-  };
 
   let tempReviewList = [
     {
       id: "",
+      classId: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -54,6 +31,7 @@ export default function ReviewPage() {
     },
     {
       id: "",
+      classId: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -63,6 +41,7 @@ export default function ReviewPage() {
     },
     {
       id: "",
+      classId: "",
       studentId: "auth.user?.student_id",
       gradeComposition: "Điểm cuối kì",
       currentGrade: "8",
@@ -73,27 +52,39 @@ export default function ReviewPage() {
   ];
   const [reviewList, setReviewList] = useState<ReviewType[]>(tempReviewList);
 
+  const [selectedReview, setSelectedReview] = useState<ReviewType>();
+
+  const handleStatus = (currentStatus: string) => {
+    if (selectedReview) {
+      if (currentStatus === "In Progress") {
+        selectedReview.status = "Completed";
+      } else if (currentStatus === "Completed") {
+        selectedReview.status = "In Progress";
+      }
+      setSelectedReview(selectedReview);
+
+      // update selected review to review list
+      setReviewList(reviewList);
+      toast.success(t("update_review_success"));
+
+      actions.notify("A grade review is finalized");
+    }
+  };
+
+  // TODO: need to update grade data
+  const [updatedGrade, setUpdatedGrade] = useState("");
+  const [note, setNote] = useState("");
+
   return (
     <div>
       <div className="grid grid-cols-2 mx-20">
-        <div
-          className={`${
-            selectedReview ? "hidden lg:block" : "col-span-2"
-          } lg:col-span-1`}
-        >
-          <div className="m-3 mx-10 text-2xl lg:text-3xl text-yellow-500 flex flex-row items-center justify-between">
-            {t("my_review")}
-            <button
-              className="btn btn-info max-w-xs bg-yellow-400 text-white"
-              onClick={handleModal}
-            >
-              {t("create_review")}
-            </button>
+        <div className="hidden lg:block lg:col-span-1 mt-2">
+          <div className="m-3 mx-10 text-2xl lg:text-3xl text-blue-600">
+            {t("all_reviews")}
           </div>
-
           <div className="grid grid-cols-2 mx-20 ml-10 gap-4">
             <div>
-              <div className="flex text-lg text-yellow-500 items-center justify-center py-2">
+              <div className="flex text-lg text-blue-600 items-center justify-center py-2">
                 {t("in_progress_status")}
               </div>
               <div className="overflow-auto h-96 space-y-2">
@@ -114,6 +105,7 @@ export default function ReviewPage() {
                       />
                       <MiniReview
                         id={review.id}
+                        classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
                         currentGrade={review.currentGrade}
@@ -126,7 +118,7 @@ export default function ReviewPage() {
               </div>
             </div>
             <div>
-              <div className="flex text-lg text-yellow-500 items-center justify-center py-2">
+              <div className="flex text-lg text-blue-600 items-center justify-center py-2">
                 {t("completed_status")}
               </div>
               <div className="overflow-auto h-96 space-y-2">
@@ -147,6 +139,7 @@ export default function ReviewPage() {
                       />
                       <MiniReview
                         id={review.id}
+                        classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
                         currentGrade={review.currentGrade}
@@ -161,12 +154,19 @@ export default function ReviewPage() {
           </div>
         </div>
         {selectedReview && (
-          <div className="m-3 flex-col col-span-2 lg:col-span-1">
-            <div className="m-3 text-2xl lg:text-3xl text-yellow-500">
+          <div className="flex-col col-span-2 lg:col-span-1">
+            <div className="p-3 text-2xl lg:text-3xl text-blue-600 flex flex-row items-center justify-between">
               {t("review_detail")}
+              <button
+                className="btn btn-info max-w-xs bg-blue-500 text-white"
+                onClick={() => handleModal()}
+              >
+                {t("update")}
+              </button>
             </div>
-            <ReviewForm
+            <TeacherReviewForm
               id={selectedReview.id}
+              classId={selectedReview.classId}
               studentId={selectedReview.studentId}
               gradeComposition={selectedReview.gradeComposition}
               currentGrade={selectedReview.currentGrade}
@@ -174,28 +174,39 @@ export default function ReviewPage() {
               explanation={selectedReview.explanation}
               status={selectedReview.status}
             />
+            {/* temp */}
+            <div>Updated grade: {updatedGrade}</div>
+            <div>Note: {note}</div>
+            {/* temp */}
+
+            {/* Modal */}
+            <dialog className={`modal ${showModal ? "modal-open" : ""}`}>
+              <div className="modal-box">
+                <div className="flex flex-row justify-between">
+                  <p className="text-sm text-gray-500">
+                    {/* Press X or click outside to close */}
+                  </p>
+                  <button onClick={handleModal}>
+                    <IoMdClose />
+                  </button>
+                </div>
+                <UpdateReviewModal
+                  gradeComposition={selectedReview.gradeComposition}
+                  currentGrade={selectedReview.currentGrade}
+                  status={selectedReview.status}
+                  toggleStatus={handleStatus}
+                  setUpdatedGrade={setUpdatedGrade}
+                  setNote={setNote}
+                  closeModal={handleModal}
+                />
+              </div>
+              <form method="dialog" className="modal-backdrop">
+                <button onClick={handleModal}>close</button>
+              </form>
+            </dialog>
           </div>
         )}
       </div>
-
-      {/* Modal */}
-      <dialog className={`modal ${showModal ? "modal-open" : ""}`}>
-        <div className="modal-box">
-          <div className="flex flex-row justify-between">
-            <p className="text-sm text-gray-500">
-              {/* Press X or click outside to close */}
-            </p>
-            <button onClick={handleModal}>
-              <IoMdClose />
-            </button>
-          </div>
-          <AddReviewModal addReview={addReview} closeModal={handleModal} />
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button onClick={handleModal}>close</button>
-        </form>
-      </dialog>
-
       <ToastContainer
         position="bottom-right"
         autoClose={5000}

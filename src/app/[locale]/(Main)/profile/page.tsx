@@ -9,12 +9,6 @@ import { useTranslations } from "next-intl";
 
 export default function Profile() {
   const auth = useAuth();
-  // const [email, setEmail] = useState("nguyen@gmail.com");
-  // const [username, setUsername] = useState("Khanh");
-  // const [profilePicture, setProfilePicture] = useState(
-  //   "https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe"
-  // );
-  // const [user, setUser] = useState<UserType | null>(null);
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   const [showFailedMsg, setShowFailedMsg] = useState(false);
   const t = useTranslations("Profile");
@@ -52,7 +46,7 @@ export default function Profile() {
           // email: _email,
           username: _username,
           // avatarUrl: _profilePicture,
-          student_id: _studentId,
+          studentId: _studentId,
         },
         {
           headers: {
@@ -80,7 +74,7 @@ export default function Profile() {
     _studentId: string | undefined,
     _profilePicture: string | undefined
   ) => {
-    auth.updateUser(_username, _profilePicture);
+    auth.updateUser(_username, _profilePicture, _studentId);
     if (auth.user)
       await updateProfile(
         _username ? _username : "",

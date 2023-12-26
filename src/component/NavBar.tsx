@@ -16,8 +16,8 @@ import { FaRegBell } from "react-icons/fa";
 import { createSharedPathnamesNavigation } from "next-intl/navigation";
 
 import NotificationList from "./NotificationList";
-import { MySocketIO } from "@/app/[locale]/(Main)/socketio";
 import { NotificationType } from "@/model/NotificationType";
+import { actions } from "@/app/[locale]/(Main)/state";
 
 export const getNotificationsData = async () => {
   return [
@@ -30,6 +30,67 @@ export const getNotificationsData = async () => {
       receiverIdList: [],
       message: "A grade composition is finalized",
       redirectUrl: "/enrolled/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
+      createdAt: "2022-12-31T17:22:05.092+0000",
+      isRead: false,
+    },
+    {
+      id: "",
+      classId: "class-name-2",
+      reviewId: "",
+      senderId: "senderId",
+      senderRole: "student",
+      receiverIdList: [],
+      message: "A student has replied",
+      redirectUrl: "/teaching/review",
       createdAt: "2022-12-31T17:22:05.092+0000",
       isRead: false,
     },
@@ -107,8 +168,8 @@ export default function NavBar() {
       let user = JSON.parse(cur_user);
       let accessToken = user.access_token;
       if (accessToken) {
-        const socket = MySocketIO({ accessToken });
-        //
+        actions.setAccessToken(accessToken);
+        actions.initializeSocket(accessToken);
       }
     }
   }, []);
@@ -202,19 +263,21 @@ export default function NavBar() {
 
               <ul
                 tabIndex={0}
-                className="relative z-[1] menu dropdown-content h-auto w-60 space-y-5"
+                className="relative z-[1] menu dropdown-content max-h-[550px] w-80 overflow-y-auto overflow-clip overflow-x-hidden shadow bg-white border-1 border-gray-300 rounded-box"
               >
                 {isNotificationVisible && (
                   <>
                     {(notifications.length === 0 && (
-                      <div className="flex align-center justify-center pt-2 h-10 text-md shadow bg-white border-1 border-gray-300 rounded-box">
+                      <div className="flex align-center justify-center pt-2 h-10 text-md">
                         {t("no_notification")}
                       </div>
                     )) || (
-                      <NotificationList
-                        notifications={notifications}
-                        isClickedNotification={isNotificationClicked}
-                      />
+                      <div onClick={() => setIsNotificationVisible(false)}>
+                        <NotificationList
+                          notifications={notifications}
+                          isClickedNotification={isNotificationClicked}
+                        />
+                      </div>
                     )}
                   </>
                 )}

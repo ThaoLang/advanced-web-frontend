@@ -16,7 +16,8 @@ export interface AuthContextType {
   isAuthModalOpen: boolean;
   updateUser: (
     username: string | undefined,
-    avatarUrl: string | undefined
+    avatarUrl: string | undefined,
+    studentId: string | undefined
   ) => void;
 }
 
@@ -62,13 +63,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const updateUser = (
     username: string | undefined,
-    avatarUrl: string | undefined
+    avatarUrl: string | undefined,
+    studentId: string | undefined
   ) => {
     if (user) {
       setUser({
         ...user,
         username: username ?? user.username,
         avatarUrl: avatarUrl ?? user.avatarUrl,
+        studentId: studentId ?? user.studentId,
       });
     }
   };

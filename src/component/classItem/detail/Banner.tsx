@@ -50,7 +50,7 @@ const Banner = (classInfo: BannerProp) => {
   // end copy
 
   return (
-    <div className="w-1/2 lg:w-2/5 bg-white rounded-xl shadow-md overflow-hidden relative">
+    <div className="w-full md:w-1/2 lg:w-2/5 bg-white rounded-xl shadow-md overflow-hidden relative">
       <div className="md:flex flex-col">
         <div className="md:shrink-0 ">
           <img
@@ -75,26 +75,16 @@ const Banner = (classInfo: BannerProp) => {
               {classInfo.inviteUrl}
             </div>
           </div>
-          <div className="mt-1 text-2xl lg:text-4xl leading-tight font-medium text-black hover:underline text-ellipsis overflow-hidden roboto-bold text-wrap-2-line">
-            {classInfo.name}
-          </div>
 
           <div className="collapse collapse-arrow">
             <input type="checkbox" onChange={() => setIsActive(!isActive)} />
             <div className="collapse-title flex flex-row justify-between align-middle">
-              <span className="absolute text-sm align-bottom end-10">
-                <div>
-                  {isActive ? (
-                    <div className="mt-0.5 text-gray-500 ml-1 cursor-pointer">
-                      {t("hide")}
-                    </div>
-                  ) : (
-                    <div className="mt-0.5 text-gray-500 ml-1 cursor-pointer">
-                      {t("view_details")}
-                    </div>
-                  )}
-                </div>
-              </span>
+              <div className="mt-1 text-2xl lg:text-4xl leading-tight font-medium text-black hover:underline text-ellipsis overflow-hidden roboto-bold text-wrap-2-line">
+                {classInfo.name}
+              </div>
+              <div className="hidden md:block text-sm mt-3 text-gray-500 ml-1 cursor-pointer">
+                {isActive ? <>{t("hide")}</> : <>{t("view_details")}</>}
+              </div>
             </div>
 
             <div className="collapse-content">
