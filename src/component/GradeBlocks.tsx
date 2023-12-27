@@ -43,7 +43,7 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
   const handleDeleteGrade = async (rubric_id: string) => {
     try {
       const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/delete/${rubric_id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${rubric_id}`,
         {
           headers: {
             Authorization: `Bearer ${auth.user?.access_token}`,
@@ -61,17 +61,13 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
     handleDeleteModal();
   };
 
-  const handleEditGrade = async (
-    gradeName: string,
-    gradeScale: number,
-    order: number
-  ) => {
+  const handleEditGrade = async (gradeName: string, gradeScale: number) => {
     const newRubric: RubricType = {
       id: props.rubric.id,
       classId: props.rubric.classId,
       gradeName: gradeName,
       gradeScale: gradeScale,
-      order: order == -1 ? props.rubric.order : order,
+      order: props.rubric.order,
     };
 
     // try {
@@ -176,15 +172,17 @@ const SortableList = SortableContainer((props: SortableListProps) => {
   };
   return (
     <ul>
-      {props.items.map((value, index) => (
-        <SortableItem
-          key={`item-${index}`}
-          index={index}
-          rubric={value}
-          setRubrics={props.setRubrics}
-          handleUpdate={handleUpdate}
-        />
-      ))}
+      {props.items &&
+        props.items.length > 0 &&
+        props.items.map((value, index) => (
+          <SortableItem
+            key={`item-${index}`}
+            index={index}
+            rubric={value}
+            setRubrics={props.setRubrics}
+            handleUpdate={handleUpdate}
+          />
+        ))}
     </ul>
   );
 });

@@ -6,7 +6,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { useTranslations } from "next-intl";
 
 interface SmallClassProp {
-  id: number;
+  id: string;
   imageUrl: string;
   name: string;
   description: string;
@@ -23,7 +23,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
     <div className="max-w-[240px] bg-white rounded-xl overflow-hidden shadow-md md:max-w-2xl relative">
       <div className="md:flex flex-col">
         {/* <Link href={`/${classInfo.page}/detail/${classInfo.id}`}> */}
-        <Link href={`/${classInfo.page}/detail`}>
+        <Link href={`/${classInfo.page}/${classInfo.id}/detail`}>
           <div className="md:shrink-0 ">
             <img
               className="h-48 object-cover w-full"
@@ -34,21 +34,21 @@ const SmallClass = (classInfo: SmallClassProp) => {
         </Link>
         <div className="p-3">
           {/* <Link href={`/${classInfo.page}/detail/${classInfo.id}`}> */}
-          <Link href={`/${classInfo.page}/detail`}>
+          <Link href={`/${classInfo.page}/${classInfo.id}/detail`}>
             <div className="flex flex-row justify-between">
-              <div
+              {/* <div
                 className=" md:text-lg text-slate-400 italic "
                 style={{ fontSize: "12px" }}
               >
                 {" "}
                 {classInfo.description}
-              </div>
-              <div
+              </div> */}
+              {/* <div
                 className=" md:text-lg text-slate-400 italic "
                 style={{ fontSize: "12px" }}
               >
                 {classInfo.inviteUrl}
-              </div>
+              </div> */}
             </div>
             <div className="mt-1 text-lg leading-tight font-medium text-black hover:underline text-ellipsis overflow-hidden roboto-bold text-wrap-2-line">
               {classInfo.name}

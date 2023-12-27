@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 interface EditGradeFormProps {
   name: string;
   scale: number;
-  handleUpdate: (gradeName: string, gradeScale: number, order: number) => void;
+  handleUpdate: (gradeName: string, gradeScale: number) => void;
 }
 export default function EditGradeForm(props: EditGradeFormProps) {
   const [nameProxy, setNameProxy] = useState(props.name);
@@ -48,7 +48,7 @@ export default function EditGradeForm(props: EditGradeFormProps) {
   const handleClickUpdate = () => {
     if (!isValidGradeScale()) return;
 
-    props.handleUpdate(nameProxy, scaleProxy, -1);
+    props.handleUpdate(nameProxy, scaleProxy);
   };
 
   return (

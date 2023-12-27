@@ -19,6 +19,7 @@ import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { useParams } from "next/navigation";
 import { RubricType } from "@/model/RubricType";
+import { UserType } from "@/model/UserType";
 
 interface SortableComponentProps {
   rubrics: RubricType[];
@@ -37,11 +38,18 @@ const SortableComponent = (props: SortableComponentProps) => {
       oldIndex,
       newIndex
     );
-    updatedRubrics.forEach((rubric, index) => {
-      rubric.order = index;
-    });
+    // updatedRubrics.forEach((rubric, index) => {
+    //   rubric.order = index;
+    // });
 
-    props.setRubrics(updatedRubrics);
+    //props.setRubrics(updatedRubrics);
+
+    const updatedRubricsWithOrder = updatedRubrics.map((rubric, index) => ({
+      ...rubric,
+      order: index,
+    }));
+
+    props.setRubrics(updatedRubricsWithOrder);
   };
 
   return (
@@ -95,9 +103,14 @@ const GradePage: React.FC = () => {
   ];
 
   const [showModal, setShowModal] = useState(false);
-  const [rubrics, setRubrics] = useState<RubricType[]>(items);
+  const [rubrics, setRubrics] = useState<RubricType[]>([]);
   const [isDisabledUpdatedBtn, setIsDisabledUpdatedBtn] = useState(true);
   const auth = useAuth();
+  const savedUser = localStorage.getItem("user");
+  let currentUser: UserType;
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+  }
   const { classId } = useParams();
   const handleModal = () => {
     console.log("Modal changed");
@@ -116,11 +129,11 @@ const GradePage: React.FC = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${auth.user?.access_token}`,
+            Authorization: `Bearer ${currentUser?.access_token}`,
           },
         }
       );
-      if (response.status === 200) {
+      if (response.status === 201) {
         const createdRubric: RubricType = response.data;
 
         setRubrics([...rubrics, createdRubric]);
@@ -128,16 +141,19 @@ const GradePage: React.FC = () => {
     } catch (error: any) {
       console.error("Failed to create new rubric:", error);
     }
+    setShowModal(false);
   };
 
-  const handleUpdate = async (rubrics: RubricType[]) => {
+  const handleUpdate = async () => {
     try {
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/update}`,
-        rubrics,
+        {
+          rubrics: rubrics,
+        },
         {
           headers: {
-            Authorization: `Bearer ${auth.user?.access_token}`,
+            Authorization: `Bearer ${currentUser?.access_token}`,
           },
         }
       );
@@ -151,14 +167,15 @@ const GradePage: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log("User", currentUser);
     axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/get`, {
-        params: { classId: classId },
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
         headers: {
-          Authorization: `Bearer ${auth.user?.access_token}`,
+          Authorization: `Bearer ${currentUser?.access_token}`,
         },
       })
       .then((response) => {
+        console.log("Response", response);
         setRubrics(response.data);
       })
       .catch((error) => {
