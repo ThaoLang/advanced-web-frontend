@@ -19,6 +19,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useParams } from "next/navigation";
 import { RubricType } from "@/model/RubricType";
 import { useTranslations } from "next-intl";
+import { ToastContainer, toast } from "react-toastify";
+import { proxy } from "valtio";
 import { UserType } from "@/model/UserType";
 
 interface SortableComponentProps {
@@ -102,77 +104,255 @@ const GradePage: React.FC = () => {
     },
   ];
 
-  const students = [
-    {
-      fullName: "Nguyen Minh Quang",
-      studentId: "20127605",
-      email: "",
-    },
-    {
-      fullName: "Lang Thao Thao",
-      studentId: "20127629",
-      email: "",
-    },
-    {
-      fullName: "Le Hoang Khanh Nguyen",
-      studentId: "20127679",
-      email: "lhkn@gmail.com",
-    },
-    {
-      fullName: "Nguyen Minh Quang",
-      studentId: "20127605",
-      email: "",
-    },
-    {
-      fullName: "Lang Thao Thao",
-      studentId: "20127629",
-      email: "",
-    },
-    {
-      fullName: "Le Hoang Khanh Nguyen",
-      studentId: "20127679",
-      email: "lhkn@gmail.com",
-    },
-    {
-      fullName: "Nguyen Minh Quang",
-      studentId: "20127605",
-      email: "",
-    },
-    {
-      fullName: "Lang Thao Thao",
-      studentId: "20127629",
-      email: "",
-    },
-    {
-      fullName: "Le Hoang Khanh Nguyen",
-      studentId: "20127679",
-      email: "lhkn@gmail.com",
-    },
-  ];
+  const getStudents = async () => {
+    return [
+      {
+        fullname: "Nguyễn Minh Quang",
+        studentId: "20127605",
+        email: "",
+      },
+      {
+        fullname: "Lăng Thảo Thảo",
+        studentId: "20127629",
+        email: "",
+      },
+      {
+        fullname: "Lê Hoàng Khanh Nguyên",
+        studentId: "20127679",
+        email: "lhkn@gmail.com",
+      },
+      {
+        fullname: "Lê Hoài Phương",
+        studentId: "20127598",
+        email: "",
+      },
+      {
+        fullname: "Hoàng Hữu Minh An",
+        studentId: "20127102",
+        email: "",
+      },
+      {
+        fullname: "Huỳnh Minh Chiến",
+        studentId: "20127444",
+        email: "20127444@student.hcmus.edu.vn",
+      },
+    ];
+  };
 
-  const studentGrade = [
-    // ?
-    {
-      studentId: "20127605",
-      grades: [],
-    },
-    {
-      studentId: "20127629",
-      grades: [],
-    },
-    {
-      studentId: "20127679",
-      grades: [],
-    },
-  ];
-  const [studentGradeProxy, setStudentGradeProxy] = useState(studentGrade);
+  const getGrade = async () => {
+    return [
+      {
+        studentId: "20127605",
+        rubricId: "1",
+        grade: "10",
+      },
+      {
+        studentId: "20127605",
+        rubricId: "2",
+        grade: "10.2",
+      },
+      {
+        studentId: "20127605",
+        rubricId: "3",
+        grade: "10",
+      },
+      {
+        studentId: "20127605",
+        rubricId: "4",
+        grade: "10.4",
+      },
+      {
+        studentId: "20127605",
+        rubricId: "5",
+        grade: "10",
+      },
+      {
+        studentId: "20127605",
+        rubricId: "6",
+        grade: "10",
+      },
+      //
+      {
+        studentId: "20127629",
+        rubricId: "1",
+        grade: "10",
+      },
+      {
+        studentId: "20127629",
+        rubricId: "2",
+        grade: "10",
+      },
+      {
+        studentId: "20127629",
+        rubricId: "3",
+        grade: "10",
+      },
+      {
+        studentId: "20127629",
+        rubricId: "4",
+        grade: "10",
+      },
+      {
+        studentId: "20127629",
+        rubricId: "5",
+        grade: "10",
+      },
+      {
+        studentId: "20127629",
+        rubricId: "6",
+        grade: "10",
+      },
+      //
+      {
+        studentId: "20127679",
+        rubricId: "1",
+        grade: "1",
+      },
+      {
+        studentId: "20127679",
+        rubricId: "2",
+        grade: "1",
+      },
+      {
+        studentId: "20127679",
+        rubricId: "3",
+        grade: "1",
+      },
+      {
+        studentId: "20127679",
+        rubricId: "4",
+        grade: "1",
+      },
+      {
+        studentId: "20127679",
+        rubricId: "5",
+        grade: "1",
+      },
+      {
+        studentId: "20127679",
+        rubricId: "6",
+        grade: "1",
+      },
+    ];
+  };
+
+  interface StudentProps {
+    fullname: string;
+    studentId: string;
+    email: string;
+  }
+
+  interface GradeProps {
+    studentId: string;
+    rubricId: string;
+    grade: string;
+  }
+
+  const [students, setStudents] = useState<StudentProps[]>();
+  const [grade, setGrade] = useState<GradeProps[]>([]);
+  const [gradeProxy, setGradeProxy] = useState<GradeProps[]>([]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const students = await getStudents();
+  //     let gradeData = await getGrade();
+
+  //     setStudents(students);
+  //     setGrade(gradeData);
+  //     setGradeProxy(proxy<GradeProps[]>([...gradeData]));
+  //   })();
+  // }, []);
+
+  const getMyStudentGrade = (studentId: string, rubricId: string) => {
+    for (let item of grade) {
+      if (item.studentId == studentId && item.rubricId == rubricId) {
+        return item.grade;
+      }
+    }
+    return "";
+  };
+
+  const getProxyStudentGrade = (studentId: string, rubricId: string) => {
+    for (let item of gradeProxy) {
+      if (item.studentId == studentId && item.rubricId == rubricId) {
+        return item.grade;
+      }
+    }
+    return "";
+  };
+
+  const isGrade = (grade: string) => {
+    const regex = /^(\d*\.)?\d+$/;
+    if (regex.test(grade)) {
+      let temp = Number.parseFloat(grade);
+      return temp >= 0 && temp <= 10;
+    } else return regex.test(grade);
+  };
+
+  // const [newGrade, setNewGrade] = useState<
+  //   { studentId: string; rubricId: string }[]
+  // >([]);
+  // const [invalidGrade, setInvalidGrade] = useState<
+  //   { studentId: string; rubricId: string }[]
+  // >([]);
+
+  const [newGrade, setNewGrade] = useState<string[]>([]);
+  const [invalidGrade, setInvalidGrade] = useState<string[]>([]);
+
+  const checkMyStudentGrade = (
+    value: string,
+    studentId: string,
+    rubricId: string
+  ) => {
+    // let temp = { studentId, rubricId };
+    if (!isGrade(value)) {
+      toast.warn(t("invalid_grade"));
+      if (!invalidGrade.includes(studentId)) {
+        setInvalidGrade([...invalidGrade, studentId]);
+      }
+
+      setNewGrade(newGrade.filter((item) => item != studentId));
+    } else {
+      let grade = getMyStudentGrade(studentId, rubricId);
+      if (value == grade) {
+        setNewGrade(newGrade.filter((item) => item != studentId));
+      } else if (!newGrade.includes(studentId)) {
+        setNewGrade([...newGrade, studentId]);
+      }
+
+      setInvalidGrade(invalidGrade.filter((item) => item != studentId));
+    }
+  };
+
+  const setMyStudentGrade = (
+    studentId: string,
+    rubricId: string,
+    value: string
+  ) => {
+    for (let item of gradeProxy) {
+      if (item.studentId == studentId && item.rubricId == rubricId) {
+        item.grade = value;
+        setGradeProxy(gradeProxy);
+        return;
+      }
+    }
+  };
+
+  const handleResetBtn = () => {
+    setGradeProxy([]);
+    async () => {
+      let gradeData = await getGrade();
+      setGradeProxy(proxy<GradeProps[]>([...gradeData]));
+    };
+    setNewGrade([]);
+    setInvalidGrade([]);
+  };
 
   const t = useTranslations("GradePage");
 
   const [showModal, setShowModal] = useState(false);
   const [rubrics, setRubrics] = useState<RubricType[]>([]);
   const [isDisabledUpdatedBtn, setIsDisabledUpdatedBtn] = useState(true);
-  const [isDisabledUpdatedBtn2, setIsDisabledUpdatedBtn2] = useState(true);
   const auth = useAuth();
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
@@ -249,6 +429,16 @@ const GradePage: React.FC = () => {
       .catch((error) => {
         console.error("Error fetching rubrics:", error);
       });
+
+    // TODO: update request
+    (async () => {
+      const students = await getStudents();
+      let gradeData = await getGrade();
+
+      setStudents(students);
+      setGrade(gradeData);
+      setGradeProxy(proxy<GradeProps[]>([...gradeData]));
+    })();
   }, []);
 
   useEffect(() => {
@@ -260,75 +450,61 @@ const GradePage: React.FC = () => {
 
   return (
     <div className="grid grid-cols-6 gap-10 mx-10">
-      <div className="hidden md:block md:col-span-3 lg:col-span-4">
+      <div className="col-span-6 lg:col-span-4">
         <div className="flex items-center justify-center gap-4 mb-2">
           <button
-            className={`btn btn-info bg-blue-500 text-white ${
-              isDisabledUpdatedBtn2 ? "btn-disabled" : ""
-            }`}
-            // onClick={() => {}}
-          >
-            {t("update")}
-          </button>
-          <button
-            className="btn btn-info bg-blue-500 text-white"
+            className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
             // onClick={() => {}}
           >
             {t("download_help")}
           </button>
           <button
-            className="btn btn-info bg-blue-500 text-white"
+            className="btn btn-info bg-blue-500 text-white text-xs"
             // onClick={() => {}}
           >
             {t("import")}
           </button>
-          <button
-            className={`btn btn-info bg-blue-500 text-white 
-            ${studentGrade.length === 0 ? "btn-disabled" : ""}
+          {grade && (
+            <button
+              className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
+            ${grade.length == 0 ? "btn-disabled" : ""}
             `}
-            // onClick={() => {}}
-          >
-            {t("export")}
-          </button>
+              // onClick={() => {}}
+            >
+              {t("export")}
+            </button>
+          )}
         </div>
         <div className="max-h-[450px] overflow-auto bg-white rounded">
           {/* table */}
-          <table className="table">
+          <table className="table table-sm table-pin-rows table-pin-cols">
             {/* head */}
-            <thead className="text-md">
+            <thead>
               <tr>
-                {/* <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th> */}
                 <th>{t("number")}</th>
-                <th>{t("fullname")}</th>
-                <th>{t("student_id")}</th>
-                <th>{t("email")}</th>
+                <td>{t("fullname")}</td>
+                <td>{t("student_id")}</td>
+                <td>{t("email")}</td>
                 {items.length > 0 &&
                   items.map((item, index) => {
-                    return <th key={index}>{item.gradeName}</th>;
+                    return <td key={index}>{item.gradeName}</td>;
                   })}
+                <th>{t("finalized_score")}</th>
               </tr>
             </thead>
             <tbody>
               {/* rows */}
-              {students.length > 0 &&
+              {students &&
+                students.length > 0 &&
                 students.map((student, index) => {
                   return (
                     <tr>
-                      {/* <th>
-                      <label>
-                        <input type="checkbox" className="checkbox" />
-                      </label>
-                    </th> */}
-                      <td>
-                        <div className="text-sm opacity-50">{index + 1}</div>
-                      </td>
-                      <td>{student.fullName}</td>
-                      <td>{student.studentId}</td>
                       <th>
+                        <div className="text-sm opacity-50">{index + 1}</div>
+                      </th>
+                      <td>{student.fullname}</td>
+                      <td>{student.studentId}</td>
+                      <td>
                         <input
                           type="text"
                           className="text-md font-light h-8 p-2"
@@ -342,46 +518,108 @@ const GradePage: React.FC = () => {
                             <>{t("unavailable")}</>
                           )}
                         </span>
-                      </th>
-                      {/* <th>
-                      <button className="btn btn-ghost btn-xs">details</button>
-                    </th> */}
+                      </td>
+
                       {items.length > 0 &&
                         items.map((item, index) => {
                           return (
-                            <th key={index}>
+                            <td key={index}>
                               <input
                                 type="text"
-                                className="text-md font-light h-8 p-2"
+                                className={`text-md font-light h-10 p-2
+                                ${
+                                  invalidGrade.includes(student.studentId)
+                                    ? "border-red-500 text-red-500"
+                                    : ""
+                                }
+                                ${
+                                  newGrade.includes(student.studentId)
+                                    ? "border-teal-500 text-teal-500"
+                                    : ""
+                                }
+                                `}
                                 placeholder={item.gradeName}
+                                defaultValue={getProxyStudentGrade(
+                                  student.studentId,
+                                  item.id
+                                )}
+                                onChange={(e) => {
+                                  setMyStudentGrade(
+                                    student.studentId,
+                                    item.id,
+                                    e.target.value
+                                  );
+                                }}
+                                onBlur={(e) =>
+                                  checkMyStudentGrade(
+                                    e.target.value,
+                                    student.studentId,
+                                    item.id
+                                  )
+                                }
+                                maxLength={6}
                               />
-                            </th>
+                            </td>
                           );
                         })}
+                      <th>
+                        <div className="text-sm opacity-50 flex justify-center align-middle">
+                          {index + 1}
+                        </div>
+                      </th>
                     </tr>
                   );
                 })}
             </tbody>
 
             {/* foot */}
-            <tfoot>
+            {/* <tfoot>
               <tr>
-                {/* <th></th> */}
                 <th>{t("number")}</th>
-                <th>{t("fullname")}</th>
-                <th>{t("student_id")}</th>
-                <th>{t("email")}</th>
+                <td>{t("fullname")}</td>
+                <td>{t("student_id")}</td>
+                <td>{t("email")}</td>
                 {items.length > 0 &&
                   items.map((item, index) => {
-                    return <th key={index}>{item.gradeName}</th>;
+                    return <td key={index}>{item.gradeName}</td>;
                   })}
               </tr>
-            </tfoot>
+            </tfoot> */}
           </table>
+        </div>
+        <div className="flex items-center justify-center gap-4 mb-2">
+          <button
+            className={`btn btn-info bg-blue-500 text-white text-xs ${
+              newGrade.length == 0 ? "btn-disabled" : ""
+            }`}
+            // onClick={() => {}}
+          >
+            {t("update")}
+          </button>
+          <button
+            className={`btn btn-info bg-blue-500 text-white text-xs ${
+              invalidGrade.length == 0 && newGrade.length == 0
+                ? "btn-disabled"
+                : ""
+            }`}
+            onClick={() => handleResetBtn()}
+          >
+            {t("cancel_change")}
+          </button>
+          {grade && (
+            <button
+              className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
+            ${grade.length == 0 ? "btn-disabled" : ""}
+            `}
+              // onClick={() => {}}
+            >
+              {t("finalize_score")}
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="col-span-6 md:col-span-3 lg:col-span-2">
+      <div className="hidden lg:block lg:col-span-2">
         <div className="absolute top-32 right-4">
           <button
             onClick={handleModal}
@@ -392,7 +630,7 @@ const GradePage: React.FC = () => {
         </div>
 
         <div className="font-bold text-xl lg:text-2xl flex items-center justify-center mb-8">
-          <h1 className="">Grade Structure</h1>
+          <h1 className="">{t("grade_structure")}</h1>
         </div>
         <SortableComponent rubrics={rubrics} setRubrics={setRubrics} />
         <div className="flex items-center justify-center">
@@ -400,7 +638,7 @@ const GradePage: React.FC = () => {
             className={`btn btn-info bg-blue-500 text-white ${
               isDisabledUpdatedBtn ? "btn-disabled" : ""
             }`}
-            onClick={() => handleUpdate([])}
+            onClick={() => handleUpdate()}
           >
             {t("update")}
           </button>
@@ -421,6 +659,18 @@ const GradePage: React.FC = () => {
           </form>
         </dialog>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
