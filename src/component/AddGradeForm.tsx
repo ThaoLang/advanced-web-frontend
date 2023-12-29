@@ -50,6 +50,8 @@ export default function AddGradeForm(props: AddGradeFormProps) {
     if (!isValidInput()) return;
 
     props.handleClick(nameProxy, Number(scaleProxy));
+    setNameProxy("");
+    setScaleProxy("");
   };
 
   return (

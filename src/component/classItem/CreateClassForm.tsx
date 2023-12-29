@@ -3,7 +3,10 @@ import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function CreateClassForm() {
+interface CreateClassFormProps {
+  handleAddNewClass: (name: string, description: string) => void;
+}
+export default function CreateClassForm(props: CreateClassFormProps) {
   const [nameProxy, setNameProxy] = useState("");
   const [descriptionProxy, setDescriptionProxy] = useState("");
   const t = useTranslations("Tabs");
@@ -11,7 +14,14 @@ export default function CreateClassForm() {
   const checkInput = () => {
     if (nameProxy === "") {
       toast.error(t("invalid_info"));
+      return false;
     }
+    return true;
+  };
+
+  const handleAdd = () => {
+    if (!checkInput()) return;
+    props.handleAddNewClass(nameProxy, descriptionProxy);
   };
 
   return (
@@ -36,7 +46,7 @@ export default function CreateClassForm() {
         />
         <button
           className="btn btn-info w-full max-w-xs"
-          onClick={() => checkInput()}
+          onClick={() => handleAdd()}
         >
           {t("create_class_btn")}!
         </button>
