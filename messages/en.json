@@ -144,6 +144,7 @@
     "my_review": "My Reviews",
     "all_reviews": "All Reviews",
     "student": "Student",
+    "student_id": "Student ID",
     "grade_composition": "Grade composition",
     "current_grade": "Current grade",
     "student_expectation_grade": "Expectation grade",
@@ -167,5 +168,18 @@
     "invalid_info": "Invalid info! Please try again...",
     "please_update_grade": "Please update grade...",
     "update_review_success": "Update review successfully!"
+  },
+  "GradePage": {
+    "add": "Add",
+    "update": "Update",
+    "import": "Import grade list",
+    "export": "Export grade list",
+    "download_help": "Download sample csv",
+    "email": "Email",
+    "fullname": "Full Name",
+    "student_id": "Student ID",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "number": "No."
   }
 }

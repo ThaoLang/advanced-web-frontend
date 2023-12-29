@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export default function TeachingLayout({
@@ -8,13 +9,15 @@ export default function TeachingLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { classId } = useParams();
+
   const t = useTranslations("Tabs");
 
   const navigation = [
-    { name: t("about"), href: "/teaching/detail" },
-    { name: t("members"), href: "/teaching/members" },
-    { name: t("grades"), href: "/teaching/grades" },
-    { name: t("review"), href: "/teaching/review" },
+    { name: t("about"), href: "/teaching/" + classId + "/detail" },
+    { name: t("members"), href: "/teaching/" + classId + "/members" },
+    { name: t("grades"), href: "/teaching/" + classId + "/grades" },
+    { name: t("review"), href: "/teaching/" + classId + "/review" },
   ];
   const [option, setOpinion] = useState("About");
 

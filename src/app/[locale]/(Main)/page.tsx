@@ -12,7 +12,7 @@ export default function Home() {
   const auth = useAuth();
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
-    if (savedUser) {
+    if (savedUser != null) {
       // Assuming UserType has a structure like { email: string }
       auth.login(JSON.parse(savedUser));
     }

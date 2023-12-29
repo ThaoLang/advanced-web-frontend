@@ -1,18 +1,22 @@
+"use client";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 
 export default function EnrolledLayout({
   children, // will be a page or nested layout
 }: {
   children: React.ReactNode;
 }) {
+  const { classId } = useParams();
+
   const t = useTranslations("Tabs");
 
   const navigation = [
-    { name: t("about"), href: "/enrolled/detail" },
-    { name: t("members"), href: "/enrolled/members" },
-    { name: t("grades"), href: "/enrolled/grades" },
-    { name: t("review"), href: "/enrolled/review" },
+    { name: t("about"), href: "/enrolled/" + classId + "/detail" },
+    { name: t("members"), href: "/enrolled/" + classId + "/members" },
+    { name: t("grades"), href: "/enrolled/" + classId + "/grades" },
+    { name: t("review"), href: "/enrolled/" + classId + "/review" },
   ];
 
   let option = "About";

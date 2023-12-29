@@ -5,7 +5,7 @@ import TeacherReviewForm from "@/component/classItem/review/TeacherReviewForm";
 import { IoMdClose } from "react-icons/io";
 import UpdateReviewModal from "@/component/classItem/review/UpdateReviewModal";
 import { ReviewType } from "@/model/ReviewType";
-import MiniReview from "@/component/classItem/review/MiniReview";
+import DetailedMiniReview from "@/component/classItem/review/DetailedMiniReview";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { actions } from "../../../state";
@@ -103,7 +103,7 @@ export default function ReviewPage() {
                         checked={selectedReview === review}
                         onChange={() => {}}
                       />
-                      <MiniReview
+                      <DetailedMiniReview
                         id={review.id}
                         classId={review.classId}
                         studentId={review.studentId}
@@ -137,7 +137,7 @@ export default function ReviewPage() {
                         checked={selectedReview === review}
                         onChange={() => {}}
                       />
-                      <MiniReview
+                      <DetailedMiniReview
                         id={review.id}
                         classId={review.classId}
                         studentId={review.studentId}

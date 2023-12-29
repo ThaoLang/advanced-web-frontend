@@ -2,7 +2,6 @@
 import { useAccount } from "@/context/AccountContext";
 import { ClassListType } from "@/model/ClassListType";
 import { ClassType } from "@/model/ClassType";
-// import { mapStudentId, unmapStudentId } from "@/utils/IdMappingUtils";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaUser, FaAngleDown } from 'react-icons/fa6'

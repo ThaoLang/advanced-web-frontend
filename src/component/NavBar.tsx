@@ -142,14 +142,14 @@ export default function NavBar() {
 
   const handleLogout = () => {
     localStorage.setItem("user", null as any);
-    auth.logout();
+    auth.logout('user');
   };
 
   // avatar url
 
   useEffect(() => {
     const cur_user = localStorage.getItem("user");
-    if (cur_user) {
+    if (cur_user != null) {
       const loggedUser = JSON.parse(cur_user);
 
       if (!loggedUser || !loggedUser.avatarUrl) {

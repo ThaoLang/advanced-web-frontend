@@ -10,7 +10,7 @@ const ReviewForm = (review: ReviewType) => {
     <div className="bg-white rounded-xl shadow-md overflow-hidden relative">
       <div className="flex flex-col">
         <div className="m-2">
-          <b>{t("student")}:</b> {review.studentId}
+          <b>{t("student_id")}:</b> {review.studentId}
         </div>
         <div className="m-2 mb-3 grid grid-cols-3">
           <div className="col-span-1 flex flex-col">

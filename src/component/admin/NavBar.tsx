@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import {
   FaAngleLeft,
@@ -15,10 +16,20 @@ import {
   FaSun,
   FaMoon,
 } from "react-icons/fa6";
+import { useAuth } from "@/context/AuthContext";
 
 export default function NavBar() {
-  const avatarUrl =
-    "https://scontent.fsgn5-10.fna.fbcdn.net/v/t39.30808-1/398534440_712492687404314_4951001529935588432_n.jpg?stp=c12.215.197.197a_dst-jpg&_nc_cat=107&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeFaUsexPKcDrToYxtmxLwrfaeoefWNJmOtp6h59Y0mY6w747LQVfj87mu_G5CfaLGbC5lGyfMKrky4mQQXAeE_7&_nc_ohc=rMLJXF5To3sAX-_ZEfW&_nc_ht=scontent.fsgn5-10.fna&oh=00_AfAErJlelj3T20XSeWKBth0yQbGlGbRuu5U_gGg5IgAEgw&oe=65640C39";
+
+  const auth = useAuth();
+
+  const handleLogout = () => {
+    localStorage.setItem("admin", null as any);
+    auth.logout("admin")
+  }
+
+  if (!auth.admin) {
+    return null;
+  }
 
   return (
     <header className="top-0 z-40 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
@@ -27,7 +38,7 @@ export default function NavBar() {
           <label
             htmlFor="admin-drawer"
             aria-label="close sidebar"
-            className="z-[99999] block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark"
+            className="z-50 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark"
           >
             <span>
               <FaBars />
@@ -68,35 +79,35 @@ export default function NavBar() {
                     tabIndex={0}
                     className="dropdown-content absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80"
                   >
-                    {/* <div className="px-4.5 py-3 mx-auto">
-                                            <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
-                                        </div>
-                                        <ul className="flex h-auto flex-col overflow-y-auto ml-2">
-                                            <li>
-                                                <a className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
-                                                    <p className="text-sm"><span className="text-black dark:text-white">Edit your information in a swipe</span> Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.</p>
-                                                    <p className="text-xs">12 May, 2025</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
-                                                    <p className="text-sm"><span className="text-black dark:text-white">It is a long established fact</span> that a reader will be distracted by the readable.</p>
-                                                    <p className="text-xs">24 Feb, 2025</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
-                                                    <p className="text-sm"><span className="text-black dark:text-white">There are many variations</span> of passages of Lorem Ipsum available, but the majority have suffered</p>
-                                                    <p className="text-xs">04 Jan, 2025</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
-                                                    <p className="text-sm"><span className="text-black dark:text-white">There are many variations</span> of passages of Lorem Ipsum available, but the majority have suffered</p>
-                                                    <p className="text-xs">01 Dec, 2024</p>
-                                                </a>
-                                            </li>
-                                        </ul> */}
+                    <div className="px-4.5 py-3 mx-auto">
+                      <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
+                    </div>
+                    <ul className="flex h-auto flex-col overflow-y-auto ml-2">
+                      <li>
+                        <a className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
+                          <p className="text-sm"><span className="text-black dark:text-white">Edit your information in a swipe</span> Sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.</p>
+                          <p className="text-xs">12 May, 2025</p>
+                        </a>
+                      </li>
+                      <li>
+                        <a className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
+                          <p className="text-sm"><span className="text-black dark:text-white">It is a long established fact</span> that a reader will be distracted by the readable.</p>
+                          <p className="text-xs">24 Feb, 2025</p>
+                        </a>
+                      </li>
+                      <li>
+                        <a className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
+                          <p className="text-sm"><span className="text-black dark:text-white">There are many variations</span> of passages of Lorem Ipsum available, but the majority have suffered</p>
+                          <p className="text-xs">04 Jan, 2025</p>
+                        </a>
+                      </li>
+                      <li>
+                        <a className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4" href="#">
+                          <p className="text-sm"><span className="text-black dark:text-white">There are many variations</span> of passages of Lorem Ipsum available, but the majority have suffered</p>
+                          <p className="text-xs">01 Dec, 2024</p>
+                        </a>
+                      </li>
+                    </ul>
                   </ul>
                 </div>
               </a>
@@ -106,9 +117,9 @@ export default function NavBar() {
             <a className="flex items-center gap-4" href="#">
               <span className="hidden text-right lg:block">
                 <span className="block text-sm font-medium text-black dark:text-white">
-                  Lăng Thảo Thảo
+                  {auth.admin?.username}
                 </span>
-                <span className="block text-xs">Admin</span>
+                <span className="block text-xs">{auth.admin?.role}</span>
               </span>
               <span className="h-12 w-12">
                 <img
@@ -116,7 +127,7 @@ export default function NavBar() {
                   alt="User"
                   loading="lazy"
                   decoding="async"
-                  src={avatarUrl}
+                  src={auth.admin?.avatarUrl}
                 />
               </span>
               <div className="hidden fill-current sm:block">
@@ -148,8 +159,9 @@ export default function NavBar() {
                   </a>
                 </li>
               </ul>
-              <div className="divider"></div>
-              <button className="flex items-center justify-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-red-500 lg:text-base">
+              <div className="divider -my-0.5"></div>
+              <button className="mt-0.5 btn flex mx-auto items-center justify-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-red-500 lg:text-base"
+                onClick={() => handleLogout()}>
                 <div>
                   <FaArrowRightFromBracket />
                 </div>
