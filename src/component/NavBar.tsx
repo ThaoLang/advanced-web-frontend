@@ -142,7 +142,7 @@ export default function NavBar() {
 
   const handleLogout = () => {
     localStorage.setItem("user", null as any);
-    auth.logout('user');
+    auth.logout("user");
   };
 
   // avatar url

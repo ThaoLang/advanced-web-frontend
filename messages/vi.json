@@ -184,6 +184,7 @@
     "finalized_score": "Điểm tổng kết",
     "finalize_score": "Tổng kết điểm",
     "cancel_change": "Hủy thay đổi",
-    "invalid_grade": "Điểm không hợp lệ! Vui lòng dùng . cho số thập phân, điểm trên thang 10"
+    "invalid_grade": "Điểm không hợp lệ! Vui lòng dùng . cho số thập phân, điểm trên thang 10",
+    "review": "Phúc khảo"
   }
 }

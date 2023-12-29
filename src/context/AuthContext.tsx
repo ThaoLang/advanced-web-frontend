@@ -42,10 +42,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (userData: UserType) => {
     console.log("Login", userData);
-    if (userData.role === "user") {
-      setUser(userData);
-    }
-    else setAdmin(userData);
+    if (userData.role === "admin") {
+      setAdmin(userData);
+    } else setUser(userData);
   };
 
   const logout = (role: string) => {

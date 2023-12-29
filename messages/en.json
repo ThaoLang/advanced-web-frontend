@@ -185,6 +185,7 @@
     "finalized_score": "Finalized score",
     "finalize_score": "Finalize score",
     "cancel_change": "Cancel changes",
-    "invalid_grade": "Invalid grade! Please use . for decimal points, score between 0 and 10"
+    "invalid_grade": "Invalid grade! Please use . for decimal points, score between 0 and 10",
+    "review": "Review"
   }
 }

@@ -1,8 +1,5 @@
 "use client";
 
-import styles from "./page.module.css";
-import Hero from "@/component/Hero";
-import { UserType } from "@/model/UserType";
 import { useEffect } from "react";
 import LandingPage from "@/component/LandingPage";
 import HomePage from "@/component/HomePage";
