@@ -74,7 +74,8 @@
     "dropping": "Drop the image here...",
     "drop_area": "Drop an image here, or click to upload image",
     "update_success": "Update profile successfully!",
-    "update_error": "Fail to update profile!"
+    "update_error": "Fail to update profile!",
+    "empty_student_id_error": "Student ID must not be empty before joining the class!"
   },
   "Setting": {
     "language": "Language"
@@ -130,7 +131,14 @@
     "import": "import/export .csv",
     "view_help_1": "3. Please import to view your student list!",
     "view_help_2": "3. View your student list now!",
-    "view": "view"
+    "view": "view",
+    "add_member_empty_error": "Please enter the email!",
+    "add_member_existed_error": "Email already exists!",
+    "invite_student": "Invite student",
+    "invite_teacher": "Invite teacher",
+    "add_member_email": "Email address(required)",
+    "send_invitation_btn": "Invite",
+    "empty": "Empty"
   },
   "Comment": {
     "comments": " comment(s)",

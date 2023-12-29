@@ -75,7 +75,8 @@
     "dropping": "Kéo thả hình ảnh ở đây...",
     "drop_area": "Kéo thả hình ảnh ở đây, hoặc tải ảnh lên",
     "update_success": "Cập nhật hồ sơ thành công!",
-    "update_error": "Cập nhật hồ sơ thất bại!"
+    "update_error": "Cập nhật hồ sơ thất bại!",
+    "empty_student_id_error": "Mã số sinh viên không được để trống trước khi tham gia lớp học!"
   },
   "EnrolledPage": {
     "title": "Lớp đăng ký"
@@ -129,7 +130,14 @@
     "import": "đăng/tải .csv",
     "view_help_1": "3. Bạn chưa thêm danh sách học sinh!",
     "view_help_2": "3. Xem danh sách học sinh tại đây!",
-    "view": "xem"
+    "view": "xem",
+    "add_member_empty_error": "Vui lòng nhập email!",
+    "add_member_existed_error": "Email đã tồn tại!",
+    "invite_student": "Mời học sinh",
+    "invite_teacher": "Mời giáo viên",
+    "add_member_email": "Email (bắt buộc)",
+    "send_invitation_btn": "Mời",
+    "empty": "Trống"
   },
   "Comment": {
     "comments": " bình luận",
