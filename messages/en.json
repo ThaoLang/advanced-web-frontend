@@ -172,10 +172,12 @@
     "in_progress_status": "In Progress",
     "completed_status": "Completed",
     "add_review_success": "Add review successfully!",
+    "add_review_failure": "Add review failed...",
     "invalid_grade": "Invalid grade! Please use . for decimal points, score between 0 and 10",
     "invalid_info": "Invalid info! Please try again...",
     "please_update_grade": "Please update grade...",
-    "update_review_success": "Update review successfully!"
+    "update_review_success": "Update review successfully!",
+    "update_review_failure": "Update review failed..."
   },
   "GradePage": {
     "add": "Add",

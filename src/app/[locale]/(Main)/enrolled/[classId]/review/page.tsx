@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import ReviewForm from "@/component/classItem/review/ReviewForm";
 import { IoMdClose } from "react-icons/io";
@@ -9,6 +9,10 @@ import MiniReview from "@/component/classItem/review/MiniReview";
 import { ReviewType } from "@/model/ReviewType";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { RubricType } from "@/model/RubricType";
+import { UserType } from "@/model/UserType";
+import { useParams } from "next/navigation";
+import axios from "axios";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
@@ -18,63 +22,102 @@ export default function ReviewPage() {
     setShowModal(!showModal);
   };
   const auth = useAuth();
-  const studentId = auth.user?.studentId ? auth.user.studentId : "";
+  const studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
+  const [rubrics, setRubrics] = useState<RubricType[]>([]);
 
+  const savedUser = localStorage.getItem("user");
+  let currentUser: UserType;
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+  }
+  const { classId } = useParams();
   const [selectedReview, setSelectedReview] = useState<ReviewType>();
 
   const addReview = (
     gradeComposition: string,
     expectationGrade: string,
-    studentExplanation: string
+    studentExplanation: string,
+    currentGrade: string
   ) => {
     let tempReview = {
-      id: "",
+      _id: "",
       studentId: studentId,
       gradeComposition: gradeComposition,
-      currentGrade: "8", // TODO: query the current grade
+      currentGrade: "8", // TODO: query the current grade in modal
       expectationGrade: expectationGrade,
       explanation: studentExplanation,
       status: "In Progress",
     } as ReviewType;
 
+    console.log("Review", tempReview);
+    axios
+      .post(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/create`,
+        {
+          classId: classId,
+          studentId: tempReview.studentId,
+          gradeComposition: tempReview.gradeComposition,
+          currentGrade: tempReview.currentGrade,
+          expectationGrade: tempReview.expectationGrade,
+          explanation: tempReview.explanation,
+          status: tempReview.status,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.status === 201) {
+          toast.success(t("add_review_success"));
+        }
+      })
+      .catch((error) => {
+        console.error("Error creating review:", error);
+        toast.error(t("add_review_failure"));
+        return;
+      });
+
     reviewList.push(tempReview);
     setReviewList(reviewList);
-    toast.success(t("add_review_success"));
   };
 
-  let tempReviewList = [
-    {
-      id: "",
-      classId: "",
-      studentId: studentId,
-      gradeComposition: "Điểm cuối kì",
-      currentGrade: "8",
-      expectationGrade: "10",
-      explanation: "Em đã làm tốt",
-      status: "In Progress",
-    },
-    {
-      id: "",
-      classId: "",
-      studentId: studentId,
-      gradeComposition: "Điểm cuối kì",
-      currentGrade: "8",
-      expectationGrade: "10",
-      explanation: "Em đã làm tốt",
-      status: "In Progress",
-    },
-    {
-      id: "",
-      classId: "",
-      studentId: studentId,
-      gradeComposition: "Điểm cuối kì",
-      currentGrade: "8",
-      expectationGrade: "10",
-      explanation: "Em đã làm tốt",
-      status: "Completed",
-    },
-  ];
-  const [reviewList, setReviewList] = useState<ReviewType[]>(tempReviewList);
+  const [reviewList, setReviewList] = useState<ReviewType[]>([]);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
+        headers: {
+          Authorization: `Bearer ${currentUser?.access_token}`,
+        },
+      })
+      .then((response) => {
+        // console.log("Response", response);
+        setRubrics(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching rubrics:", error);
+      });
+
+    // get review list
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/studentReviews/${classId}/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Response", response);
+        setReviewList(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching review list:", error);
+      });
+  }, []);
 
   return (
     <div>
@@ -86,12 +129,14 @@ export default function ReviewPage() {
         >
           <div className="m-3 mx-10 text-2xl lg:text-3xl text-yellow-500 flex flex-row items-center justify-between">
             {t("my_review")}
-            <button
-              className="btn btn-info max-w-xs bg-yellow-400 text-white"
-              onClick={handleModal}
-            >
-              {t("create_review")}
-            </button>
+            {rubrics.length > 0 && (
+              <button
+                className="btn btn-info max-w-xs bg-yellow-400 text-white"
+                onClick={handleModal}
+              >
+                {t("create_review")}
+              </button>
+            )}
           </div>
 
           <div className="grid grid-cols-2 mx-20 ml-10 gap-4">
@@ -116,7 +161,7 @@ export default function ReviewPage() {
                         onChange={() => {}}
                       />
                       <MiniReview
-                        id={review.id}
+                        _id={review._id}
                         classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
@@ -150,7 +195,7 @@ export default function ReviewPage() {
                         onChange={() => {}}
                       />
                       <MiniReview
-                        id={review.id}
+                        _id={review._id}
                         classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
@@ -171,7 +216,7 @@ export default function ReviewPage() {
               {t("review_detail")}
             </div>
             <ReviewForm
-              id={selectedReview.id}
+              _id={selectedReview._id}
               classId={selectedReview.classId}
               studentId={selectedReview.studentId}
               gradeComposition={selectedReview.gradeComposition}
@@ -195,7 +240,11 @@ export default function ReviewPage() {
               <IoMdClose />
             </button>
           </div>
-          <AddReviewModal addReview={addReview} closeModal={handleModal} />
+          <AddReviewModal
+            rubrics={rubrics}
+            addReview={addReview}
+            closeModal={handleModal}
+          />
         </div>
         <form method="dialog" className="modal-backdrop">
           <button onClick={handleModal}>close</button>

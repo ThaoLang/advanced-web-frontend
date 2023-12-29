@@ -171,10 +171,12 @@
     "in_progress_status": "Chờ xác nhận",
     "completed_status": "Đã hoàn thành",
     "add_review_success": "Thêm phúc khảo thành công!",
+    "add_review_failure": "Thêm phúc khảo thất bại...",
     "invalid_grade": "Điểm không hợp lệ! Vui lòng dùng . cho số thập phân, điểm trên thang 10",
     "invalid_info": "Thông tin không hợp lệ! Vui lòng thử lại...",
     "please_update_grade": "Xin hãy cập nhật điểm...",
-    "update_review_success": "Cập nhật phúc khảo thành công!"
+    "update_review_success": "Cập nhật phúc khảo thành công!",
+    "update_review_failure": "Cập nhật phúc khảo thất bại..."
   },
   "GradePage": {
     "add": "Tạo",

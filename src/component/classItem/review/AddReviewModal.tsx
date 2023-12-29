@@ -1,25 +1,20 @@
+"use client";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-export const getClassRubric = async () => {
-  return [
-    // {t("mock_quizzes")},
-    // {t("mid_term_exam")},
-    // {t("final_exam")},
-    "Mock Quizzes",
-    "Mid-term Exam",
-    "Final Exam",
-  ];
-};
-// return Rubric[];  later if necessary
+import { RubricType } from "@/model/RubricType";
+import { UserType } from "@/model/UserType";
+import { useParams } from "next/navigation";
+import axios from "axios";
 
 interface AddReviewProps {
+  rubrics: RubricType[];
   addReview: (
     gradeComposition: string,
     expectationGrade: string,
-    studentExplanation: string
+    studentExplanation: string,
+    currentGrade: string
   ) => void;
   closeModal: () => void;
 }
@@ -28,12 +23,31 @@ export default function AddReviewModal(props: AddReviewProps) {
   const [gradeCompositionProxy, setGradeCompositionProxy] = useState("");
   const [expectationGradeProxy, setExpectationGradeProxy] = useState("");
   const [studentExplanationProxy, setStudentExplanationProxy] = useState("");
-  const [rubrics, setRubrics] = useState<string[]>([]);
+  const [grade, setGrade] = useState(""); // view current grade
+
+  const savedUser = localStorage.getItem("user");
+  let currentUser: UserType;
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+  }
+  const { classId } = useParams();
+
+  // TODO: update request to get current grade
   useEffect(() => {
-    (async () => {
-      const classRubrics = await getClassRubric();
-      setRubrics(classRubrics);
-    })();
+    // console.log("User", currentUser);
+    // axios
+    //   .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
+    //     headers: {
+    //       Authorization: `Bearer ${currentUser?.access_token}`,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     console.log("Response", response);
+    //     setRubrics(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching rubrics:", error);
+    //   });
   }, []);
 
   const t = useTranslations("Review");
@@ -61,7 +75,8 @@ export default function AddReviewModal(props: AddReviewProps) {
       props.addReview(
         gradeCompositionProxy,
         expectationGradeProxy,
-        studentExplanationProxy
+        studentExplanationProxy,
+        grade
       );
 
       setGradeCompositionProxy("");
@@ -95,10 +110,11 @@ export default function AddReviewModal(props: AddReviewProps) {
           {/* <option value={t("mock_quizzes")}>{t("mock_quizzes")}</option>
           <option value={t("mid_term_exam")}>{t("mid_term_exam")}</option>
           <option value={t("final_exam")}>{t("final_exam")}</option> */}
-          {rubrics.length > 0 &&
-            rubrics.map((rubric, index) => (
-              <option key={index} value={rubric}>
-                {rubric}
+
+          {props.rubrics &&
+            props.rubrics.map((rubric, index) => (
+              <option key={index} value={rubric.gradeName}>
+                {rubric.gradeName}
               </option>
             ))}
         </select>

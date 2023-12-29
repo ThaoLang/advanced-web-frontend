@@ -1,5 +1,5 @@
 export type ReviewType = {
-  id: string;
+  _id: string;
   classId: string;
   studentId: string;
   gradeComposition: string;
