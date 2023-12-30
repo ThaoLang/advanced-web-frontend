@@ -26,17 +26,10 @@ interface CommentProps {
 }
 
 const Comment = (props: CommentProps) => {
-  const auth = useAuth();
-  const logginedUser = {
-    userId: auth.user?.id,
-    avatar: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png", //auth.user?.avatarUrl,
-  };
-
   const t = useTranslations("Comment");
 
-  // const isUserLoggined = Boolean(logginedUser.userId);
   const isUserLoggined = true;
-  const isCommentBelongsToUser = logginedUser.userId === props.comment.user.id;
+  const isCommentBelongsToUser = props.comment.isSender;
   const isReplying =
     props.affectedComment &&
     props.affectedComment.type === "replying" &&

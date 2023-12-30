@@ -48,8 +48,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = (role: string) => {
-    if (role === "user") setUser(null);
-    else setAdmin(null);
+    if (role === "admin") setAdmin(null);
+    else setUser(null);
   };
   // const login = async (userData: User) => {
   //   console.log("Login", userData)
