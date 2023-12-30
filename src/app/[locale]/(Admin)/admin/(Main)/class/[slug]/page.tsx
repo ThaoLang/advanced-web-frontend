@@ -1,6 +1,6 @@
     "use client";
-    import CSVExporter from "@/component/admin/(file)/CSVExporter";
-    import CSVImporter from "@/component/admin/(file)/CSVImporter";
+    import CSVExporter from "@/component/excel/CSVExporter";
+    import CSVImporter from "@/component/excel/CSVImporter";
     import ClassListTable from "@/component/admin/(table)/ClassListTable";
     import SearchBar from "@/component/admin/SearchBar";
     import { ClassListType } from "@/model/ClassListType";
@@ -41,7 +41,7 @@
         const [studentIdFilter, setStudentIdFilter] = useState<string | null>(null);
 
         const [userIdSelectOptions, setUserIdSelectOptions] = useState<Array<string>>([]);
-        const [classIdSelectOptions, setClassIdSelectOptions] = useState<Array<string>>([]);
+        // const [classIdSelectOptions, setClassIdSelectOptions] = useState<Array<string>>([]);
         const [nameSelectOptions, setNameSelectOptions] = useState<Array<string>>([]);
         const [studentIdSelectOptions, setStudentIdSelectOptions] = useState<Array<string>>([]);
 
@@ -84,7 +84,7 @@
                 // Dynamically generate nameSelectOptions based on unique names
                 const uniqueUserIds: string[] = Array.from(new Set(classList.map((items: ClassListType) => items.user_id)));
                 setUserIdSelectOptions(uniqueUserIds);
-                const uniqueNames: string[] = Array.from(new Set(classList.map((items: ClassListType) => items.fullname)));
+                const uniqueNames: string[] = Array.from(new Set(classList.map((items: ClassListType) => items.fullName)));
                 setNameSelectOptions(uniqueNames);
                 const uniqueStudentIds: string[] = Array.from(new Set(classList.map((items: ClassListType) => items.student_id)));
                 setStudentIdSelectOptions(uniqueStudentIds);
@@ -205,7 +205,7 @@
                         <summary className="collapse-title text-xl font-medium">Import/Export Data</summary>
                         <div className="collapse-content">
                             <div className="lg:col-start-0 lg:col-end-1">
-                                <CSVImporter onFileUpload={handleFileUpload} />
+                                <CSVImporter onFileUpload={handleFileUpload}/>
                             </div>
                             <div className="lg:col-start-2 lg:col-span-2">
                                 <CSVExporter data={classList} filename="exported_data" />

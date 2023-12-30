@@ -91,6 +91,7 @@ export default function AuthForm(props: AuthFormProps) {
           email: email,
           password: password,
           username: username,
+          role: 'user',
           avatarUrl: `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`,
         }
       );
