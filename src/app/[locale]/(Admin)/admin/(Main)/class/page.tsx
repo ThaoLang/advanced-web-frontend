@@ -143,7 +143,7 @@ export default function Classes({
   const fetchClassesData = async () => {
     const templateClasses: Array<ClassType> = [
       {
-        id: "class1",
+        _id: "class1",
         host_id: "1",
         description: "Introduction to Mathematics",
         name: "Mathematics 101",
@@ -152,7 +152,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/math101",
       },
       {
-        id: "class2",
+        _id: "class2",
         host_id: "1",
         description: "Programming Fundamentals",
         name: "Programming 101",
@@ -161,7 +161,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/cs101",
       },
       {
-        id: "class3",
+        _id: "class3",
         host_id: "3",
         description: "Literature Appreciation",
         name: "English Literature",
@@ -170,7 +170,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/eng101",
       },
       {
-        id: "class4",
+        _id: "class4",
         host_id: "5",
         description: "Chemistry Basics",
         name: "Chemistry 101",
@@ -179,7 +179,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/chem101",
       },
       {
-        id: "class5",
+        _id: "class5",
         host_id: "5",
         description: "History of Art",
         name: "Art History",
@@ -188,7 +188,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/art101",
       },
       {
-        id: "class6",
+        _id: "class6",
         host_id: "7",
         description: "Web Development Workshop",
         name: "Web Dev Workshop",
@@ -197,7 +197,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/webdev101",
       },
       {
-        id: "class7",
+        _id: "class7",
         host_id: "7",
         description: "Physics Principles",
         name: "Physics 101",
@@ -206,7 +206,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/physics101",
       },
       {
-        id: "class8",
+        _id: "class8",
         host_id: "11",
         description: "Introduction to Psychology",
         name: "Psychology 101",
@@ -215,7 +215,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/psych101",
       },
       {
-        id: "class9",
+        _id: "class9",
         host_id: "9",
         description: "Computer Networks",
         name: "Networking Basics",
@@ -224,7 +224,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/network101",
       },
       {
-        id: "class10",
+        _id: "class10",
         host_id: "11",
         description: "Human Anatomy",
         name: "Anatomy 101",
@@ -233,7 +233,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/anatomy101",
       },
       {
-        id: "class11",
+        _id: "class11",
         host_id: "11",
         description: "Environmental Science",
         name: "Environmental Science",
@@ -242,7 +242,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/envsci101",
       },
       {
-        id: "class12",
+        _id: "class12",
         host_id: "7",
         description: "Data Structures and Algorithms",
         name: "DSA Workshop",
@@ -251,7 +251,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/dsa101",
       },
       {
-        id: "class13",
+        _id: "class13",
         host_id: "3",
         description: "Microeconomics Basics",
         name: "Microeconomics 101",
@@ -260,7 +260,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/econ101",
       },
       {
-        id: "class14",
+        _id: "class14",
         host_id: "1",
         description: "Introduction to Sociology",
         name: "Sociology 101",
@@ -269,7 +269,7 @@ export default function Classes({
         invite_url: "https://example.com/invite/socio101",
       },
       {
-        id: "class15",
+        _id: "class15",
         host_id: "5",
         description: "Digital Marketing Strategies",
         name: "Marketing 101",
