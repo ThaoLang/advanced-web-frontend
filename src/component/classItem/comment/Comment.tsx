@@ -110,9 +110,10 @@ const Comment = (props: CommentProps) => {
           {isEditing && (
             <CommentForm
               btnLabel={<FiSend />}
-              formSubmitHandler={(value) =>
-                props.updateComment(value, props.comment.id)
-              }
+              formSubmitHandler={(value) => {
+                props.updateComment(value, props.comment.id);
+                props.setAffectedComment(null);
+              }}
               formCancelHandler={() => props.setAffectedComment(null)}
               initialText={props.comment.desc}
             ></CommentForm>

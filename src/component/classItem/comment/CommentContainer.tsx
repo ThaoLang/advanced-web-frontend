@@ -12,71 +12,6 @@ import { useTranslations } from "next-intl";
 import axios from "axios";
 import { UserType } from "@/model/UserType";
 
-// export const getCommentsData = async () => {
-//   return [
-//     {
-//       id: "10",
-//       reviewId: "",
-//       user: {
-//         id: "a",
-//         name: "Trần Văn A",
-//         avatar: "https://i.pravatar.cc/299",
-//       },
-//       desc: "Điểm của em là đúng rồi nhé",
-//       parent: null,
-//       replyOnUser: null,
-//       createdAt: "2022-12-31T17:22:05.092+0000",
-//       like: 120,
-//       like_status: false,
-//     },
-//     {
-//       id: "11",
-//       reviewId: "",
-//       user: {
-//         id: "b",
-//         name: "Lâm Ánh Hạ",
-//         avatar: "https://i.pravatar.cc/300",
-//       },
-//       desc: ":(",
-//       parent: "10",
-//       replyOnUser: "a",
-//       createdAt: "2022-12-31T17:22:05.092+0000",
-//       like: 10,
-//       like_status: false,
-//     },
-//     {
-//       id: "12",
-//       reviewId: "",
-//       user: {
-//         id: "c",
-//         name: "Trần Nhật Minh",
-//         avatar: "https://i.pravatar.cc/301",
-//       },
-//       desc: "Đáp án câu này chưa đúng nên thầy không cho em điểm được",
-//       parent: null,
-//       replyOnUser: null,
-//       createdAt: "2022-12-31T17:22:05.092+0000",
-//       like: 54,
-//       like_status: false,
-//     },
-//     {
-//       id: "13",
-//       reviewId: "",
-//       user: {
-//         id: "d",
-//         name: "Nguyễn Bảo Hân",
-//         avatar: "https://i.pravatar.cc/302",
-//       },
-//       desc: "Ráng làm bài sau tốt hơn em nhé",
-//       parent: null,
-//       replyOnUser: null,
-//       createdAt: "2022-12-31T17:22:05.092+0000",
-//       like: 32,
-//       like_status: true,
-//     },
-//   ];
-// };
-
 interface CommentContainerInterface {
   reviewId: string;
 }
@@ -93,10 +28,6 @@ const CommentContainer = (props: CommentContainerInterface) => {
   const [comments, setComments] = useState<CommentType[]>([]);
 
   useEffect(() => {
-    // (async () => {
-    //   const commentData = await getCommentsData();
-    //   setComments(commentData);
-    // })();
     let responseData: RawCommentType[];
 
     axios
@@ -116,15 +47,14 @@ const CommentContainer = (props: CommentContainerInterface) => {
         let tempComments = [];
 
         for (let comment of responseData) {
-          let tempName = comment.isSender
-            ? // currentUser?.id === comment.sender_id
-              currentUser.username
-            : "Lâm Ánh Hạ"; //replace
+          //TODO: update temp values
+          let tempName = comment.isSender ? currentUser.username : "Lâm Ánh Hạ";
 
           let tempAvatar = comment.isSender
-            ? // currentUser?.id === comment.sender_id
-              "https://cdn-icons-png.flaticon.com/128/1077/1077114.png"
+            ? "https://cdn-icons-png.flaticon.com/128/1077/1077114.png"
             : "https://i.pravatar.cc/300";
+          // let tempAvatar =
+          //   "https://cdn-icons-png.flaticon.com/128/1077/1077114.png";
 
           tempComments.push({
             id: comment._id,
@@ -176,6 +106,8 @@ const CommentContainer = (props: CommentContainerInterface) => {
 
     console.log("newRawComment", newRawComment);
 
+    let newId;
+
     await axios
       .post(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/createComment`,
@@ -195,7 +127,8 @@ const CommentContainer = (props: CommentContainerInterface) => {
       )
       .then((response) => {
         if (response.status === 201) {
-          console.log("Success");
+          console.log("Success creating comment ", response.data);
+          newId = response.data._id;
         }
       })
       .catch((error) => {
@@ -204,7 +137,7 @@ const CommentContainer = (props: CommentContainerInterface) => {
       });
 
     const newComment = {
-      id: Math.random().toString(), //get id from response
+      id: newId,
       user: {
         // id: auth.user?._id,
         id: currentUser?.id,
@@ -224,22 +157,67 @@ const CommentContainer = (props: CommentContainerInterface) => {
 
     setAffectedComment(null);
   };
-  const updateCommentHandler = (value: string, commentId: string) => {
-    const updateComments = comments.map((comment) => {
-      if (comment.id === commentId) {
-        return { ...comment, desc: value };
-      }
-      return comment;
-    });
-    setComments(updateComments);
-    setAffectedComment(null);
+
+  const updateCommentHandler = async (value: string, commentId: string) => {
+    await axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/updateComment`,
+        {
+          id: commentId,
+          desc: value,
+          like: 0,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.status === 201) {
+          console.log("Success updating comment");
+
+          const updateComments = comments.map((comment) => {
+            if (comment.id === commentId) {
+              return { ...comment, desc: value, like: 0 };
+            }
+            return comment;
+          });
+
+          setComments(updateComments);
+          setAffectedComment(null);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating comment:", error);
+        return;
+      });
   };
 
-  const deleteCommentHandler = (commentId: string) => {
-    const updateComments = comments.filter((comment) => {
-      return comment.id !== commentId;
-    });
-    setComments(updateComments);
+  const deleteCommentHandler = async (commentId: string) => {
+    console.log("Delete commentId:", commentId);
+
+    await axios
+      .delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/deleteComment/${commentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          const updateComments = comments.filter((comment) => {
+            return comment.id !== commentId;
+          });
+          setComments(updateComments);
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting comment:", error);
+        return;
+      });
   };
 
   const getRepliesHandler = (commentId: string) => {
