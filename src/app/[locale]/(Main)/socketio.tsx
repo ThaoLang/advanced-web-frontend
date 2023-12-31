@@ -38,6 +38,10 @@ export const MySocketIO = (props: MySocketIOProps) => {
       socket.on("onMessage", (message: string) => {
         toast("New notification!" + message);
       });
+
+      socket.on("returnNotification", (message: string) => {
+        toast("New notification!" + message);
+      });
     });
 
     console.log("[Outside] Is connected: " + socket.connected.toString());

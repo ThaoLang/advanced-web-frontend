@@ -43,7 +43,7 @@ export default function ReviewPage() {
       _id: "",
       studentId: studentId,
       gradeComposition: gradeComposition,
-      currentGrade: "8", // TODO: query the current grade in modal
+      currentGrade: currentGrade,
       expectationGrade: expectationGrade,
       explanation: studentExplanation,
       status: "In Progress",
@@ -241,6 +241,8 @@ export default function ReviewPage() {
             </button>
           </div>
           <AddReviewModal
+            rubricName=""
+            currentGrade={null}
             rubrics={rubrics}
             addReview={addReview}
             closeModal={handleModal}

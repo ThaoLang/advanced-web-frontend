@@ -3,6 +3,8 @@ import { Socket } from "socket.io-client";
 import { proxy, ref } from "valtio";
 import { subscribeKey } from "valtio/utils";
 import { MySocketIO } from "./socketio";
+import axios from "axios";
+import { NotificationType } from "@/model/NotificationType";
 
 type WsError = {
   type: string;
@@ -36,6 +38,10 @@ const actions = {
     state.accessToken = token;
   },
   initializeSocket: (accessToken: string): void => {
+    if (!state.accessToken) {
+      state.accessToken = accessToken;
+    }
+
     if (!state.socket) {
       state.socket = ref(
         MySocketIO({
@@ -62,11 +68,52 @@ const actions = {
     state.socket = undefined;
     state.wsErrors = [];
   },
-  notify: (message: string): void => {
+  notify: (message: string, room: string): void => {
     //test
-    state.socket?.emit("notify", { message });
-    state.socket?.emit("newMessage", { message });
-    state.socket?.emit("sendMessage", { message });
+    state.socket?.emit("notify", { message, room });
+    state.socket?.emit("newMessage", { message, room });
+    state.socket?.emit("sendMessage", { message, room });
+  },
+  //notificationList
+  sendNotification: async (
+    accessToken: string,
+    notification: NotificationType
+  ) => {
+    if (!state.accessToken) {
+      state.accessToken = accessToken;
+    }
+
+    await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/create`,
+        {
+          notification,
+          // classId: notification.classId,
+          // reviewId: notification.reviewId,
+          // senderRole: notification.senderRole,
+          // receiverIdList: notification.receiverIdList,
+          // message: notification.message,
+          // redirectUrl: notification.redirectUrl,
+          // createdAt: notification.createdAt,
+          // isRead: notification.isRead,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Notification response", response);
+
+        let room = notification.classId;
+        if (notification.reviewId) room = notification.reviewId;
+
+        actions.notify(notification.message, room);
+      })
+      .catch((error) => {
+        console.error("Error creating notification:", error);
+      });
   },
   addWsError: (error: WsError): void => {
     state.wsErrors = [

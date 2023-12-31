@@ -9,6 +9,8 @@ import { useParams } from "next/navigation";
 import axios from "axios";
 
 interface AddReviewProps {
+  rubricName: string;
+  currentGrade: string | null;
   rubrics: RubricType[];
   addReview: (
     gradeComposition: string,
@@ -32,23 +34,31 @@ export default function AddReviewModal(props: AddReviewProps) {
   }
   const { classId } = useParams();
 
-  // TODO: update request to get current grade
   useEffect(() => {
-    // console.log("User", currentUser);
-    // axios
-    //   .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
-    //     headers: {
-    //       Authorization: `Bearer ${currentUser?.access_token}`,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     console.log("Response", response);
-    //     setRubrics(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching rubrics:", error);
-    //   });
-  }, []);
+    if (props.rubricName != "") {
+      setGradeCompositionProxy(props.rubricName);
+    }
+  }, [props.rubricName]);
+
+  useEffect(() => {
+    if (!props.currentGrade) {
+      // TODO: update request to get current grade
+      // console.log("User", currentUser);
+      // axios
+      //   .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
+      //     headers: {
+      //       Authorization: `Bearer ${currentUser?.access_token}`,
+      //     },
+      //   })
+      //   .then((response) => {
+      //     console.log("Response", response);
+      //     setRubrics(response.data);
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error fetching rubrics:", error);
+      //   });
+    } else setGrade(props.currentGrade);
+  }, [props.currentGrade]);
 
   const t = useTranslations("Review");
 
@@ -119,7 +129,7 @@ export default function AddReviewModal(props: AddReviewProps) {
             ))}
         </select>
         <p className="text-sm ml-4">
-          <b>{t("current_grade")}:</b>{" "}
+          <b>{t("current_grade")}:</b> {grade}
         </p>
         <input
           type="text"
