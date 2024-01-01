@@ -11,38 +11,39 @@ import axios from "axios";
 import { ClassType } from "@/model/ClassType";
 import { UserType } from "@/model/UserType";
 
-const tempclasses = [
-  {
-    id: 2,
-    imageUrl:
-      "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "teaching",
-  },
-  {
-    id: 2,
-    imageUrl:
-      "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "teaching",
-  },
-  {
-    id: 2,
-    imageUrl:
-      "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "teaching",
-  },
-];
+// const tempclasses = [
+//   {
+//     id: 2,
+//     imageUrl:
+//       "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
+//     name: "My Class Name",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "teaching",
+//   },
+//   {
+//     id: 2,
+//     imageUrl:
+//       "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
+//     name: "My Class Name",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "teaching",
+//   },
+//   {
+//     id: 2,
+//     imageUrl:
+//       "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
+//     name: "My Class Name",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "teaching",
+//   },
+// ];
 
 export default function TeachingPage() {
   const [classes, setClasses] = useState<ClassType[]>([]);
+  // const [errorMsg, setErrorMsg] = useState<string>("");
   const maxItemNumber = 3;
   const limit = 5;
   const totalPages =
@@ -95,11 +96,11 @@ export default function TeachingPage() {
           const newClass: ClassType = response.data;
 
           setClasses([...classes, newClass]);
+          setShowModal(false);
         }
       } catch (error: any) {
         console.error("Failed to create new rubric:", error);
       }
-      setShowModal(false);
     };
 
     // function addNewClass() {
@@ -202,7 +203,10 @@ export default function TeachingPage() {
                     <IoMdClose />
                   </button>
                 </div>
-                <CreateClassForm handleAddNewClass={handleAddNewClass} />
+                <CreateClassForm
+                  handleAddNewClass={handleAddNewClass}
+                  classes={classes}
+                />
               </div>
               <form method="dialog" className="modal-backdrop">
                 <button onClick={handleModal}>close</button>

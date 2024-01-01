@@ -93,6 +93,7 @@
     "create_class_btn": "Tạo lớp",
     "create_class_name": "Tên lớp (bắt buộc)",
     "create_class_desc": "Miêu tả",
+    "join_class_title": "VÀO LỚP",
     "join_class_btn": "Vào lớp",
     "join_class_code": "Mã lớp (bắt buộc)",
     "join_class_id": "Mã học sinh (bắt buộc)",
@@ -137,7 +138,8 @@
     "invite_teacher": "Mời giáo viên",
     "add_member_email": "Email (bắt buộc)",
     "send_invitation_btn": "Mời",
-    "empty": "Trống"
+    "empty": "Trống",
+    "duplicate_class_error_msg": "Lớp học đã tồn tại!"
   },
   "Comment": {
     "comments": " bình luận",

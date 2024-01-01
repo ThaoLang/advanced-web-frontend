@@ -95,6 +95,7 @@
     "create_class_btn": "Create class",
     "create_class_name": "Class name (required)",
     "create_class_desc": "Description",
+    "join_class_title": "JOIN CLASS",
     "join_class_btn": "Join class",
     "join_class_code": "Class code (required)",
     "join_class_id": "Student id (required)",
@@ -138,7 +139,8 @@
     "invite_teacher": "Invite teacher",
     "add_member_email": "Email address(required)",
     "send_invitation_btn": "Invite",
-    "empty": "Empty"
+    "empty": "Empty",
+    "duplicate_class_error_msg": "Class already exists!"
   },
   "Comment": {
     "comments": " comment(s)",

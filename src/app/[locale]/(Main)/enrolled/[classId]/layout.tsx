@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 
 export default function EnrolledLayout({
   children, // will be a page or nested layout
@@ -19,7 +20,7 @@ export default function EnrolledLayout({
     { name: t("review"), href: "/enrolled/" + classId + "/review" },
   ];
 
-  let option = "About";
+  const [option, setOpinion] = useState("About");
 
   return (
     <section>
@@ -27,7 +28,11 @@ export default function EnrolledLayout({
 
       <div className="tabs tabs-lifted h-10 justify-center space-x-4 lg:gap-10">
         {navigation.map((item, index) => (
-          <Link key={index} href={item.href}>
+          <Link
+            key={index}
+            href={item.href}
+            onClick={() => setOpinion(item.name)}
+          >
             <div
               className={`tab text-md lg:text-lg space-x-2 ${
                 option === item.name ? "tab-active" : ""
