@@ -60,15 +60,17 @@ export default function NotificationList(props: NotificationListProps) {
             key={index}
             onClick={() => props.isClickedNotification(notification)}
           >
-            <Notification
-              classId={notification.classId}
-              senderId={notification.senderId}
-              senderRole={notification.senderRole}
-              message={notification.message}
-              createdAt={notification.createdAt}
-              redirectUrl={notification.redirectUrl}
-              isRead={notification.isRead}
-            />
+            {notification.redirectUrl && (
+              <Notification
+                classId={notification.classId}
+                senderId={notification.senderId}
+                senderRole={notification.senderRole}
+                message={notification.message}
+                createdAt={notification.createdAt}
+                redirectUrl={notification.redirectUrl}
+                isRead={notification.isRead}
+              />
+            )}
           </div>
         ))}
     </div>

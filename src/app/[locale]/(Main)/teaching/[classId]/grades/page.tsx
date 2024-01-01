@@ -101,103 +101,6 @@ const GradePage: React.FC = () => {
     ];
   };
 
-  const getGrade = async () => {
-    return [
-      {
-        studentId: "20127605",
-        rubricId: "1",
-        grade: "10",
-      },
-      {
-        studentId: "20127605",
-        rubricId: "2",
-        grade: "10.2",
-      },
-      {
-        studentId: "20127605",
-        rubricId: "3",
-        grade: "10",
-      },
-      {
-        studentId: "20127605",
-        rubricId: "4",
-        grade: "10.4",
-      },
-      {
-        studentId: "20127605",
-        rubricId: "5",
-        grade: "10",
-      },
-      {
-        studentId: "20127605",
-        rubricId: "6",
-        grade: "10",
-      },
-      //
-      {
-        studentId: "20127629",
-        rubricId: "1",
-        grade: "10",
-      },
-      {
-        studentId: "20127629",
-        rubricId: "2",
-        grade: "10",
-      },
-      {
-        studentId: "20127629",
-        rubricId: "3",
-        grade: "10",
-      },
-      {
-        studentId: "20127629",
-        rubricId: "4",
-        grade: "10",
-      },
-      {
-        studentId: "20127629",
-        rubricId: "5",
-        grade: "10",
-      },
-      {
-        studentId: "20127629",
-        rubricId: "6",
-        grade: "10",
-      },
-      //
-      {
-        studentId: "20127679",
-        rubricId: "1",
-        grade: "1",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "2",
-        grade: "1",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "3",
-        grade: "1",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "4",
-        grade: "1",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "5",
-        grade: "1",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "6",
-        grade: "1",
-      },
-    ];
-  };
-
   interface StudentProps {
     fullname: string;
     studentId: string;
@@ -285,10 +188,35 @@ const GradePage: React.FC = () => {
 
   const handleResetBtn = () => {
     setGradeProxy([]);
-    async () => {
-      let gradeData = await getGrade();
-      setGradeProxy(proxy<GradeType[]>([...gradeData]));
-    };
+    setGrade([]);
+
+    let newData: GradeType[];
+    newData = [];
+
+    rubrics.forEach((element) => {
+      (async () => {
+        await axios
+          .get(
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/allGrades/${element._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${currentUser?.access_token}`,
+              },
+            }
+          )
+          .then((response) => {
+            if (response.data.length > 0) {
+              console.log("Response reset", response.data);
+              newData = [...newData, ...response.data];
+              setGrade(newData);
+              setGradeProxy(proxy<GradeType[]>(newData));
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching grade:", error);
+          });
+      })();
+    });
     setNewGrade([]);
     setInvalidGrade([]);
   };
@@ -360,31 +288,59 @@ const GradePage: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("User", currentUser);
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
-        headers: {
-          Authorization: `Bearer ${currentUser?.access_token}`,
-        },
-      })
-      .then((response) => {
-        console.log("Response", response);
-        setRubrics(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching rubrics:", error);
-      });
-
-    // TODO: update request
     (async () => {
-      const students = await getStudents();
-      let gradeData = await getGrade();
-
-      setStudents(students);
-      setGrade(gradeData);
-      setGradeProxy(proxy<GradeType[]>([...gradeData]));
+      // console.log("User", currentUser);
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        })
+        .then((response) => {
+          // console.log("Response", response);
+          setRubrics(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching rubrics:", error);
+        });
     })();
   }, []);
+
+  useEffect(() => {
+    let newData: GradeType[];
+    newData = [];
+
+    rubrics.forEach((element) => {
+      (async () => {
+        await axios
+          .get(
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/allGrades/${element._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${currentUser?.access_token}`,
+              },
+            }
+          )
+          .then((response) => {
+            if (response.data.length > 0) {
+              console.log("Response start", response.data);
+              newData = [...newData, ...response.data];
+              setGrade(newData);
+              setGradeProxy(proxy<GradeType[]>(newData));
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching grade:", error);
+          });
+      })();
+    });
+
+    (async () => {
+      // TODO: update request
+      const students = await getStudents();
+      setStudents(students);
+    })();
+  }, [rubrics]);
 
   useEffect(() => {
     console.log("List Rubrics:", rubrics);
@@ -535,7 +491,9 @@ const GradePage: React.FC = () => {
         <div className="flex items-center justify-center gap-4 mb-2">
           <button
             className={`btn btn-info bg-blue-500 text-white text-xs ${
-              newGrade.length == 0 ? "btn-disabled" : ""
+              invalidGrade.length != 0 || newGrade.length == 0
+                ? "btn-disabled"
+                : ""
             }`}
             // onClick={() => {}}
           >
