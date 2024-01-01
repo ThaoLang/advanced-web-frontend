@@ -1,25 +1,49 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ClassType } from "@/model/ClassType";
 
-export default function JoinClassForm() {
+interface JoinClassFormProps {
+  handleJoinNewClass: (code: string) => void;
+  classes: ClassType[];
+  errorMsg: string | null;
+}
+
+export default function JoinClassForm(props: JoinClassFormProps) {
   const [classCodeProxy, setClassCodeProxy] = useState("");
   const t = useTranslations("Tabs");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const checkInput = () => {
     if (classCodeProxy == "") {
-      toast.error(t("invalid_info"));
-    } else if (classCodeProxy !== "") {
-      //update logic into checking if class code exists
-      toast.error(t("unavailable_class_code"));
+      setErrorMsg(t("invalid_info"));
+      return false;
     }
+
+    const duplicate_code = props.classes.some(
+      (item) => item.class_code === classCodeProxy
+    );
+    if (duplicate_code) {
+      setErrorMsg(t("duplicate_class_error_msg"));
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleJoin = () => {
+    if (!checkInput()) return;
+    setErrorMsg(null);
+    props.handleJoinNewClass(classCodeProxy);
   };
 
   return (
     <div className="flex flex-row m-10 align-middle justify-center">
       <div className="flex flex-col gap-4 w-md">
-        <p className="mb-2 text-lg"> {t("join_class_btn")}</p>
+        <p className="mb-2 text-2xl font-bold text-center">
+          {" "}
+          {t("join_class_title")}
+        </p>
         <p className="text-sm"> {t("help_join_class")}</p>
         <input
           type="text"
@@ -29,9 +53,14 @@ export default function JoinClassForm() {
           onChange={(e) => setClassCodeProxy(e.target.value)}
           maxLength={15}
         />
+        {(props.errorMsg || errorMsg) && (
+          <label className="flex text-center items-center justify-center my-3 text-red-700">
+            {props.errorMsg ? props.errorMsg : errorMsg}
+          </label>
+        )}
         <button
           className="btn btn-info w-full max-w-xs"
-          onClick={() => checkInput()}
+          onClick={() => handleJoin}
         >
           {t("join_class_btn")}!
         </button>
