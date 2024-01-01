@@ -33,7 +33,7 @@ export default function Classes({
     Array<string>
   >([]);
   const classroomTableHeaders = [
-    { header_name: "ID", key: "id" },
+    { header_name: "ID", key: "_id" },
     { header_name: "Name", key: "name" },
     { header_name: "Host name", key: "host_username" },
     { header_name: "Description", key: "description" },
@@ -41,7 +41,7 @@ export default function Classes({
   ];
   const statusSelectOptions: any[] = ["Active", "Inactive"];
 
-  const [sortBy, setSortBy] = useState<string | null>("id");
+  const [sortBy, setSortBy] = useState<string | null>("_id");
   const [orderBy, setOrderBy] = useState<string>("asc");
   const [idFilter, setIdFilter] = useState<string | null>(null);
   const [nameFilter, setNameFilter] = useState<string | null>(null);
@@ -441,8 +441,8 @@ export default function Classes({
       return;
     }
 
-    const updatedClasses = classes.filter((user: any) => {
-      return user._id !== currentClass._id;
+    const updatedClasses = classes.filter((classItem: any) => {
+      return classItem._id !== currentClass._id;
     });
     setClasses(updatedClasses);
   };
@@ -452,16 +452,18 @@ export default function Classes({
       // Handle the case where classes is still loading or null
       return;
     }
-    const updatedClasses = classes.map((user: any) => {
-      if (user.id === currentClass._id && currentClass.status === "inactive") {
-        return { ...user, status: "active" };
+    const updatedClasses = classes.map((classItem: any) => {
+      let updatedItem = {...classItem };
+
+      if (classItem._id === currentClass._id && currentClass.status === "inactive") {
+        updatedItem.status = "active";
       } else if (
-        user.id === currentClass._id &&
+        classItem._id === currentClass._id &&
         currentClass.status === "active"
       ) {
-        return { ...user, status: "inactive" };
+        updatedItem.status = "inactive";
       }
-      return user;
+      return updatedItem;
     });
     setClasses(updatedClasses);
   };

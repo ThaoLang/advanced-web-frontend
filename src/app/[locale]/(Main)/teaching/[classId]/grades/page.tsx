@@ -23,6 +23,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { proxy } from "valtio";
 import { UserType } from "@/model/UserType";
 import { GradeType } from "@/model/GradeType";
+import FileDownloadButton from "@/component/excel/FileDownloadButton";
+import ImportModal from "@/component/classItem/grade/ImportModal";
+import ExportModal from "@/component/classItem/grade/ExportModal";
 
 interface SortableComponentProps {
   rubrics: RubricType[];
@@ -224,6 +227,8 @@ const GradePage: React.FC = () => {
   const t = useTranslations("GradePage");
 
   const [showModal, setShowModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [rubrics, setRubrics] = useState<RubricType[]>([]);
   const [isDisabledUpdatedBtn, setIsDisabledUpdatedBtn] = useState(true);
   const auth = useAuth();
@@ -236,6 +241,17 @@ const GradePage: React.FC = () => {
   const handleModal = () => {
     console.log("Modal changed");
     setShowModal(!showModal);
+  };
+
+  
+  const handleImportModal = () => {
+    console.log("Modal changed");
+    setShowImportModal(!showImportModal);
+  };
+
+  const handleExportModal = () => {
+    console.log("Modal changed");
+    setShowExportModal(!showExportModal);
   };
 
   const handleAddRubric = async (gradeName: string, gradeScale: number) => {
@@ -353,15 +369,19 @@ const GradePage: React.FC = () => {
     <div className="grid grid-cols-6 gap-10 mx-10">
       <div className="col-span-6 lg:col-span-4">
         <div className="flex items-center justify-center gap-4 mb-2">
-          <button
+          {/* <button
             className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
             // onClick={() => {}}
-          >
-            {t("download_help")}
-          </button>
+          > */}
+          {/* </button> */}
+
+          {t("download_help")}
+          <FileDownloadButton
+            templateCategory="Grade"
+            filename="Grade_Template" />
           <button
             className="btn btn-info bg-blue-500 text-white text-xs"
-            // onClick={() => {}}
+          onClick={handleImportModal}
           >
             {t("import")}
           </button>
@@ -370,7 +390,7 @@ const GradePage: React.FC = () => {
               className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
             ${grade.length == 0 ? "btn-disabled" : ""}
             `}
-              // onClick={() => {}}
+            onClick={handleExportModal}
             >
               {t("export")}
             </button>
@@ -559,6 +579,46 @@ const GradePage: React.FC = () => {
           </div>
           <form method="dialog" className="modal-backdrop">
             <button onClick={handleModal}>close</button>
+          </form>
+        </dialog>
+         {/* Import Modal */}
+         <dialog className={`modal ${showImportModal ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <div className="flex flex-row justify-between">
+              <p className="text-sm text-gray-500">
+                {/* Press X or click outside to close */}
+              </p>
+              <button onClick={handleImportModal}>
+                <IoMdClose />
+              </button>
+            </div>
+            <ImportModal
+              //
+              closeModal={handleImportModal}
+              data={undefined} />
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={handleImportModal}>close</button>
+          </form>
+        </dialog>
+        {/* Export Modal */}
+        <dialog className={`modal ${showExportModal ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <div className="flex flex-row justify-between">
+              <p className="text-sm text-gray-500">
+                {/* Press X or click outside to close */}
+              </p>
+              <button onClick={handleExportModal}>
+                <IoMdClose />
+              </button>
+            </div>
+            <ExportModal
+              //
+              closeModal={handleExportModal}
+              data={undefined} />
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={handleExportModal}>close</button>
           </form>
         </dialog>
       </div>

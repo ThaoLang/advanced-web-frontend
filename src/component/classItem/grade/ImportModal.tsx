@@ -1,17 +1,15 @@
-import CSVExporter from "@/component/excel/CSVExporter";
 import CSVImporter from "@/component/excel/CSVImporter";
 import { useTranslations } from "next-intl";
 import "react-toastify/dist/ReactToastify.css";
 
-interface ImportExportProps {
+interface ImportProps {
   //
   data: any,
-  setIsAvailable: (status: boolean) => void;
   closeModal: () => void;
 }
 
-export default function ImportExportModal(props: ImportExportProps) {
-  const t = useTranslations("Tabs");
+export default function ImportModal(props: ImportProps) {
+  const t = useTranslations("GradePage");
 
   function handleFileUpload(data: any): void {
     // Handle the parsed CSV data, you can send it to an API or process it further
@@ -23,7 +21,6 @@ export default function ImportExportModal(props: ImportExportProps) {
     //     student_id: item.student_id ? item.student_id.toString() : '', // Convert student_id to string if it's a number, or use an empty string if undefined
     // }));
     //   setClassList(convertedData);
-    props.setIsAvailable(true);
   }
 
   return (
@@ -33,7 +30,6 @@ export default function ImportExportModal(props: ImportExportProps) {
           <b>{t("import")}</b>
         </p>
         <CSVImporter onFileUpload={handleFileUpload} />
-        <CSVExporter data={props.data} filename="exported_data" />
       </div>
     </div>
   );
