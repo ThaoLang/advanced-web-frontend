@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import TeacherReviewForm from "@/component/classItem/review/TeacherReviewForm";
 import { IoMdClose } from "react-icons/io";
@@ -9,6 +9,9 @@ import DetailedMiniReview from "@/component/classItem/review/DetailedMiniReview"
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { actions } from "../../../state";
+import axios from "axios";
+import { UserType } from "@/model/UserType";
+import { useParams } from "next/navigation";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
@@ -18,39 +21,14 @@ export default function ReviewPage() {
     setShowModal(!showModal);
   };
 
-  let tempReviewList = [
-    {
-      id: "",
-      classId: "",
-      studentId: "auth.user?.student_id",
-      gradeComposition: "Điểm cuối kì",
-      currentGrade: "8",
-      expectationGrade: "10",
-      explanation: "Em đã làm tốt",
-      status: "In Progress",
-    },
-    {
-      id: "",
-      classId: "",
-      studentId: "auth.user?.student_id",
-      gradeComposition: "Điểm cuối kì",
-      currentGrade: "8",
-      expectationGrade: "10",
-      explanation: "Em đã làm tốt",
-      status: "In Progress",
-    },
-    {
-      id: "",
-      classId: "",
-      studentId: "auth.user?.student_id",
-      gradeComposition: "Điểm cuối kì",
-      currentGrade: "8",
-      expectationGrade: "10",
-      explanation: "Em đã làm tốt",
-      status: "Completed",
-    },
-  ];
-  const [reviewList, setReviewList] = useState<ReviewType[]>(tempReviewList);
+  const savedUser = localStorage.getItem("user");
+  let currentUser: UserType;
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+  }
+  const { classId } = useParams();
+
+  const [reviewList, setReviewList] = useState<ReviewType[]>([]);
 
   const [selectedReview, setSelectedReview] = useState<ReviewType>();
 
@@ -65,7 +43,30 @@ export default function ReviewPage() {
 
       // update selected review to review list
       setReviewList(reviewList);
-      toast.success(t("update_review_success"));
+
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/update`,
+          {
+            classId: classId,
+            studentId: selectedReview.studentId,
+            gradeComposition: selectedReview.gradeComposition,
+            status: selectedReview.status,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          toast.success(t("update_review_success"));
+        })
+        .catch((error) => {
+          console.error("Error updating review:", error);
+          toast.error(t("update_review_failure"));
+          return;
+        });
 
       actions.notify("A grade review is finalized");
     }
@@ -74,6 +75,26 @@ export default function ReviewPage() {
   // TODO: need to update grade data
   const [updatedGrade, setUpdatedGrade] = useState("");
   const [note, setNote] = useState("");
+
+  useEffect(() => {
+    // get review list
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/allReviews/${classId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Response", response);
+        setReviewList(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching review list:", error);
+      });
+  }, []);
 
   return (
     <div>
@@ -104,7 +125,7 @@ export default function ReviewPage() {
                         onChange={() => {}}
                       />
                       <DetailedMiniReview
-                        id={review.id}
+                        _id={review._id}
                         classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
@@ -138,7 +159,7 @@ export default function ReviewPage() {
                         onChange={() => {}}
                       />
                       <DetailedMiniReview
-                        id={review.id}
+                        _id={review._id}
                         classId={review.classId}
                         studentId={review.studentId}
                         gradeComposition={review.gradeComposition}
@@ -165,7 +186,7 @@ export default function ReviewPage() {
               </button>
             </div>
             <TeacherReviewForm
-              id={selectedReview.id}
+              _id={selectedReview._id}
               classId={selectedReview.classId}
               studentId={selectedReview.studentId}
               gradeComposition={selectedReview.gradeComposition}

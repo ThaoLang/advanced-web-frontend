@@ -63,7 +63,7 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
 
   const handleEditGrade = async (gradeName: string, gradeScale: number) => {
     const newRubric: RubricType = {
-      id: props.rubric.id,
+      _id: props.rubric._id,
       classId: props.rubric.classId,
       gradeName: gradeName,
       gradeScale: gradeScale,
@@ -149,7 +149,7 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
           <DeleteGradeForm
             name={props.rubric.gradeName}
             scale={props.rubric.gradeScale}
-            id={props.rubric.id}
+            id={props.rubric._id}
             deleteFunc={handleDeleteGrade}
             cancelFunc={() => setDeleteShowModal(!showDeleteModal)}
           />
@@ -165,7 +165,7 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
 const SortableList = SortableContainer((props: SortableListProps) => {
   const handleUpdate = (updatedRubric: RubricType) => {
     const updatedItems = props.items.map((item) =>
-      item.id === updatedRubric.id ? updatedRubric : item
+      item._id === updatedRubric._id ? updatedRubric : item
     );
 
     props.setRubrics(updatedItems);

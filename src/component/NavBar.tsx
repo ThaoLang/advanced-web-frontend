@@ -18,6 +18,7 @@ import { createSharedPathnamesNavigation } from "next-intl/navigation";
 import NotificationList from "./NotificationList";
 import { NotificationType } from "@/model/NotificationType";
 import { actions } from "@/app/[locale]/(Main)/state";
+import axios from "axios";
 
 export const getNotificationsData = async () => {
   return [
@@ -120,6 +121,12 @@ export default function NavBar() {
 
   const auth = useAuth();
 
+  // const savedUser = localStorage.getItem("user");
+  // let currentUser: UserType;
+  // if (savedUser) {
+  //   currentUser = JSON.parse(savedUser);
+  // }
+
   const [notifications, setNotifications] = useState<Array<NotificationType>>(
     []
   );
@@ -128,6 +135,28 @@ export default function NavBar() {
       const notificationsData = await getNotificationsData();
       setNotifications(notificationsData);
     })();
+
+    // (async () => {
+    //   // get a list of class id user is in
+    //   // loop the list
+
+    //   axios
+    //     .get(
+    //       `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/${classId}`,
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${auth.user?.access_token}`,
+    //         },
+    //       }
+    //     )
+    //     .then((response) => {
+    //       console.log("Response", response);
+    //       // setNotifications([...notifications, response.data]);
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error fetching rubrics:", error);
+    //     });
+    // })();
   }, []);
 
   const isNotificationClicked = (notification: NotificationType) => {
@@ -142,7 +171,7 @@ export default function NavBar() {
 
   const handleLogout = () => {
     localStorage.setItem("user", null as any);
-    auth.logout('user');
+    auth.logout("user");
   };
 
   // avatar url

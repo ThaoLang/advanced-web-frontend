@@ -22,6 +22,7 @@ import { useTranslations } from "next-intl";
 import { ToastContainer, toast } from "react-toastify";
 import { proxy } from "valtio";
 import { UserType } from "@/model/UserType";
+import { GradeType } from "@/model/GradeType";
 
 interface SortableComponentProps {
   rubrics: RubricType[];
@@ -65,45 +66,6 @@ const SortableComponent = (props: SortableComponentProps) => {
 };
 
 const GradePage: React.FC = () => {
-  const items: RubricType[] = [
-    {
-      classId: "123",
-      id: "1",
-      gradeName: "Homework 1",
-      gradeScale: 53,
-      order: 1,
-    },
-    {
-      classId: "123",
-      id: "2",
-      gradeName: "Homework 2",
-      gradeScale: 92,
-      order: 2,
-    },
-    {
-      classId: "123",
-      id: "3",
-      gradeName: "Midterm ",
-      gradeScale: 14,
-      order: 3,
-    },
-    { classId: "123", id: "4", gradeName: "Test 4", gradeScale: 68, order: 4 },
-    {
-      classId: "123",
-      id: "5",
-      gradeName: "Final project 5",
-      gradeScale: 35,
-      order: 5,
-    },
-    {
-      classId: "123",
-      id: "6",
-      gradeName: "Additional point 6",
-      gradeScale: 79,
-      order: 6,
-    },
-  ];
-
   const getStudents = async () => {
     return [
       {
@@ -242,26 +204,9 @@ const GradePage: React.FC = () => {
     email: string;
   }
 
-  interface GradeProps {
-    studentId: string;
-    rubricId: string;
-    grade: string;
-  }
-
   const [students, setStudents] = useState<StudentProps[]>();
-  const [grade, setGrade] = useState<GradeProps[]>([]);
-  const [gradeProxy, setGradeProxy] = useState<GradeProps[]>([]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const students = await getStudents();
-  //     let gradeData = await getGrade();
-
-  //     setStudents(students);
-  //     setGrade(gradeData);
-  //     setGradeProxy(proxy<GradeProps[]>([...gradeData]));
-  //   })();
-  // }, []);
+  const [grade, setGrade] = useState<GradeType[]>([]);
+  const [gradeProxy, setGradeProxy] = useState<GradeType[]>([]);
 
   const getMyStudentGrade = (studentId: string, rubricId: string) => {
     for (let item of grade) {
@@ -342,7 +287,7 @@ const GradePage: React.FC = () => {
     setGradeProxy([]);
     async () => {
       let gradeData = await getGrade();
-      setGradeProxy(proxy<GradeProps[]>([...gradeData]));
+      setGradeProxy(proxy<GradeType[]>([...gradeData]));
     };
     setNewGrade([]);
     setInvalidGrade([]);
@@ -437,7 +382,7 @@ const GradePage: React.FC = () => {
 
       setStudents(students);
       setGrade(gradeData);
-      setGradeProxy(proxy<GradeProps[]>([...gradeData]));
+      setGradeProxy(proxy<GradeType[]>([...gradeData]));
     })();
   }, []);
 
@@ -477,7 +422,7 @@ const GradePage: React.FC = () => {
         </div>
         <div className="max-h-[450px] overflow-auto bg-white rounded">
           {/* table */}
-          <table className="table table-sm table-pin-rows table-pin-cols">
+          <table className="table table-sm table-pin-rows table-pin-cols z-0">
             {/* head */}
             <thead>
               <tr>
@@ -485,8 +430,8 @@ const GradePage: React.FC = () => {
                 <td>{t("fullname")}</td>
                 <td>{t("student_id")}</td>
                 <td>{t("email")}</td>
-                {items.length > 0 &&
-                  items.map((item, index) => {
+                {rubrics.length > 0 &&
+                  rubrics.map((item, index) => {
                     return <td key={index}>{item.gradeName}</td>;
                   })}
                 <th>{t("finalized_score")}</th>
@@ -520,8 +465,8 @@ const GradePage: React.FC = () => {
                         </span>
                       </td>
 
-                      {items.length > 0 &&
-                        items.map((item, index) => {
+                      {rubrics.length > 0 &&
+                        rubrics.map((item, index) => {
                           return (
                             <td key={index}>
                               <input
@@ -541,12 +486,12 @@ const GradePage: React.FC = () => {
                                 placeholder={item.gradeName}
                                 defaultValue={getProxyStudentGrade(
                                   student.studentId,
-                                  item.id
+                                  item._id
                                 )}
                                 onChange={(e) => {
                                   setMyStudentGrade(
                                     student.studentId,
-                                    item.id,
+                                    item._id,
                                     e.target.value
                                   );
                                 }}
@@ -554,7 +499,7 @@ const GradePage: React.FC = () => {
                                   checkMyStudentGrade(
                                     e.target.value,
                                     student.studentId,
-                                    item.id
+                                    item._id
                                   )
                                 }
                                 maxLength={6}
@@ -579,8 +524,8 @@ const GradePage: React.FC = () => {
                 <td>{t("fullname")}</td>
                 <td>{t("student_id")}</td>
                 <td>{t("email")}</td>
-                {items.length > 0 &&
-                  items.map((item, index) => {
+                {rubrics.length > 0 &&
+                  rubrics.map((item, index) => {
                     return <td key={index}>{item.gradeName}</td>;
                   })}
               </tr>

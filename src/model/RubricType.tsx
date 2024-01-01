@@ -1,5 +1,5 @@
 export type RubricType = {
-  id: string;
+  _id: string;
   gradeName: string;
   gradeScale: number;
   classId: string;

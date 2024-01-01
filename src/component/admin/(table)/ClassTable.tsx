@@ -116,7 +116,7 @@ export default async function ClassTable(props: ClassTableProps) {
                             props.paginatedResult.map((items: any, index: number) => {
                                 return (
                                 <tr key={index} className="hover:bg-gray-100 cursor-pointer hover:border-1 hover:border-gray-200">
-                                    <td>{items.id}</td>
+                                    <td>{items._id}</td>
                                     <td>{items.name}</td>
                                     <td>
                                         <div className="flex items-center gap-3">
@@ -149,7 +149,7 @@ export default async function ClassTable(props: ClassTableProps) {
                                     <th>
                                         <div className="flex flex-row justify-start space-x-2">
                                             <div className="cursor-pointer hover:text-primary">
-                                                <Link href={`/admin/class/${items.id}`} passHref legacyBehavior>
+                                                <Link href={`/admin/class/${items._id}`} passHref legacyBehavior>
                                                     <button onClick={() => context.classroom = items}>
                                                         <FaRegEye />
                                                     </button>
