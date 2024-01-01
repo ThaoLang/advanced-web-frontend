@@ -70,9 +70,9 @@ const actions = {
   },
   notify: (message: string, room: string): void => {
     //test
-    state.socket?.emit("notify", { message, room });
+    state.socket?.emit("sendMessage", { message });
+
     state.socket?.emit("newMessage", { message, room });
-    state.socket?.emit("sendMessage", { message, room });
   },
   //notificationList
   sendNotification: async (
@@ -87,15 +87,14 @@ const actions = {
       .post(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/create`,
         {
-          notification,
-          // classId: notification.classId,
-          // reviewId: notification.reviewId,
-          // senderRole: notification.senderRole,
-          // receiverIdList: notification.receiverIdList,
-          // message: notification.message,
-          // redirectUrl: notification.redirectUrl,
-          // createdAt: notification.createdAt,
-          // isRead: notification.isRead,
+          classId: notification.classId,
+          reviewId: notification.reviewId,
+          senderRole: notification.senderRole,
+          receiverIdList: notification.receiverIdList,
+          message: notification.message,
+          redirectUrl: notification.redirectUrl,
+          createdAt: notification.createdAt,
+          isRead: notification.isRead,
         },
         {
           headers: {

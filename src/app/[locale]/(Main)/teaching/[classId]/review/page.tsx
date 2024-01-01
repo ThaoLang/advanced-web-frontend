@@ -36,6 +36,9 @@ export default function ReviewPage() {
     if (selectedReview) {
       if (currentStatus === "In Progress") {
         selectedReview.status = "Completed";
+        // test sockio
+        actions.notify("A grade review is finalized", selectedReview._id);
+        // use actions.sendNotification
       } else if (currentStatus === "Completed") {
         selectedReview.status = "In Progress";
       }
@@ -67,8 +70,6 @@ export default function ReviewPage() {
           toast.error(t("update_review_failure"));
           return;
         });
-
-      actions.notify("A grade review is finalized");
     }
   };
 
