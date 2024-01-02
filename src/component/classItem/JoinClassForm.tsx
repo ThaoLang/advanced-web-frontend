@@ -51,7 +51,7 @@ export default function JoinClassForm(props: JoinClassFormProps) {
           className="input input-bordered w-full max-w-xs"
           value={classCodeProxy}
           onChange={(e) => setClassCodeProxy(e.target.value)}
-          maxLength={15}
+          maxLength={40}
         />
         {(props.errorMsg || errorMsg) && (
           <label className="flex text-center items-center justify-center my-3 text-red-700">
@@ -60,7 +60,7 @@ export default function JoinClassForm(props: JoinClassFormProps) {
         )}
         <button
           className="btn btn-info w-full max-w-xs"
-          onClick={() => handleJoin}
+          onClick={() => handleJoin()}
         >
           {t("join_class_btn")}!
         </button>

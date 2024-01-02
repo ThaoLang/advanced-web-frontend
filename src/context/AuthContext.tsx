@@ -45,6 +45,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (userData.role === "admin") {
       setAdmin(userData);
     } else setUser(userData);
+    console.log("User after login", userData);
   };
 
   const logout = (role: string) => {

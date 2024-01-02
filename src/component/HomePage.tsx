@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import PaginationBar from "./PaginationBar";
 import SmallClass from "./classItem/SmallClass";
@@ -8,85 +8,90 @@ import { useTranslations } from "next-intl";
 import NewClass from "@/component/classItem/NewClass";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { UserType } from "@/model/UserType";
+import { ClassType } from "@/model/ClassType";
 
-const classes = [
-  {
-    id: 1,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "enrolled",
-  },
-  {
-    id: 2,
-    imageUrl:
-      "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "teaching",
-  },
-  {
-    id: 3,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "enrolled",
-  },
-  {
-    id: 1,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name 2",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "enrolled",
-  },
-  {
-    id: 2,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name 2",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "enrolled",
-  },
-  {
-    id: 3,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name 2",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "enrolled",
-  },
-  {
-    id: 1,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "enrolled",
-  },
-  {
-    id: 2,
-    imageUrl:
-      "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-    name: "My Class Name",
-    description: "This is the class",
-    inviteUrl: "inviteurl",
-    page: "enrolled",
-  },
-];
+// const classes = [
+//   {
+//     id: 1,
+//     imageUrl:
+//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+//     name: "My Class Name",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "enrolled",
+//   },
+//   {
+//     id: 2,
+//     imageUrl:
+//       "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
+//     name: "My Class Name",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "teaching",
+//   },
+//   {
+//     id: 3,
+//     imageUrl:
+//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+//     name: "My Class Name",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "enrolled",
+//   },
+//   {
+//     id: 1,
+//     imageUrl:
+//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+//     name: "My Class Name 2",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "enrolled",
+//   },
+//   {
+//     id: 2,
+//     imageUrl:
+//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+//     name: "My Class Name 2",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "enrolled",
+//   },
+//   {
+//     id: 3,
+//     imageUrl:
+//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+//     name: "My Class Name 2",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "enrolled",
+//   },
+//   {
+//     id: 1,
+//     imageUrl:
+//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+//     name: "My Class Name",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "enrolled",
+//   },
+//   {
+//     id: 2,
+//     imageUrl:
+//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
+//     name: "My Class Name",
+//     description: "This is the class",
+//     inviteUrl: "inviteurl",
+//     page: "enrolled",
+//   },
+// ];
 
 export default function HomePage() {
-  const auth = useAuth();
-  const t = useTranslations("Homepage");
+  const t_homepage = useTranslations("Homepage");
+  const t_tab = useTranslations("Tabs");
+
+  const [classes, setClasses] = useState<ClassType[]>([]);
 
   const maxItemNumber = 3;
   const limit = 5;
@@ -102,30 +107,23 @@ export default function HomePage() {
         index >= (page - 1) * maxItemNumber && index < page * maxItemNumber
       );
     });
-  }, [page]);
+  }, [page, classes]);
 
   const [showModal, setShowModal] = useState(false);
+  const auth = useAuth();
+  const savedUser = localStorage.getItem("user");
+  let currentUser: UserType;
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+  }
+
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleModal = () => {
     console.log("Modal changed");
     setShowModal(!showModal);
   };
 
-  // function addNewClass() {
-  //   setShowModal(true);
-  // }
-
-  // function createClass() {
-  //   //
-  //   setShowModal(false);
-  // }
-
-  // function joinClass() {
-  //   //
-  //   setShowModal(false);
-  // }
-
-  // copy invite link
   const [isCopied, setIsCopied] = useState(false);
 
   const WriteToClipboard = async (text: string) => {
@@ -138,6 +136,31 @@ export default function HomePage() {
     }
     console.log("Permission denied");
     return false;
+  };
+
+  const handleAddNewClass = async (className: string, description: string) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/create`,
+        {
+          name: className,
+          description: description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        }
+      );
+      if (response.status === 201) {
+        const newClass: ClassType = response.data;
+
+        setClasses([...classes, newClass]);
+        setShowModal(false);
+      }
+    } catch (error: any) {
+      console.error("Failed to create new rubric:", error);
+    }
   };
 
   const CopyInviteLink = (text: string) => {
@@ -158,10 +181,54 @@ export default function HomePage() {
   };
   // end copy invite link
 
+  const handleEnrollClass = async (code: string) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/enrolled?code=${code}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        }
+      );
+      console.log("RESPONSE", response);
+
+      if (response.status === 201) {
+        const newClass: ClassType = response.data;
+        setClasses([...classes, newClass]);
+        setShowModal(false);
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error.response && error.response.data
+          ? error.response.data.message
+          : t_tab("join_class_code_error_msg");
+      setErrorMsg(errorMessage);
+    }
+  };
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
+        headers: {
+          Authorization: `Bearer ${currentUser?.access_token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Response", response.data);
+        setClasses(response.data);
+        console.log("Response class", classes);
+      })
+      .catch((error) => {
+        console.error("Error fetching classes:", error);
+      });
+  }, []);
+
   return auth.user ? (
     <div className="mx-20 my-10">
       <p className="mb-5 text-2xl flex justify-center items-center mx-auto">
-        <b>{t("class")}</b>
+        <b>{t_homepage("class")}</b>
       </p>
 
       <div className="flex justify-around items-center font-poppins mb-20">
@@ -186,7 +253,12 @@ export default function HomePage() {
                   <IoMdClose />
                 </button>
               </div>
-              <NewClass />
+              <NewClass
+                classes={classes}
+                handleAddNewClass={handleAddNewClass}
+                handleEnrollClass={handleEnrollClass}
+                errorMsg={errorMsg}
+              />
             </div>
             <form method="dialog" className="modal-backdrop">
               <button onClick={handleModal}>close</button>
@@ -195,15 +267,21 @@ export default function HomePage() {
 
           {filterData.map((items, index) => (
             <SmallClass
-              id={items.id}
-              imageUrl={items.imageUrl}
+              id={items._id}
+              imageUrl={
+                items.type === "enrolled"
+                  ? "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg"
+                  : "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f"
+              }
               name={items.name}
               description={items.description}
-              inviteUrl={items.inviteUrl}
-              page={items.page}
+              inviteUrl={items.invite_url}
+              page={items.type}
               isCopied={isCopied}
               CopyInviteLink={CopyInviteLink}
               key={index}
+              student_number={items.student_number ? items.student_number : 0}
+              teacher_number={items.teacher_number ? items.teacher_number : 1}
             />
           ))}
         </div>
