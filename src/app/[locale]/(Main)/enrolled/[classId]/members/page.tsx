@@ -76,7 +76,7 @@ export default function MemberPage() {
     return false;
   };
 
-  const CopyText = (text: string) => {
+  const CopyText = (text: string = "") => {
     // Asynchronously call
     WriteToClipboard(text)
       .then((result) => {
@@ -312,7 +312,7 @@ export default function MemberPage() {
                   </div>
                 </div>
                 <span className="badge badge-sm mr-16">
-                  Email: {student.email} thao {currentUser.studentId}
+                  Email: {student.email}
                 </span>
                 {currentUser.studentId &&
                   student.student_id === currentUser.studentId && (
