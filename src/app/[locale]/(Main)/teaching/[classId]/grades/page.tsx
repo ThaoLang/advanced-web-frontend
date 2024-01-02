@@ -26,6 +26,9 @@ import { GradeType } from "@/model/GradeType";
 import FileDownloadButton from "@/component/excel/FileDownloadButton";
 import ImportModal from "@/component/classItem/grade/ImportModal";
 import ExportModal from "@/component/classItem/grade/ExportModal";
+import { ClassListType } from "@/model/ClassListType";
+import { NotificationType } from "@/model/NotificationType";
+import { actions } from "../../../state";
 
 interface SortableComponentProps {
   rubrics: RubricType[];
@@ -224,7 +227,67 @@ const GradePage: React.FC = () => {
     setInvalidGrade([]);
   };
 
+  const finalizeScore = () => {
+    // notification
+    (async () => {
+      let senderRole: string,
+        message: string,
+        redirectUrl: string,
+        receiverIdList: string[],
+        allMembersList: ClassListType[];
+
+      receiverIdList = [];
+
+      await axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response", response);
+          allMembersList = response.data;
+          senderRole = "teacher";
+          message = noti_t("grade_finalize");
+          redirectUrl = `/enrolled/${classId}/grades`;
+
+          if (allMembersList.length > 0) {
+            let filteredMembersList = allMembersList.filter((member) => {
+              member.role === "student";
+            });
+            filteredMembersList.forEach((element) => {
+              receiverIdList.push(element.user_id);
+            });
+          }
+
+          let newNotification: NotificationType;
+          newNotification = {
+            id: "",
+            senderId: "",
+            classId: classId.toString(),
+            reviewId: undefined,
+            senderRole: senderRole,
+            receiverIdList: receiverIdList,
+            message: message,
+            redirectUrl: redirectUrl,
+            createdAt: new Date().toISOString(),
+            isRead: false,
+          };
+
+          actions.sendNotification(currentUser.access_token, newNotification);
+        })
+        .catch((error) => {
+          console.error("Error fetching class members:", error);
+        });
+    })();
+    // end send notification
+  };
+
   const t = useTranslations("GradePage");
+  const noti_t = useTranslations("Notification");
 
   const [showModal, setShowModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -243,7 +306,6 @@ const GradePage: React.FC = () => {
     setShowModal(!showModal);
   };
 
-  
   const handleImportModal = () => {
     console.log("Modal changed");
     setShowImportModal(!showImportModal);
@@ -378,10 +440,11 @@ const GradePage: React.FC = () => {
           {t("download_help")}
           <FileDownloadButton
             templateCategory="Grade"
-            filename="Grade_Template" />
+            filename="Grade_Template"
+          />
           <button
             className="btn btn-info bg-blue-500 text-white text-xs"
-          onClick={handleImportModal}
+            onClick={handleImportModal}
           >
             {t("import")}
           </button>
@@ -390,7 +453,7 @@ const GradePage: React.FC = () => {
               className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
             ${grade.length == 0 ? "btn-disabled" : ""}
             `}
-            onClick={handleExportModal}
+              onClick={handleExportModal}
             >
               {t("export")}
             </button>
@@ -534,7 +597,7 @@ const GradePage: React.FC = () => {
               className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
             ${grade.length == 0 ? "btn-disabled" : ""}
             `}
-              // onClick={() => {}}
+              onClick={() => {}}
             >
               {t("finalize_score")}
             </button>
@@ -581,8 +644,8 @@ const GradePage: React.FC = () => {
             <button onClick={handleModal}>close</button>
           </form>
         </dialog>
-         {/* Import Modal */}
-         <dialog className={`modal ${showImportModal ? "modal-open" : ""}`}>
+        {/* Import Modal */}
+        <dialog className={`modal ${showImportModal ? "modal-open" : ""}`}>
           <div className="modal-box">
             <div className="flex flex-row justify-between">
               <p className="text-sm text-gray-500">
@@ -595,7 +658,8 @@ const GradePage: React.FC = () => {
             <ImportModal
               //
               closeModal={handleImportModal}
-              data={undefined} />
+              data={undefined}
+            />
           </div>
           <form method="dialog" className="modal-backdrop">
             <button onClick={handleImportModal}>close</button>
@@ -615,7 +679,8 @@ const GradePage: React.FC = () => {
             <ExportModal
               //
               closeModal={handleExportModal}
-              data={undefined} />
+              data={undefined}
+            />
           </div>
           <form method="dialog" className="modal-backdrop">
             <button onClick={handleExportModal}>close</button>

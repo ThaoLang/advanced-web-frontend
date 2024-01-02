@@ -13,9 +13,13 @@ import { RubricType } from "@/model/RubricType";
 import { UserType } from "@/model/UserType";
 import { useParams } from "next/navigation";
 import axios from "axios";
+import { ClassListType } from "@/model/ClassListType";
+import { NotificationType } from "@/model/NotificationType";
+import { actions } from "../../../state";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
+  const noti_t = useTranslations("Notification");
   const [showModal, setShowModal] = useState(false);
   const handleModal = () => {
     console.log("Modal changed");
@@ -48,42 +52,110 @@ export default function ReviewPage() {
       _id: "",
       studentId: studentId,
       gradeComposition: gradeComposition,
-      currentGrade: currentGrade,
+      currentGrade: currentGrade ? currentGrade : "",
       expectationGrade: expectationGrade,
       explanation: studentExplanation,
       status: "In Progress",
     } as ReviewType;
 
     console.log("Review", tempReview);
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/create`,
-        {
-          classId: classId,
-          studentId: tempReview.studentId,
-          gradeComposition: tempReview.gradeComposition,
-          currentGrade: tempReview.currentGrade,
-          expectationGrade: tempReview.expectationGrade,
-          explanation: tempReview.explanation,
-          status: tempReview.status,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
-          },
-        }
-      )
-      .then((response) => {
-        if (response.status === 201) {
-          toast.success(t("add_review_success"));
-        }
-      })
-      .catch((error) => {
-        console.error("Error creating review:", error);
-        toast.error(t("add_review_failure"));
-        return;
-      });
 
+    (async () => {
+      await axios
+        .post(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/create`,
+          {
+            classId: classId,
+            studentId: tempReview.studentId,
+            gradeComposition: tempReview.gradeComposition,
+            currentGrade: tempReview.currentGrade,
+            expectationGrade: tempReview.expectationGrade,
+            explanation: tempReview.explanation,
+            status: tempReview.status,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 201) {
+            toast.success(t("add_review_success"));
+
+            let data: ReviewType;
+            data = response.data;
+
+            tempReview._id = data._id;
+
+            // notification
+            (async () => {
+              let senderRole: string,
+                message: string,
+                redirectUrl: string,
+                receiverIdList: string[],
+                allMembersList: ClassListType[];
+
+              receiverIdList = [];
+
+              await axios
+                .get(
+                  `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${currentUser?.access_token}`,
+                    },
+                  }
+                )
+                .then((response) => {
+                  console.log("Response", response);
+                  allMembersList = response.data;
+
+                  senderRole = "student";
+                  message = noti_t("review_create");
+                  redirectUrl = `/teaching/${classId}/review`;
+
+                  if (allMembersList.length > 0) {
+                    let filteredMembersList = allMembersList.filter(
+                      (member) => member.role === "teacher"
+                    );
+                    filteredMembersList.forEach((element) => {
+                      receiverIdList.push(element.user_id);
+                    });
+                  }
+
+                  let newNotification: NotificationType;
+                  newNotification = {
+                    id: "",
+                    senderId: "",
+                    classId: classId.toString(),
+                    reviewId: data._id,
+                    senderRole: senderRole,
+                    receiverIdList: receiverIdList,
+                    message: message,
+                    redirectUrl: redirectUrl,
+                    createdAt: new Date().toISOString(),
+                    isRead: false,
+                  };
+
+                  actions.sendNotification(
+                    currentUser.access_token,
+                    newNotification
+                  );
+                })
+                .catch((error) => {
+                  console.error("Error fetching class members:", error);
+                });
+            })();
+            // end send notification
+          }
+        })
+        .catch((error) => {
+          console.error("Error creating review:", error);
+          toast.error(t("add_review_failure"));
+          return;
+        });
+    })();
     reviewList.push(tempReview);
     setReviewList(reviewList);
   };
