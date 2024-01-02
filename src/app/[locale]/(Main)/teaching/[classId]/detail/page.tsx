@@ -11,42 +11,26 @@ import axios from "axios";
 import { UserType } from "@/model/UserType";
 import FileDownloadButton from "@/component/excel/FileDownloadButton";
 
-// const classInfo = {
-//   id: 1,
-//   imageUrl:
-//     "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
-//   name: "My Class Name",
-//   description: "This is the class",
-//   inviteUrl: "inviteurl",
-//   classCode: "classCode",
-// };
-
-// interface DetailClassProps{
-//   classInfo:ClassType;
-// }
-
 export default function DetailTeachingClass() {
   const t = useTranslations("Tabs");
   const [isAvailableStudentList, setIsAvailable] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { classId } = useParams();
   const [classInfo, setClassInfo] = useState<ClassType>();
-  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
-  
+
+  const savedUser = localStorage.getItem("user");
+  let currentUser: UserType;
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+  }
+
   const handleModal = () => {
     console.log("Modal changed");
     setShowModal(!showModal);
   };
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
-    }}, []);
-
-
-
-  useEffect(() => {
+    console.log("CURRENT", currentUser.access_token);
     axios
       .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}`, {
         headers: {
@@ -87,7 +71,8 @@ export default function DetailTeachingClass() {
                   </button> */}
                 <FileDownloadButton
                   templateCategory="ClassList"
-                  filename="ClassList_Template" />
+                  filename="ClassList_Template"
+                />
               </label>
               <label className="label">
                 <span className="label-text">{t("import_help")} </span>
@@ -114,10 +99,10 @@ export default function DetailTeachingClass() {
                   </Link>
                 </label>
               )) || (
-                  <label className="label">
-                    <span className="label-text mt-5">{t("view_help_1")}</span>
-                  </label>
-                )}
+                <label className="label">
+                  <span className="label-text mt-5">{t("view_help_1")}</span>
+                </label>
+              )}
             </div>
           </div>
         </div>
@@ -137,7 +122,8 @@ export default function DetailTeachingClass() {
             //
             setIsAvailable={setIsAvailable}
             closeModal={handleModal}
-            data={undefined} />
+            data={undefined}
+          />
         </div>
         <form method="dialog" className="modal-backdrop">
           <button onClick={handleModal}>close</button>
@@ -146,4 +132,3 @@ export default function DetailTeachingClass() {
     </>
   );
 }
-

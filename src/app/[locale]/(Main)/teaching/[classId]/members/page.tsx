@@ -124,7 +124,7 @@ export default function MembersPage() {
     return false;
   };
 
-  const CopyText = (text: string) => {
+  const CopyText = (text: string = "") => {
     // Asynchronously call
     WriteToClipboard(text)
       .then((result) => {

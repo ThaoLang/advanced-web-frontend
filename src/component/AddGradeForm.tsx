@@ -80,15 +80,14 @@ export default function AddGradeForm(props: AddGradeFormProps) {
             <span className="p-2">%</span>
           </div>
         </div>
-
-        <button className="btn btn-info w-full " onClick={handleAddRubric}>
-          {t("add_grade_btn")}!
-        </button>
         {errorMsg && (
           <label className="flex text-center items-center justify-center my-3 text-red-700">
             {errorMsg}
           </label>
         )}
+        <button className="btn btn-info w-full " onClick={handleAddRubric}>
+          {t("add_grade_btn")}!
+        </button>
       </div>
     </div>
   );

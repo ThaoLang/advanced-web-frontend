@@ -142,7 +142,8 @@
     "empty": "Empty",
     "duplicate_class_error_msg": "Class already exists!",
     "leave_class_option": "Leave class",
-    "join_class_code_error_msg": "Failed to join the class!"
+    "join_class_code_error_msg": "Failed to join the class!",
+    "rubric_scale_empty_error": "Rubric must not be empty!"
   },
   "Comment": {
     "comments": " comment(s)",
