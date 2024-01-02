@@ -25,7 +25,7 @@ import FileDownloadButton from "@/component/excel/FileDownloadButton";
 //   classInfo:ClassType;
 // }
 
-export default function DetailClass() {
+export default function DetailTeachingClass() {
   const t = useTranslations("Tabs");
   const [isAvailableStudentList, setIsAvailable] = useState(false);
   const [showModal, setShowModal] = useState(false);

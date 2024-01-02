@@ -35,6 +35,8 @@ export default function CreateClassForm(props: CreateClassFormProps) {
     if (!checkInput()) return;
     setErrorMsg(null);
     props.handleAddNewClass(nameProxy, descriptionProxy);
+    setNameProxy("");
+    setDescriptionProxy("");
   };
 
   return (
@@ -55,7 +57,7 @@ export default function CreateClassForm(props: CreateClassFormProps) {
           className="input input-bordered w-full max-w-xs"
           value={descriptionProxy}
           onChange={(e) => setDescriptionProxy(e.target.value)}
-          maxLength={15}
+          maxLength={30}
         />
         {errorMsg && (
           <label className="flex text-center items-center justify-center my-3 text-red-700">

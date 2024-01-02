@@ -103,23 +103,6 @@ export default function TeachingPage() {
       }
     };
 
-    // function addNewClass() {
-    //   setShowModal(true);
-    // }
-
-    // function createClass() {
-    //   //
-    //   setShowModal(false);
-    // }
-
-    // function joinClass() {
-    //   //
-    //   setShowModal(false);
-    // }
-
-    // TODO: make this functional
-    // copy invite link
-
     const WriteToClipboard = async (text: string) => {
       const param = "clipboard-write" as PermissionName;
       const result = await navigator.permissions.query({ name: param });
@@ -224,6 +207,8 @@ export default function TeachingPage() {
                 isCopied={isCopied}
                 CopyInviteLink={CopyInviteLink}
                 key={index}
+                student_number={items.student_number ? items.student_number : 0}
+                teacher_number={items.teacher_number ? items.teacher_number : 1}
               />
             ))}
           </div>
