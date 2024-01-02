@@ -18,7 +18,6 @@ import { NotificationType } from "@/model/NotificationType";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
-  const noti_t = useTranslations("Notification");
   const [showModal, setShowModal] = useState(false);
   const handleModal = () => {
     console.log("Modal changed");
@@ -40,10 +39,7 @@ export default function ReviewPage() {
     if (selectedReview) {
       if (currentStatus === "In Progress") {
         selectedReview.status = "Completed";
-        // test sockio
-        actions.notify("A grade review is finalized", selectedReview._id);
 
-        // use actions.sendNotification
         // notification
         (async () => {
           let senderRole: string,
@@ -64,19 +60,20 @@ export default function ReviewPage() {
               }
             )
             .then((response) => {
-              console.log("Response", response);
-              allMembersList = response.data;
-              senderRole = "teacher";
-              message = noti_t("review_finalize");
+              allMembersList = response.data.members;
+
+              senderRole = "Teacher";
+              message = "review_finalize";
               redirectUrl = `/enrolled/${classId}/review`;
 
               if (allMembersList.length > 0) {
-                let filteredMembersList = allMembersList.filter((member) => {
-                  member.role === "student" &&
-                    member.student_id === selectedReview.studentId;
-                });
-                filteredMembersList.forEach((element) => {
-                  receiverIdList.push(element.user_id);
+                allMembersList.forEach((member) => {
+                  if (
+                    member.role === "Student" &&
+                    member.student_id === selectedReview.studentId
+                  ) {
+                    receiverIdList.push(member.user_id);
+                  }
                 });
               }
 

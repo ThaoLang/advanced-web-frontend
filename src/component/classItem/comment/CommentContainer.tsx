@@ -18,6 +18,7 @@ import { ClassListType } from "@/model/ClassListType";
 
 interface CommentContainerInterface {
   reviewId: string;
+  studentId: string;
 }
 
 const CommentContainer = (props: CommentContainerInterface) => {
@@ -25,7 +26,6 @@ const CommentContainer = (props: CommentContainerInterface) => {
   const { classId } = useParams();
   const pathname = usePathname();
   const t = useTranslations("Comment");
-  const noti_t = useTranslations("Notification");
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
   if (savedUser) {
@@ -159,31 +159,33 @@ const CommentContainer = (props: CommentContainerInterface) => {
                 }
               )
               .then((response) => {
-                console.log("Response", response);
-                allMembersList = response.data;
+                allMembersList = response.data.members;
 
                 if (allMembersList.length > 0) {
                   if (pathname.includes("teaching")) {
-                    senderRole = "teacher";
-                    message = noti_t("teacher_reply");
+                    senderRole = "Teacher";
+                    message = "teacher_reply";
                     redirectUrl = `/enrolled/${classId}/review`;
 
-                    let filteredMembersList = allMembersList.filter(
-                      (member) => member.role === "student"
-                    );
-                    filteredMembersList.forEach((element) => {
-                      receiverIdList.push(element.user_id);
+                    allMembersList.forEach((member) => {
+                      if (
+                        member.role === "Student" &&
+                        member.student_id === props.studentId
+                      ) {
+                        receiverIdList.push(member.user_id);
+                      }
                     });
                   } else {
-                    senderRole = "student";
-                    message = noti_t("student_reply");
+                    receiverIdList.push(response.data.host_user._id);
+
+                    senderRole = "Student";
+                    message = "student_reply";
                     redirectUrl = `/teaching/${classId}/review`;
 
-                    let filteredMembersList = allMembersList.filter(
-                      (member) => member.role === "teacher"
-                    );
-                    filteredMembersList.forEach((element) => {
-                      receiverIdList.push(element.user_id);
+                    allMembersList.forEach((member) => {
+                      if (member.role === "Teacher") {
+                        receiverIdList.push(member.user_id);
+                      }
                     });
                   }
                 }

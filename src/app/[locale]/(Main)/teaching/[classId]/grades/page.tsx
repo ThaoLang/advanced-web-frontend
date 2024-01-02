@@ -248,18 +248,17 @@ const GradePage: React.FC = () => {
           }
         )
         .then((response) => {
-          console.log("Response", response);
-          allMembersList = response.data;
-          senderRole = "teacher";
-          message = noti_t("grade_finalize");
+          allMembersList = response.data.members;
+
+          senderRole = "Teacher";
+          message = "grade_finalize";
           redirectUrl = `/enrolled/${classId}/grades`;
 
           if (allMembersList.length > 0) {
-            let filteredMembersList = allMembersList.filter((member) => {
-              member.role === "student";
-            });
-            filteredMembersList.forEach((element) => {
-              receiverIdList.push(element.user_id);
+            allMembersList.forEach((member) => {
+              if (member.role === "Student") {
+                receiverIdList.push(member.user_id);
+              }
             });
           }
 
@@ -287,7 +286,6 @@ const GradePage: React.FC = () => {
   };
 
   const t = useTranslations("GradePage");
-  const noti_t = useTranslations("Notification");
 
   const [showModal, setShowModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -597,7 +595,7 @@ const GradePage: React.FC = () => {
               className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
             ${grade.length == 0 ? "btn-disabled" : ""}
             `}
-              onClick={() => {}}
+              onClick={() => finalizeScore}
             >
               {t("finalize_score")}
             </button>

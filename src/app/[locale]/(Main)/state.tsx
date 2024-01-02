@@ -72,7 +72,7 @@ const actions = {
     //test
     state.socket?.emit("sendMessage", { message });
 
-    state.socket?.emit("newMessage", { message, room });
+    state.socket?.emit("notify", { message, room });
   },
   //notificationList
   sendNotification: async (

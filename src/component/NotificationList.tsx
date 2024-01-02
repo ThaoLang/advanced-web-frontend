@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { NotificationType } from "@/model/NotificationType";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { UserType } from "@/model/UserType";
+import axios from "axios";
 
 interface NotificationListProps {
   notifications: NotificationType[] | undefined;
@@ -21,20 +24,54 @@ interface NotificationProps {
 export function Notification(props: NotificationProps) {
   const { locale } = useParams();
   const language = locale === "en" ? "en-EN" : "vi-VN";
+  const t = useTranslations("Notification");
+
+  const [className, setClassName] = useState("");
+
+  const savedUser = localStorage.getItem("user");
+  let currentUser: UserType;
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+  }
+
+  useEffect(() => {
+    (async () => {
+      // get class name
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${props.classId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response", response);
+          setClassName(response.data.name);
+        })
+        .catch((error) => {
+          console.error("Error fetching review list:", error);
+        });
+      //TODO: get sender name
+    })();
+  }, []);
 
   return (
     <Link href={props.redirectUrl}>
       <div className="flex flex-col bg-white border-b-2 border-slate-200 overflow-hidden p-5 cursor-pointer">
         <div className=" flex flex-row justify-between">
-          <div className="text-lg font-semibold">{props.classId}</div>
+          <div className="text-md font-semibold">
+            {t("classroom")}: <span className="text-lg">{className}</span>
+          </div>
           {!props.isRead && (
             <span className="badge badge-xs badge-primary list-item" />
           )}
         </div>
         <div className="text-xs">
-          {props.senderRole}: <b>{props.senderId}</b>
+          {t(props.senderRole)}: <b>{props.senderId}</b>
         </div>
-        <div className="my-2">{props.message}</div>
+        <div className="my-2">{t(props.message)}</div>
         <div className="text-xs font-extralight">
           {new Date(props.createdAt).toLocaleDateString(language, {
             weekday: "short",

@@ -19,7 +19,6 @@ import { actions } from "../../../state";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
-  const noti_t = useTranslations("Notification");
   const [showModal, setShowModal] = useState(false);
   const handleModal = () => {
     console.log("Modal changed");
@@ -108,19 +107,19 @@ export default function ReviewPage() {
                   }
                 )
                 .then((response) => {
-                  console.log("Response", response);
-                  allMembersList = response.data;
+                  allMembersList = response.data.members;
 
-                  senderRole = "student";
-                  message = noti_t("review_create");
+                  receiverIdList.push(response.data.host_user._id);
+
+                  senderRole = "Student";
+                  message = "review_create";
                   redirectUrl = `/teaching/${classId}/review`;
 
                   if (allMembersList.length > 0) {
-                    let filteredMembersList = allMembersList.filter(
-                      (member) => member.role === "teacher"
-                    );
-                    filteredMembersList.forEach((element) => {
-                      receiverIdList.push(element.user_id);
+                    allMembersList.forEach((member) => {
+                      if (member.role === "Teacher") {
+                        receiverIdList.push(member.user_id);
+                      }
                     });
                   }
 
