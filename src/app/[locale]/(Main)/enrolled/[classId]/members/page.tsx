@@ -9,45 +9,6 @@ import { useAuth } from "@/context/AuthContext";
 import { UserType } from "@/model/UserType";
 import { ClassListType } from "@/model/ClassListType";
 
-// const teachers = [
-//   {
-//     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-//     name: "Teacher 1",
-//     email: "name@flaticon.com",
-//   },
-//   {
-//     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-//     name: "Teacher 2",
-//     email: "name@flaticon.com",
-//   },
-//   {
-//     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-//     name: "Teacher 3",
-//     email: "name@flaticon.com",
-//   },
-// ];
-
-// const students = [
-//   {
-//     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-//     name: "Nguyen Minh Quang",
-//     email: "nmq@flaticon.com",
-//     studentId: "20127605",
-//   },
-//   {
-//     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-//     name: "Lang Thao Thao",
-//     email: "ltt@flaticon.com",
-//     studentId: "20127629",
-//   },
-//   {
-//     avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-//     name: "Le Hoang Khanh Nguyen",
-//     email: "lhkn@flaticon.com",
-//     studentId: "20127679",
-//   },
-// ];
-
 export default function MemberPage() {
   // copy
   const [isCopied, setIsCopied] = useState(false);
@@ -144,10 +105,13 @@ export default function MemberPage() {
         setHostUser(response.data.host_user);
 
         response.data.members.map((item: ClassListType) => {
+          console.log("Item", item);
           if (item.role === "Student") {
-            setStudentList([...studentList, item]);
+            setStudentList((prevStudentList) => [...prevStudentList, item]);
+
+            console.log("Student", studentList);
           } else {
-            setTeacherList([...teacherList, item]);
+            setTeacherList((prevTeacherList) => [...prevTeacherList, item]);
           }
         });
       })
