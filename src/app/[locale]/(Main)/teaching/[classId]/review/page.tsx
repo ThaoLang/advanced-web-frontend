@@ -12,6 +12,7 @@ import { actions } from "../../../state";
 import axios from "axios";
 import { UserType } from "@/model/UserType";
 import { useParams } from "next/navigation";
+import { RubricType } from "@/model/RubricType";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
@@ -32,7 +33,7 @@ export default function ReviewPage() {
 
   const [selectedReview, setSelectedReview] = useState<ReviewType>();
 
-  const handleStatus = (currentStatus: string) => {
+  const handleStatus = (currentStatus: string, currentGrade: string) => {
     if (selectedReview) {
       if (currentStatus === "In Progress") {
         selectedReview.status = "Completed";
@@ -42,6 +43,11 @@ export default function ReviewPage() {
       } else if (currentStatus === "Completed") {
         selectedReview.status = "In Progress";
       }
+
+      if (currentGrade !== selectedReview.currentGrade) {
+        selectedReview.currentGrade = currentGrade;
+      }
+
       setSelectedReview(selectedReview);
 
       // update selected review to review list
@@ -55,6 +61,7 @@ export default function ReviewPage() {
             studentId: selectedReview.studentId,
             gradeComposition: selectedReview.gradeComposition,
             status: selectedReview.status,
+            currentGrade: selectedReview.currentGrade,
           },
           {
             headers: {
@@ -74,27 +81,78 @@ export default function ReviewPage() {
   };
 
   // TODO: need to update grade data
-  const [updatedGrade, setUpdatedGrade] = useState("");
-  const [note, setNote] = useState("");
+  // const [updatedGrade, setUpdatedGrade] = useState("");
+  // const [note, setNote] = useState("");
+
+  const updateGrade = (updateGrade: string) => {
+    if (selectedReview) {
+      (async () => {
+        axios
+          .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          })
+          .then((response) => {
+            let rubrics: RubricType[];
+            rubrics = response.data;
+
+            let currentRubricId = "";
+            rubrics.forEach((element) => {
+              if (element.gradeName === selectedReview.gradeComposition) {
+                currentRubricId = element._id;
+              }
+              (async () => {
+                await axios
+                  .put(
+                    `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/update`,
+                    {
+                      studentId: selectedReview.studentId,
+                      rubricId: currentRubricId,
+                      grade: Number.parseFloat(updateGrade),
+                    },
+                    {
+                      headers: {
+                        Authorization: `Bearer ${currentUser?.access_token}`,
+                      },
+                    }
+                  )
+                  .then((response) => {
+                    console.log("Response", response);
+                  })
+                  .catch((error) => {
+                    console.error("Error updating grade:", error);
+                  });
+              })();
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching rubrics:", error);
+          });
+      })();
+    }
+  };
 
   useEffect(() => {
     // get review list
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/allReviews/${classId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Response", response);
-        setReviewList(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching review list:", error);
-      });
+    (async () => {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/allReviews/${classId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response", response);
+          setReviewList(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching review list:", error);
+        });
+    })();
   }, []);
 
   return (
@@ -197,8 +255,8 @@ export default function ReviewPage() {
               status={selectedReview.status}
             />
             {/* temp */}
-            <div>Updated grade: {updatedGrade}</div>
-            <div>Note: {note}</div>
+            {/* <div>Updated grade: {updatedGrade}</div> */}
+            {/* <div>Note: {note}</div> */}
             {/* temp */}
 
             {/* Modal */}
@@ -217,8 +275,8 @@ export default function ReviewPage() {
                   currentGrade={selectedReview.currentGrade}
                   status={selectedReview.status}
                   toggleStatus={handleStatus}
-                  setUpdatedGrade={setUpdatedGrade}
-                  setNote={setNote}
+                  setUpdatedGrade={updateGrade}
+                  // setNote={setNote}
                   closeModal={handleModal}
                 />
               </div>

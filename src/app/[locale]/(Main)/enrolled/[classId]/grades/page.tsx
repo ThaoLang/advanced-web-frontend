@@ -47,13 +47,16 @@ export default function GradePage() {
 
   const [grade, setGrade] = useState<GradeType[]>([]);
 
-  const auth = useAuth();
-  student.studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
+  // const auth = useAuth();
+  // student.studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
   if (savedUser) {
     currentUser = JSON.parse(savedUser);
-    student.email = currentUser.email;
+    if (currentUser) {
+      student.email = currentUser.email;
+      student.studentId = currentUser.studentId;
+    }
   }
   const { classId } = useParams();
 

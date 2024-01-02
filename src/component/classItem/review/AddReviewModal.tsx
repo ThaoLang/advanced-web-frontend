@@ -29,10 +29,12 @@ export default function AddReviewModal(props: AddReviewProps) {
 
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
-  let studentId = "";
+  let studentId = "20127679";
   if (savedUser) {
     currentUser = JSON.parse(savedUser);
-    studentId = currentUser.studentId ? currentUser.studentId : "20127679";
+    if (currentUser) {
+      studentId = currentUser.studentId;
+    }
   }
 
   useEffect(() => {

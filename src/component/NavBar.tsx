@@ -34,9 +34,12 @@ export default function NavBar() {
   const auth = useAuth();
 
   const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
+  let accessToken = "";
+
   if (savedUser) {
+    let currentUser: UserType;
     currentUser = JSON.parse(savedUser);
+    if (currentUser) accessToken = currentUser.access_token;
   }
 
   const [notifications, setNotifications] = useState<Array<NotificationType>>(
@@ -51,7 +54,7 @@ export default function NavBar() {
       await axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
           headers: {
-            Authorization: `Bearer ${currentUser.access_token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         })
         .then((response) => {
@@ -65,7 +68,7 @@ export default function NavBar() {
                   `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/list/${element._id}`,
                   {
                     headers: {
-                      Authorization: `Bearer ${currentUser.access_token}`,
+                      Authorization: `Bearer ${accessToken}`,
                     },
                   }
                 )
