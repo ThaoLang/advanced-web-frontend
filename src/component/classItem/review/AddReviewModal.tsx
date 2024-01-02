@@ -5,8 +5,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RubricType } from "@/model/RubricType";
 import { UserType } from "@/model/UserType";
-import { useParams } from "next/navigation";
 import axios from "axios";
+import { GradeType } from "@/model/GradeType";
 
 interface AddReviewProps {
   rubricName: string;
@@ -29,10 +29,11 @@ export default function AddReviewModal(props: AddReviewProps) {
 
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
+  let studentId = "";
   if (savedUser) {
     currentUser = JSON.parse(savedUser);
+    studentId = currentUser.studentId ? currentUser.studentId : "20127679";
   }
-  const { classId } = useParams();
 
   useEffect(() => {
     if (props.rubricName != "") {
@@ -42,23 +43,37 @@ export default function AddReviewModal(props: AddReviewProps) {
 
   useEffect(() => {
     if (!props.currentGrade) {
-      // TODO: update request to get current grade
-      // console.log("User", currentUser);
-      // axios
-      //   .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
-      //     headers: {
-      //       Authorization: `Bearer ${currentUser?.access_token}`,
-      //     },
-      //   })
-      //   .then((response) => {
-      //     console.log("Response", response);
-      //     setRubrics(response.data);
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error fetching rubrics:", error);
-      //   });
+      // request to get current grade
+      if (gradeCompositionProxy != "") {
+        let rubricId;
+
+        props.rubrics.forEach((element) => {
+          if (element.gradeName === gradeCompositionProxy) {
+            rubricId = element._id;
+          }
+        });
+
+        axios
+          .get(
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/grade/${rubricId}/${studentId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${currentUser?.access_token}`,
+              },
+            }
+          )
+          .then((response) => {
+            console.log("Response", response);
+            let data: GradeType;
+            data = response.data;
+            setGrade(data.grade);
+          })
+          .catch((error) => {
+            console.error("Error fetching current grade:", error);
+          });
+      }
     } else setGrade(props.currentGrade);
-  }, [props.currentGrade]);
+  }, [props.currentGrade, gradeCompositionProxy]);
 
   const t = useTranslations("Review");
 

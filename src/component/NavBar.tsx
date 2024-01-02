@@ -19,96 +19,8 @@ import NotificationList from "./NotificationList";
 import { NotificationType } from "@/model/NotificationType";
 import { actions } from "@/app/[locale]/(Main)/state";
 import axios from "axios";
-
-export const getNotificationsData = async () => {
-  return [
-    {
-      id: "",
-      classId: "class-name",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "teacher",
-      receiverIdList: [],
-      message: "A grade composition is finalized",
-      redirectUrl: "/enrolled/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-  ];
-};
+import { UserType } from "@/model/UserType";
+import { ClassType } from "@/model/ClassType";
 
 export default function NavBar() {
   const t = useTranslations("Navbar");
@@ -121,42 +33,59 @@ export default function NavBar() {
 
   const auth = useAuth();
 
-  // const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  // }
+  const savedUser = localStorage.getItem("user");
+  let currentUser: UserType;
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+  }
 
   const [notifications, setNotifications] = useState<Array<NotificationType>>(
     []
   );
   useEffect(() => {
     (async () => {
-      const notificationsData = await getNotificationsData();
-      setNotifications(notificationsData);
+      // get a list of class id user is in
+      // loop the list
+      let classes: ClassType[];
+
+      await axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
+          headers: {
+            Authorization: `Bearer ${currentUser.access_token}`,
+          },
+        })
+        .then((response) => {
+          (async () => {
+            console.log("Classes response", response);
+            classes = response.data;
+
+            classes.forEach((element) => {
+              axios
+                .get(
+                  `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/list/${element._id}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${currentUser.access_token}`,
+                    },
+                  }
+                )
+
+                .then((response) => {
+                  if (response.data.length > 0) {
+                    console.log("Notifications response", response);
+                    setNotifications([...notifications, ...response.data]);
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error fetching notifications:", error);
+                });
+            });
+          })();
+        })
+        .catch((error) => {
+          console.error("Error fetching my enrolled classes:", error);
+        });
     })();
-
-    // (async () => {
-    //   // get a list of class id user is in
-    //   // loop the list
-
-    //   axios
-    //     .get(
-    //       `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/${classId}`,
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${auth.user?.access_token}`,
-    //         },
-    //       }
-    //     )
-    //     .then((response) => {
-    //       console.log("Response", response);
-    //       // setNotifications([...notifications, response.data]);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error fetching rubrics:", error);
-    //     });
-    // })();
   }, []);
 
   const isNotificationClicked = (notification: NotificationType) => {

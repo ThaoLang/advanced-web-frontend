@@ -23,6 +23,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { proxy } from "valtio";
 import { UserType } from "@/model/UserType";
 import { GradeType } from "@/model/GradeType";
+import FileDownloadButton from "@/component/excel/FileDownloadButton";
+import ImportModal from "@/component/classItem/grade/ImportModal";
+import ExportModal from "@/component/classItem/grade/ExportModal";
 
 interface SortableComponentProps {
   rubrics: RubricType[];
@@ -97,103 +100,6 @@ const GradePage: React.FC = () => {
         fullname: "Huỳnh Minh Chiến",
         studentId: "20127444",
         email: "20127444@student.hcmus.edu.vn",
-      },
-    ];
-  };
-
-  const getGrade = async () => {
-    return [
-      {
-        studentId: "20127605",
-        rubricId: "1",
-        grade: "10",
-      },
-      {
-        studentId: "20127605",
-        rubricId: "2",
-        grade: "10.2",
-      },
-      {
-        studentId: "20127605",
-        rubricId: "3",
-        grade: "10",
-      },
-      {
-        studentId: "20127605",
-        rubricId: "4",
-        grade: "10.4",
-      },
-      {
-        studentId: "20127605",
-        rubricId: "5",
-        grade: "10",
-      },
-      {
-        studentId: "20127605",
-        rubricId: "6",
-        grade: "10",
-      },
-      //
-      {
-        studentId: "20127629",
-        rubricId: "1",
-        grade: "10",
-      },
-      {
-        studentId: "20127629",
-        rubricId: "2",
-        grade: "10",
-      },
-      {
-        studentId: "20127629",
-        rubricId: "3",
-        grade: "10",
-      },
-      {
-        studentId: "20127629",
-        rubricId: "4",
-        grade: "10",
-      },
-      {
-        studentId: "20127629",
-        rubricId: "5",
-        grade: "10",
-      },
-      {
-        studentId: "20127629",
-        rubricId: "6",
-        grade: "10",
-      },
-      //
-      {
-        studentId: "20127679",
-        rubricId: "1",
-        grade: "1",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "2",
-        grade: "1",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "3",
-        grade: "1",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "4",
-        grade: "1",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "5",
-        grade: "1",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "6",
-        grade: "1",
       },
     ];
   };
@@ -285,10 +191,35 @@ const GradePage: React.FC = () => {
 
   const handleResetBtn = () => {
     setGradeProxy([]);
-    async () => {
-      let gradeData = await getGrade();
-      setGradeProxy(proxy<GradeType[]>([...gradeData]));
-    };
+    setGrade([]);
+
+    let newData: GradeType[];
+    newData = [];
+
+    rubrics.forEach((element) => {
+      (async () => {
+        await axios
+          .get(
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/allGrades/${element._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${currentUser?.access_token}`,
+              },
+            }
+          )
+          .then((response) => {
+            if (response.data.length > 0) {
+              console.log("Response reset", response.data);
+              newData = [...newData, ...response.data];
+              setGrade(newData);
+              setGradeProxy(proxy<GradeType[]>(newData));
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching grade:", error);
+          });
+      })();
+    });
     setNewGrade([]);
     setInvalidGrade([]);
   };
@@ -296,6 +227,8 @@ const GradePage: React.FC = () => {
   const t = useTranslations("GradePage");
 
   const [showModal, setShowModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [rubrics, setRubrics] = useState<RubricType[]>([]);
   const [isDisabledUpdatedBtn, setIsDisabledUpdatedBtn] = useState(true);
   const auth = useAuth();
@@ -308,6 +241,17 @@ const GradePage: React.FC = () => {
   const handleModal = () => {
     console.log("Modal changed");
     setShowModal(!showModal);
+  };
+
+  
+  const handleImportModal = () => {
+    console.log("Modal changed");
+    setShowImportModal(!showImportModal);
+  };
+
+  const handleExportModal = () => {
+    console.log("Modal changed");
+    setShowExportModal(!showExportModal);
   };
 
   const handleAddRubric = async (gradeName: string, gradeScale: number) => {
@@ -360,31 +304,59 @@ const GradePage: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("User", currentUser);
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
-        headers: {
-          Authorization: `Bearer ${currentUser?.access_token}`,
-        },
-      })
-      .then((response) => {
-        console.log("Response", response);
-        setRubrics(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching rubrics:", error);
-      });
-
-    // TODO: update request
     (async () => {
-      const students = await getStudents();
-      let gradeData = await getGrade();
-
-      setStudents(students);
-      setGrade(gradeData);
-      setGradeProxy(proxy<GradeType[]>([...gradeData]));
+      // console.log("User", currentUser);
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        })
+        .then((response) => {
+          // console.log("Response", response);
+          setRubrics(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching rubrics:", error);
+        });
     })();
   }, []);
+
+  useEffect(() => {
+    let newData: GradeType[];
+    newData = [];
+
+    rubrics.forEach((element) => {
+      (async () => {
+        await axios
+          .get(
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/allGrades/${element._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${currentUser?.access_token}`,
+              },
+            }
+          )
+          .then((response) => {
+            if (response.data.length > 0) {
+              console.log("Response start", response.data);
+              newData = [...newData, ...response.data];
+              setGrade(newData);
+              setGradeProxy(proxy<GradeType[]>(newData));
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching grade:", error);
+          });
+      })();
+    });
+
+    (async () => {
+      // TODO: update request
+      const students = await getStudents();
+      setStudents(students);
+    })();
+  }, [rubrics]);
 
   useEffect(() => {
     console.log("List Rubrics:", rubrics);
@@ -397,15 +369,19 @@ const GradePage: React.FC = () => {
     <div className="grid grid-cols-6 gap-10 mx-10">
       <div className="col-span-6 lg:col-span-4">
         <div className="flex items-center justify-center gap-4 mb-2">
-          <button
+          {/* <button
             className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
             // onClick={() => {}}
-          >
-            {t("download_help")}
-          </button>
+          > */}
+          {/* </button> */}
+
+          {t("download_help")}
+          <FileDownloadButton
+            templateCategory="Grade"
+            filename="Grade_Template" />
           <button
             className="btn btn-info bg-blue-500 text-white text-xs"
-            // onClick={() => {}}
+          onClick={handleImportModal}
           >
             {t("import")}
           </button>
@@ -414,7 +390,7 @@ const GradePage: React.FC = () => {
               className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
             ${grade.length == 0 ? "btn-disabled" : ""}
             `}
-              // onClick={() => {}}
+            onClick={handleExportModal}
             >
               {t("export")}
             </button>
@@ -535,7 +511,9 @@ const GradePage: React.FC = () => {
         <div className="flex items-center justify-center gap-4 mb-2">
           <button
             className={`btn btn-info bg-blue-500 text-white text-xs ${
-              newGrade.length == 0 ? "btn-disabled" : ""
+              invalidGrade.length != 0 || newGrade.length == 0
+                ? "btn-disabled"
+                : ""
             }`}
             // onClick={() => {}}
           >
@@ -601,6 +579,46 @@ const GradePage: React.FC = () => {
           </div>
           <form method="dialog" className="modal-backdrop">
             <button onClick={handleModal}>close</button>
+          </form>
+        </dialog>
+         {/* Import Modal */}
+         <dialog className={`modal ${showImportModal ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <div className="flex flex-row justify-between">
+              <p className="text-sm text-gray-500">
+                {/* Press X or click outside to close */}
+              </p>
+              <button onClick={handleImportModal}>
+                <IoMdClose />
+              </button>
+            </div>
+            <ImportModal
+              //
+              closeModal={handleImportModal}
+              data={undefined} />
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={handleImportModal}>close</button>
+          </form>
+        </dialog>
+        {/* Export Modal */}
+        <dialog className={`modal ${showExportModal ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <div className="flex flex-row justify-between">
+              <p className="text-sm text-gray-500">
+                {/* Press X or click outside to close */}
+              </p>
+              <button onClick={handleExportModal}>
+                <IoMdClose />
+              </button>
+            </div>
+            <ExportModal
+              //
+              closeModal={handleExportModal}
+              data={undefined} />
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={handleExportModal}>close</button>
           </form>
         </dialog>
       </div>

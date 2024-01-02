@@ -5,7 +5,7 @@ export type NotificationType = {
   senderId: string; //name?
   senderRole: string; //?
   receiverIdList: string[];
-  message: string; // A grade composition is finalized / A grade review is finalized / A teacher has replied / A student has replied
+  message: string; // A grade composition is finalized / A grade review is finalized / A grade review is created / A teacher has replied / A student has replied
   //   parent: string | null;
   //   replyOnUser: string | null;
   redirectUrl: string;

@@ -200,5 +200,12 @@
     "cancel_change": "Hủy thay đổi",
     "invalid_grade": "Điểm không hợp lệ! Vui lòng dùng . cho số thập phân, điểm trên thang 10",
     "review": "Phúc khảo"
+  },
+  "Notification": {
+    "grade_finalize": "Điểm thành phần đã được tổng kết",
+    "review_finalize": "Phúc khảo đã hoàn thành",
+    "review_create": "Phúc khảo đã được tạo",
+    "teacher_reply": "Giáo viên đã trả lời",
+    "student_reply": "Học sinh đã trả lời"
   }
 }

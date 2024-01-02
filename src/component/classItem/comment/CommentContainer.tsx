@@ -11,6 +11,10 @@ import {
 import { useTranslations } from "next-intl";
 import axios from "axios";
 import { UserType } from "@/model/UserType";
+import { actions } from "@/app/[locale]/(Main)/state";
+import { useParams, usePathname } from "next/navigation";
+import { NotificationType } from "@/model/NotificationType";
+import { ClassListType } from "@/model/ClassListType";
 
 interface CommentContainerInterface {
   reviewId: string;
@@ -18,7 +22,10 @@ interface CommentContainerInterface {
 
 const CommentContainer = (props: CommentContainerInterface) => {
   const auth = useAuth();
+  const { classId } = useParams();
+  const pathname = usePathname();
   const t = useTranslations("Comment");
+  const noti_t = useTranslations("Notification");
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
   if (savedUser) {
@@ -81,7 +88,7 @@ const CommentContainer = (props: CommentContainerInterface) => {
       .catch((error) => {
         console.error("Error fetching comment list:", error);
       });
-  }, []);
+  }, [props.reviewId]);
 
   const mainComments = comments.filter(
     (comment) => comment.parent === null || undefined
@@ -129,6 +136,77 @@ const CommentContainer = (props: CommentContainerInterface) => {
         if (response.status === 201) {
           console.log("Success creating comment ", response.data);
           newId = response.data._id;
+
+          console.log("Log out review.id:", props.reviewId);
+
+          // notification
+          (async () => {
+            let senderRole: string,
+              message: string,
+              redirectUrl: string,
+              receiverIdList: string[],
+              allMembersList: ClassListType[];
+
+            await axios
+              .get(
+                `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${currentUser?.access_token}`,
+                  },
+                }
+              )
+              .then((response) => {
+                console.log("Response", response);
+                allMembersList = response.data;
+                if (pathname.includes("teaching")) {
+                  senderRole = "teacher";
+                  message = noti_t("teacher_reply");
+                  redirectUrl = `/enrolled/${classId}/review`;
+
+                  let filteredMembersList = allMembersList.filter(
+                    (member) => member.role === "student"
+                  );
+                  filteredMembersList.forEach((element) => {
+                    receiverIdList.push(element.user_id);
+                  });
+                } else {
+                  senderRole = "student";
+                  message = noti_t("student_reply");
+                  redirectUrl = `/teaching/${classId}/review`;
+
+                  let filteredMembersList = allMembersList.filter(
+                    (member) => member.role === "teacher"
+                  );
+                  filteredMembersList.forEach((element) => {
+                    receiverIdList.push(element.user_id);
+                  });
+                }
+
+                let newNotification: NotificationType;
+                newNotification = {
+                  id: "",
+                  senderId: "",
+                  classId: classId.toString(),
+                  reviewId: props.reviewId,
+                  senderRole: senderRole,
+                  receiverIdList: receiverIdList,
+                  message: message,
+                  redirectUrl: redirectUrl,
+                  createdAt: newRawComment.createdAt,
+                  isRead: false,
+                };
+
+                actions.sendNotification(
+                  currentUser.access_token,
+                  newNotification
+                );
+              })
+              .catch((error) => {
+                console.error("Error fetching class members:", error);
+              });
+          })();
+          // end send notification
         }
       })
       .catch((error) => {
