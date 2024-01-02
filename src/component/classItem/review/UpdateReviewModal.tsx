@@ -7,15 +7,15 @@ interface UpdateReviewProps {
   gradeComposition: string;
   currentGrade: string;
   status: string;
-  toggleStatus: (value: string) => void;
+  toggleStatus: (status: string, grade: string) => void;
   setUpdatedGrade: (value: string) => void;
-  setNote: (value: string) => void;
+  // setNote: (value: string) => void;
   closeModal: () => void;
 }
 
 export default function UpdateReviewModal(props: UpdateReviewProps) {
   const [updatedGradeProxy, setUpdatedGradeProxy] = useState("");
-  const [noteProxy, setNoteProxy] = useState("");
+  // const [noteProxy, setNoteProxy] = useState("");
   const t = useTranslations("Review");
 
   const isGrade = (grade: string) => {
@@ -35,17 +35,17 @@ export default function UpdateReviewModal(props: UpdateReviewProps) {
       toast.warn(t("invalid_grade"));
     } else {
       props.setUpdatedGrade(updatedGradeProxy);
-      props.setNote(noteProxy);
-      props.toggleStatus("In Progress");
+      // props.setNote(noteProxy);
+      props.toggleStatus("In Progress", updatedGradeProxy);
 
       setUpdatedGradeProxy("");
-      setNoteProxy("");
+      // setNoteProxy("");
       props.closeModal();
     }
   };
 
   const updateStatus = () => {
-    props.toggleStatus(props.status);
+    props.toggleStatus(props.status, props.currentGrade);
     props.closeModal();
   };
 
@@ -67,14 +67,14 @@ export default function UpdateReviewModal(props: UpdateReviewProps) {
           onChange={(e) => setUpdatedGradeProxy(e.target.value)}
           maxLength={15}
         />
-        <input
+        {/* <input
           type="text"
           placeholder={t("note")}
           className="input input-bordered w-full max-w-xs"
           value={noteProxy}
           onChange={(e) => setNoteProxy(e.target.value)}
           maxLength={15}
-        />
+        /> */}
         <div className="flex flex-row gap-4 align-middle justify-center pt-10">
           <button
             className="btn btn-info max-w-xs bg-blue-500 text-white"

@@ -21,14 +21,19 @@ export default function ReviewPage() {
     console.log("Modal changed");
     setShowModal(!showModal);
   };
-  const auth = useAuth();
-  const studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
+  // const auth = useAuth();
+  // const studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
+  let studentId = "";
+
   const [rubrics, setRubrics] = useState<RubricType[]>([]);
 
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
   if (savedUser) {
     currentUser = JSON.parse(savedUser);
+    if (currentUser) {
+      studentId = currentUser.studentId;
+    }
   }
   const { classId } = useParams();
   const [selectedReview, setSelectedReview] = useState<ReviewType>();
