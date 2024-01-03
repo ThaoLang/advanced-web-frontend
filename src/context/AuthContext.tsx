@@ -41,11 +41,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const login = async (userData: UserType) => {
-    console.log("Login", userData);
+    // console.log("Login", userData);
     if (userData.role === "admin") {
       setAdmin(userData);
-    } else setUser(userData);
-    console.log("User after login", userData);
+    } else { setUser(userData); }
   };
 
   const logout = (role: string) => {

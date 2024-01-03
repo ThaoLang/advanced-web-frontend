@@ -288,6 +288,15 @@ const templateClassList: Array<ClassType> = [
   },
 ];
 
+// const [_class, setClass] = useState<Array<ClassType> | null>(null);
+// const [classList, setClassList] = useState<Array<ClassListType> | null>(null);
+
+// //Loading state..
+// useEffect(() => {
+
+// })
+
+
 async function getClassListByUserId(user_id: string) {
   const matchingClasses: Array<ClassType> = [];
 

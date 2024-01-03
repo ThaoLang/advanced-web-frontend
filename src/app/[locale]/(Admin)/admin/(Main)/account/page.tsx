@@ -8,6 +8,8 @@ import { UserType } from "@/model/UserType";
 import { ClassListType } from "@/model/ClassListType";
 import filterAndSortArray from "@/utils/ArrayFilterUtils";
 import LoadingIndicator from "@/component/admin/LoadingIndicator";
+import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -19,6 +21,7 @@ export default function Account({
     page?: string;
   };
 }) {
+  const auth = useAuth();
   const [accounts, setAccounts] = useState<any>(null);
   const [query, setQuery] = useState(searchParams?.query || "");
   const [currentPage, setCurrentPage] = useState(
@@ -70,7 +73,6 @@ export default function Account({
   };
 
   useEffect(() => {
-    console.log("render page.tsx");
 
     const fetchData = async () => {
       const userData = await fetchAccountsData();
@@ -135,141 +137,21 @@ export default function Account({
   ]); // Run this effect when currentPage or accounts changes
 
   const fetchAccountsData = async () => {
-    const templateAccounts: Array<UserType> = [
-      {
-        id: "1",
-        studentId: "",
-        username: "Nguyễn Minh Quang",
-        email: "20127605@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=1",
-        role: "user",
-        status: "ban",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "2",
-        studentId: "",
-        username: "Lê Hoàng Khanh Nguyên",
-        email: "20127679@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=2",
-        role: "user",
-        status: "ban",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "3",
-        studentId: "",
-        username: "Lăng Thảo Thảo",
-        email: "20127629@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=3",
-        role: "admin",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "4",
-        studentId: "",
-        username: "Lê Hoài Phương",
-        email: "20127598@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=4",
-        role: "admin",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "5",
-        studentId: "",
-        username: "Hoàng Hữu Minh An",
-        email: "20127102@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=5",
-        role: "admin",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "6",
-        studentId: "",
-        username: "Huỳnh Minh Chiến",
-        email: "20127444@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=6",
-        role: "user",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "7",
-        studentId: "",
-        username: "Nguyễn Hoàng Phúc",
-        email: "20127523@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=7",
-        role: "user",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "8",
-        studentId: "",
-        username: "Lê Duẩn",
-        email: "20127123@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=8",
-        role: "user",
-        status: "ban",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "9",
-        studentId: "",
-        username: "Lê Cung Tiến",
-        email: "20127034@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=9",
-        role: "user",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "10",
-        studentId: "",
-        username: "Nguyễn Đăng Khoa",
-        email: "20127528@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=10",
-        role: "user",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "11",
-        studentId: "",
-        username: "Bùi Thị Dung",
-        email: "20127349@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=11",
-        role: "admin",
-        status: "ban",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "12",
-        studentId: "",
-        username: "Bành Hảo Toàn",
-        email: "20127646@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=12",
-        role: "user",
-        status: "ban",
-        refresh_token: "",
-        access_token: "",
-      },
-    ];
-    return templateAccounts;
+    let ResponseData: Array<UserType> = [];
+      await axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile`, {
+          headers: {
+            Authorization: `Bearer ${auth.admin?.access_token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Response", response.data);
+          ResponseData = response.data as Array<UserType>;
+        })
+        .catch((error) => {
+          console.error("Error fetching all users:", error);
+        });
+    return ResponseData;
   };
 
   const deleteAccountHandler = (currentUser: any) => {

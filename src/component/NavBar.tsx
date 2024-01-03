@@ -23,6 +23,22 @@ import { UserType } from "@/model/UserType";
 import { ClassType } from "@/model/ClassType";
 
 export default function NavBar() {
+  const auth = useAuth();
+
+  useEffect(() => {
+    const checkCredential = async () => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser != null) {
+            // Assuming UserType has a structure like { email: string }
+            const user = JSON.parse(savedUser);
+            if (user) {
+                auth.login(user);
+            }
+        }
+    }
+    checkCredential();
+}, []);
+
   const t = useTranslations("Navbar");
 
   const [isNotificationVisible, setIsNotificationVisible] =
@@ -30,17 +46,6 @@ export default function NavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const pathname = usePathname();
   const router = useRouter();
-
-  const auth = useAuth();
-
-  const savedUser = localStorage.getItem("user");
-  let accessToken = "";
-
-  if (savedUser) {
-    let currentUser: UserType;
-    currentUser = JSON.parse(savedUser);
-    if (currentUser) accessToken = currentUser.access_token;
-  }
 
   const [notifications, setNotifications] = useState<Array<NotificationType>>(
     []
@@ -54,7 +59,21 @@ export default function NavBar() {
       await axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Teaching classes response", response);
+          classes = response.data;
+        })
+        .catch((error) => {
+          console.error("Error fetching my classes:", error);
+        });
+
+      await axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/get-enrolled`, {
+          headers: {
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         })
         .then((response) => {
@@ -68,7 +87,7 @@ export default function NavBar() {
                   `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/list/${element._id}`,
                   {
                     headers: {
-                      Authorization: `Bearer ${accessToken}`,
+                      Authorization: `Bearer ${auth.user?.access_token}`,
                     },
                   }
                 )
@@ -109,29 +128,12 @@ export default function NavBar() {
   // avatar url
 
   useEffect(() => {
-    const cur_user = localStorage.getItem("user");
-    if (cur_user != null) {
-      const loggedUser = JSON.parse(cur_user);
-
-      if (!loggedUser || !loggedUser.avatarUrl) {
-        const updatedUser = {
-          ...loggedUser,
-          avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-        };
-
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        auth.login(updatedUser);
-      } else {
-        auth.login(loggedUser);
-      }
-
       // socket io notification
-      let user = JSON.parse(cur_user);
-      let accessToken = user.access_token;
+      let user = auth.user;
+      let accessToken = user?.access_token;
       if (accessToken) {
         actions.setAccessToken(accessToken);
         actions.initializeSocket(accessToken);
-      }
     }
   }, []);
 
