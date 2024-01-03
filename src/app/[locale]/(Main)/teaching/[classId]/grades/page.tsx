@@ -26,6 +26,9 @@ import { GradeType } from "@/model/GradeType";
 import FileDownloadButton from "@/component/excel/FileDownloadButton";
 import ImportModal from "@/component/classItem/grade/ImportModal";
 import ExportModal from "@/component/classItem/grade/ExportModal";
+import { ClassListType } from "@/model/ClassListType";
+import { NotificationType } from "@/model/NotificationType";
+import { actions } from "../../../state";
 
 interface SortableComponentProps {
   rubrics: RubricType[];
@@ -222,6 +225,64 @@ const GradePage: React.FC = () => {
     });
     setNewGrade([]);
     setInvalidGrade([]);
+  };
+
+  const finalizeScore = () => {
+    // notification
+    (async () => {
+      let senderRole: string,
+        message: string,
+        redirectUrl: string,
+        receiverIdList: string[],
+        allMembersList: ClassListType[];
+
+      receiverIdList = [];
+
+      await axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          allMembersList = response.data.members;
+
+          senderRole = "Teacher";
+          message = "grade_finalize";
+          redirectUrl = `/enrolled/${classId}/grades`;
+
+          if (allMembersList.length > 0) {
+            allMembersList.forEach((member) => {
+              if (member.role === "Student") {
+                receiverIdList.push(member.user_id);
+              }
+            });
+          }
+
+          let newNotification: NotificationType;
+          newNotification = {
+            id: "",
+            senderId: "",
+            classId: classId.toString(),
+            reviewId: undefined,
+            senderRole: senderRole,
+            receiverIdList: receiverIdList,
+            message: message,
+            redirectUrl: redirectUrl,
+            createdAt: new Date().toISOString(),
+            isRead: false,
+          };
+
+          actions.sendNotification(currentUser.access_token, newNotification);
+        })
+        .catch((error) => {
+          console.error("Error fetching class members:", error);
+        });
+    })();
+    // end send notification
   };
 
   const t = useTranslations("GradePage");
@@ -535,7 +596,7 @@ const GradePage: React.FC = () => {
               className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
             ${grade.length == 0 ? "btn-disabled" : ""}
             `}
-              // onClick={() => {}}
+              onClick={() => finalizeScore}
             >
               {t("finalize_score")}
             </button>

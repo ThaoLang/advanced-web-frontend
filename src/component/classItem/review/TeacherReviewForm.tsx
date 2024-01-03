@@ -40,7 +40,7 @@ const ReviewForm = (review: ReviewType) => {
           </div>
         </div>
       </div>
-      <CommentContainer reviewId={review._id} />
+      <CommentContainer reviewId={review._id} studentId={review.studentId} />
     </div>
   );
 };

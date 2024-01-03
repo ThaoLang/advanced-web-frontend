@@ -208,6 +208,9 @@
     "review_finalize": "A grade review is finalized",
     "review_create": "A grade review is created",
     "teacher_reply": "A teacher has replied",
-    "student_reply": "A student has replied"
+    "student_reply": "A student has replied",
+    "Teacher": "Teacher",
+    "Student": "Student",
+    "classroom": "Class"
   }
 }

@@ -206,6 +206,9 @@
     "review_finalize": "Phúc khảo đã hoàn thành",
     "review_create": "Phúc khảo đã được tạo",
     "teacher_reply": "Giáo viên đã trả lời",
-    "student_reply": "Học sinh đã trả lời"
+    "student_reply": "Học sinh đã trả lời",
+    "Teacher": "Giáo viên",
+    "Student": "Học sinh",
+    "classroom": "Lớp"
   }
 }
