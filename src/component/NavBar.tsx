@@ -27,17 +27,17 @@ export default function NavBar() {
 
   useEffect(() => {
     const checkCredential = async () => {
-        const savedUser = localStorage.getItem("user");
-        if (savedUser != null) {
-            // Assuming UserType has a structure like { email: string }
-            const user = JSON.parse(savedUser);
-            if (user) {
-                auth.login(user);
-            }
+      const savedUser = localStorage.getItem("user");
+      if (savedUser != null) {
+        // Assuming UserType has a structure like { email: string }
+        const user = JSON.parse(savedUser);
+        if (user) {
+          auth.login(user);
         }
-    }
+      }
+    };
     checkCredential();
-}, []);
+  }, []);
 
   const t = useTranslations("Navbar");
 
@@ -128,12 +128,12 @@ export default function NavBar() {
   // avatar url
 
   useEffect(() => {
-      // socket io notification
-      let user = auth.user;
-      let accessToken = user?.access_token;
-      if (accessToken) {
-        actions.setAccessToken(accessToken);
-        actions.initializeSocket(accessToken);
+    // socket io notification
+    let user = auth.user;
+    let accessToken = user?.access_token;
+    if (accessToken) {
+      actions.setAccessToken(accessToken);
+      actions.initializeSocket(accessToken);
     }
   }, []);
 
@@ -154,6 +154,7 @@ export default function NavBar() {
             className="h-8 w-auto"
             src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png"
             alt="logo"
+            data-testid="logo"
           ></img>
           LightHub
         </Link>
