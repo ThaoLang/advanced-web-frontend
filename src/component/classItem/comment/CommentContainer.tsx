@@ -165,7 +165,7 @@ const CommentContainer = (props: CommentContainerInterface) => {
                   if (pathname.includes("teaching")) {
                     senderRole = "Teacher";
                     message = "teacher_reply";
-                    redirectUrl = `/enrolled/${classId}/review`;
+                    redirectUrl = `/enrolled/${classId}/review/${props.reviewId}`;
 
                     allMembersList.forEach((member) => {
                       if (
@@ -180,7 +180,7 @@ const CommentContainer = (props: CommentContainerInterface) => {
 
                     senderRole = "Student";
                     message = "student_reply";
-                    redirectUrl = `/teaching/${classId}/review`;
+                    redirectUrl = `/teaching/${classId}/review/${props.reviewId}`;
 
                     allMembersList.forEach((member) => {
                       if (member.role === "Teacher") {

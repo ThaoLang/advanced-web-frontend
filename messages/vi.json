@@ -199,7 +199,9 @@
     "finalize_score": "Tổng kết điểm",
     "cancel_change": "Hủy thay đổi",
     "invalid_grade": "Điểm không hợp lệ! Vui lòng dùng . cho số thập phân, điểm trên thang 10",
-    "review": "Phúc khảo"
+    "review": "Phúc khảo",
+    "update_rubric_success": "Cập nhật thang điểm thành công!",
+    "update_rubric_failure": "Cập nhật thang điểm thất bại..."
   },
   "Notification": {
     "grade_finalize": "Điểm thành phần đã được tổng kết",

@@ -49,7 +49,7 @@ export default function RootLayout({
       icon: <FaChalkboardTeacher />,
     },
     { name: `${t("enrolled")}`, href: "/enrolled", icon: <GiGraduateCap /> },
-    { name: `${t("settings")}`, href: "/settings", icon: <FaGear /> },
+    { name: `${t("settings")}`, href: "/profile", icon: <FaGear /> },
   ];
 
   return (
