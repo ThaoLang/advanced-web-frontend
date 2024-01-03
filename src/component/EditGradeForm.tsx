@@ -9,6 +9,7 @@ interface EditGradeFormProps {
   handleUpdate: (gradeName: string, gradeScale: number) => void;
 }
 export default function EditGradeForm(props: EditGradeFormProps) {
+  console.log(`EditGradeForm`, props.name, props.scale);
   const [nameProxy, setNameProxy] = useState(props.name);
   const [scaleProxy, setScaleProxy] = useState(props.scale);
   const t = useTranslations("Tabs");

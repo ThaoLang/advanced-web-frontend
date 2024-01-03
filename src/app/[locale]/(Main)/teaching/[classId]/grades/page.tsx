@@ -243,7 +243,6 @@ const GradePage: React.FC = () => {
     setShowModal(!showModal);
   };
 
-  
   const handleImportModal = () => {
     console.log("Modal changed");
     setShowImportModal(!showImportModal);
@@ -284,7 +283,7 @@ const GradePage: React.FC = () => {
   const handleUpdate = async () => {
     try {
       const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/update}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/update`,
         {
           rubrics: rubrics,
         },
@@ -297,9 +296,10 @@ const GradePage: React.FC = () => {
       if (response.status === 200) {
         //const newRubrics = response.data;
         //setRubrics(newRubrics);
+        console.log("Update rubrics successfully");
       }
     } catch (error: any) {
-      console.error("Failed to delete:", error);
+      console.error("Failed to update:", error);
     }
   };
 
@@ -378,10 +378,11 @@ const GradePage: React.FC = () => {
           {t("download_help")}
           <FileDownloadButton
             templateCategory="Grade"
-            filename="Grade_Template" />
+            filename="Grade_Template"
+          />
           <button
             className="btn btn-info bg-blue-500 text-white text-xs"
-          onClick={handleImportModal}
+            onClick={handleImportModal}
           >
             {t("import")}
           </button>
@@ -390,7 +391,7 @@ const GradePage: React.FC = () => {
               className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
             ${grade.length == 0 ? "btn-disabled" : ""}
             `}
-            onClick={handleExportModal}
+              onClick={handleExportModal}
             >
               {t("export")}
             </button>
@@ -556,16 +557,18 @@ const GradePage: React.FC = () => {
           <h1 className="">{t("grade_structure")}</h1>
         </div>
         <SortableComponent rubrics={rubrics} setRubrics={setRubrics} />
-        <div className="flex items-center justify-center">
-          <button
-            className={`btn btn-info bg-blue-500 text-white ${
-              isDisabledUpdatedBtn ? "btn-disabled" : ""
-            }`}
-            onClick={() => handleUpdate()}
-          >
-            {t("update")}
-          </button>
-        </div>
+        {rubrics.length > 0 && (
+          <div className="flex items-center justify-center">
+            <button
+              className={`btn btn-info bg-blue-500 text-white ${
+                isDisabledUpdatedBtn ? "btn-disabled" : ""
+              }`}
+              onClick={() => handleUpdate()}
+            >
+              {t("update")}
+            </button>
+          </div>
+        )}
         {/* Add Modal */}
         <dialog className={`modal ${showModal ? "modal-open" : ""}`}>
           <div className="modal-box">
@@ -581,8 +584,8 @@ const GradePage: React.FC = () => {
             <button onClick={handleModal}>close</button>
           </form>
         </dialog>
-         {/* Import Modal */}
-         <dialog className={`modal ${showImportModal ? "modal-open" : ""}`}>
+        {/* Import Modal */}
+        <dialog className={`modal ${showImportModal ? "modal-open" : ""}`}>
           <div className="modal-box">
             <div className="flex flex-row justify-between">
               <p className="text-sm text-gray-500">
@@ -595,7 +598,8 @@ const GradePage: React.FC = () => {
             <ImportModal
               //
               closeModal={handleImportModal}
-              data={undefined} />
+              data={undefined}
+            />
           </div>
           <form method="dialog" className="modal-backdrop">
             <button onClick={handleImportModal}>close</button>
@@ -615,7 +619,8 @@ const GradePage: React.FC = () => {
             <ExportModal
               //
               closeModal={handleExportModal}
-              data={undefined} />
+              data={undefined}
+            />
           </div>
           <form method="dialog" className="modal-backdrop">
             <button onClick={handleExportModal}>close</button>
