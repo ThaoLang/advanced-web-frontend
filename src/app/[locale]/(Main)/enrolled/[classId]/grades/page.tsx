@@ -13,26 +13,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { GradeType } from "@/model/GradeType";
 
 export default function GradePage() {
-  const getGrade = async () => {
-    return [
-      {
-        studentId: "20127679",
-        rubricId: "658fe74fd84611827e20386c",
-        grade: "8",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "658e7c2a1222775d68873e5b",
-        grade: "7",
-      },
-      {
-        studentId: "20127679",
-        rubricId: "658e7655bb8de14a73d75565",
-        grade: "8.5",
-      },
-    ];
-  };
-
+  //temp
   const student = {
     fullname: "Lê Hoàng Khanh Nguyên",
     studentId: "20127679",
@@ -66,12 +47,16 @@ export default function GradePage() {
 
   const [grade, setGrade] = useState<GradeType[]>([]);
 
-  const auth = useAuth();
-  const studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
+  // const auth = useAuth();
+  // student.studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
   if (savedUser) {
     currentUser = JSON.parse(savedUser);
+    if (currentUser) {
+      student.email = currentUser.email;
+      student.studentId = currentUser.studentId;
+    }
   }
   const { classId } = useParams();
 
@@ -83,7 +68,7 @@ export default function GradePage() {
   ) => {
     let tempReview = {
       _id: "",
-      studentId: studentId,
+      studentId: student.studentId,
       gradeComposition: gradeComposition,
       currentGrade: currentGrade,
       expectationGrade: expectationGrade,
@@ -123,26 +108,36 @@ export default function GradePage() {
   };
 
   useEffect(() => {
-    console.log("User", currentUser);
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
-        headers: {
-          Authorization: `Bearer ${currentUser?.access_token}`,
-        },
-      })
-      .then((response) => {
-        console.log("Response", response);
-        setRubrics(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching rubrics:", error);
-      });
-
-    // TODO: update request
     (async () => {
-      let gradeData = await getGrade();
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        })
+        .then((response) => {
+          setRubrics(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching rubrics:", error);
+        });
 
-      setGrade(gradeData);
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/studentGrades/${student.studentId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response", response);
+          setGrade(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching grade:", error);
+        });
     })();
   }, []);
 

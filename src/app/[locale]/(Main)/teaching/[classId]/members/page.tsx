@@ -102,9 +102,9 @@ export default function MembersPage() {
       if (response.status === 201) {
         const newMember: ClassListType = response.data;
         if (newMember.role == "Student") {
-          setStudentList([...studentList, newMember]);
+          setStudentList((prevStudentList) => [...prevStudentList, newMember]);
         } else if (newMember.role == "Teacher") {
-          setTeacherList([...teacherList, newMember]);
+          setTeacherList((prevTeacherList) => [...prevTeacherList, newMember]);
         }
       }
     } catch (error: any) {
@@ -124,7 +124,7 @@ export default function MembersPage() {
     return false;
   };
 
-  const CopyText = (text: string) => {
+  const CopyText = (text: string = "") => {
     // Asynchronously call
     WriteToClipboard(text)
       .then((result) => {
@@ -193,9 +193,9 @@ export default function MembersPage() {
 
         response.data.members.map((item: ClassListType) => {
           if (item.role === "Student") {
-            setStudentList([...studentList, item]);
+            setStudentList((prevStudentList) => [...prevStudentList, item]);
           } else {
-            setTeacherList([...teacherList, item]);
+            setTeacherList((prevTeacherList) => [...prevTeacherList, item]);
           }
         });
       })

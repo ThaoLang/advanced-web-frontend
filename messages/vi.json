@@ -139,7 +139,9 @@
     "add_member_email": "Email (bắt buộc)",
     "send_invitation_btn": "Mời",
     "empty": "Trống",
-    "duplicate_class_error_msg": "Lớp học đã tồn tại!"
+    "duplicate_class_error_msg": "Lớp học đã tồn tại!",
+    "leave_class_option": "Rời khỏi lớp",
+    "join_class_code_error_msg": "Tham gia vào lớp học thất bại!"
   },
   "Comment": {
     "comments": " bình luận",
@@ -204,6 +206,9 @@
     "review_finalize": "Phúc khảo đã hoàn thành",
     "review_create": "Phúc khảo đã được tạo",
     "teacher_reply": "Giáo viên đã trả lời",
-    "student_reply": "Học sinh đã trả lời"
+    "student_reply": "Học sinh đã trả lời",
+    "Teacher": "Giáo viên",
+    "Student": "Học sinh",
+    "classroom": "Lớp"
   }
 }

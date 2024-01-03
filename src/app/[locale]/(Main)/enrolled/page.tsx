@@ -11,36 +11,6 @@ import { ClassType } from "@/model/ClassType";
 import { UserType } from "@/model/UserType";
 import axios from "axios";
 
-// const classes = [
-//   {
-//     id: 2,
-//     imageUrl:
-//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "enrolled",
-//   },
-//   {
-//     id: 2,
-//     imageUrl:
-//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "enrolled",
-//   },
-//   {
-//     id: 2,
-//     imageUrl:
-//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "enrolled",
-//   },
-// ];
-
 export default function EnrolledPage() {
   const [classes, setClasses] = useState<ClassType[]>([]);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -55,6 +25,7 @@ export default function EnrolledPage() {
   const [showModal, setShowModal] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const t = useTranslations("EnrolledPage");
+  const t_tab = useTranslations("Tabs");
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
   if (savedUser) {
@@ -66,26 +37,12 @@ export default function EnrolledPage() {
           index >= (page - 1) * maxItemNumber && index < page * maxItemNumber
         );
       });
-    }, [page]);
+    }, [page, classes]);
 
     const handleModal = () => {
       console.log("Modal changed");
       setShowModal(!showModal);
     };
-
-    // function addNewClass() {
-    //   setShowModal(true);
-    // }
-
-    // function createClass() {
-    //   //
-    //   setShowModal(false);
-    // }
-
-    // function joinClass() {
-    //   //
-    //   setShowModal(false);
-    // }
 
     const WriteToClipboard = async (text: string) => {
       const param = "clipboard-write" as PermissionName;
@@ -119,6 +76,7 @@ export default function EnrolledPage() {
       try {
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/enrolled?code=${code}`,
+          {},
           {
             headers: {
               Authorization: `Bearer ${currentUser?.access_token}`,
@@ -129,38 +87,50 @@ export default function EnrolledPage() {
           const newClass: ClassType = response.data;
           setClasses([...classes, newClass]);
           setShowModal(false);
-        } else if (response.status === 409) {
+        } else if (response.status === 409 || response.status === 404) {
           setErrorMsg(response.data.message);
         }
       } catch (error: any) {
-        console.error("Failed to join new class:", error);
+        const errorMessage =
+          error.response && error.response.data
+            ? error.response.data.message
+            : t_tab("join_class_code_error_msg");
+        setErrorMsg(errorMessage);
       }
     };
 
     useEffect(() => {
       const savedUser = localStorage.getItem("user");
-      if (savedUser) {
-        // Assuming UserType has a structure like { email: string }
-        auth.login(JSON.parse(savedUser));
+
+      if (savedUser != null) {
+        const curUser: UserType = JSON.parse(savedUser);
+        auth.login(curUser);
       }
     }, []);
 
     useEffect(() => {
+      console.log("ACCESS_TOKEN", currentUser?.access_token);
       axios
-        .post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/get-enrolled`, {
-          headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
-          },
-        })
-        .then((response) => {
+        .post(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/get-enrolled`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser.access_token}`,
+            },
+          }
+        )
+        .then(async (response) => {
           console.log("Response", response.data);
-          setClasses(response.data);
+          await setClasses(response.data);
           console.log("Response class", classes);
         })
         .catch((error) => {
           console.error("Error fetching classes:", error);
         });
     }, []);
+
+    console.log("Class", classes);
 
     return currentUser ? (
       <div className="mx-20 my-10">
@@ -208,10 +178,12 @@ export default function EnrolledPage() {
                 name={items.name}
                 description={items.description}
                 inviteUrl={items.invite_url}
-                page="teaching"
+                page="enrolled"
                 isCopied={isCopied}
                 CopyInviteLink={CopyInviteLink}
                 key={index}
+                student_number={items.student_number ? items.student_number : 0}
+                teacher_number={items.teacher_number ? items.teacher_number : 1}
               />
             ))}
           </div>

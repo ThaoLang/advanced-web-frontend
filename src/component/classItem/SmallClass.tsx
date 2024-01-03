@@ -11,9 +11,11 @@ interface SmallClassProp {
   name: string;
   description: string;
   inviteUrl: string;
-  page: string;
+  page: string | undefined;
   isCopied: boolean;
   CopyInviteLink: (text: string) => void;
+  student_number: number;
+  teacher_number: number;
 }
 
 const SmallClass = (classInfo: SmallClassProp) => {
@@ -61,8 +63,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
                   <PiProjectorScreenChart />
                 </div>
                 <p className="text-slate-500 ml-1 text-sm lowercase">
-                  {" "}
-                  2 {t("teachers")}{" "}
+                  {classInfo.teacher_number} {t("teachers")}{" "}
                 </p>
               </div>
               <div className="flex flex-row">
@@ -70,8 +71,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
                   <IoMdPerson />
                 </div>
                 <p className="text-slate-500 ml-1 text-sm lowercase">
-                  {" "}
-                  2 {t("students")}{" "}
+                  {classInfo.student_number} {t("students")}{" "}
                 </p>
               </div>
             </div>

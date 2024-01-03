@@ -34,6 +34,7 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
   const auth = useAuth();
 
   const handleEditModal = () => {
+    console.log("Editting modal", props.rubric);
     setEditShowModal(!showEditModal);
   };
 
@@ -69,25 +70,6 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
       gradeScale: gradeScale,
       order: props.rubric.order,
     };
-
-    // try {
-    //   const response = await axios.put(
-    //     `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/update`,
-    //     newRubric,
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${auth.user?.access_token}`,
-    //       },
-    //     }
-    //   );
-    //   if (response.status === 200) {
-    //     const updatedRubric = response.data;
-
-    //     props.handleUpdate(updatedRubric);
-    //   }
-    // } catch (error: any) {
-    //   console.error("Failed to delete rubric:", error);
-    // }
     props.handleUpdate(newRubric);
     handleEditModal();
   };
@@ -163,6 +145,7 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
 });
 
 const SortableList = SortableContainer((props: SortableListProps) => {
+  console.log("Sort List Item", props.items);
   const handleUpdate = (updatedRubric: RubricType) => {
     const updatedItems = props.items.map((item) =>
       item._id === updatedRubric._id ? updatedRubric : item
@@ -176,7 +159,7 @@ const SortableList = SortableContainer((props: SortableListProps) => {
         props.items.length > 0 &&
         props.items.map((value, index) => (
           <SortableItem
-            key={`item-${index}`}
+            key={`item-${value._id}`}
             index={index}
             rubric={value}
             setRubrics={props.setRubrics}

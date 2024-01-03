@@ -10,6 +10,7 @@ import CreateClassForm from "@/component/classItem/CreateClassForm";
 import axios from "axios";
 import { ClassType } from "@/model/ClassType";
 import { UserType } from "@/model/UserType";
+import LoadingIndicator from "@/component/admin/LoadingIndicator";
 
 // const tempclasses = [
 //   {
@@ -155,7 +156,6 @@ export default function TeachingPage() {
   //   }
   // }, []);
   useEffect(() => {
-    console.log("USER: ", auth.user);
     const fetchClasses = async () => {
     await axios
       .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
@@ -172,7 +172,7 @@ export default function TeachingPage() {
         console.error("Error fetching classes:", error);
       });
     }
-    fetchClasses();
+    fetchClasses
   }, []);
 
   return auth.user ? (
@@ -213,35 +213,37 @@ export default function TeachingPage() {
             </form>
           </dialog>
 
-          {filterData.map((items, index) => (
-            <SmallClass
-              id={items._id}
-              imageUrl="https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f"
-              name={items.name}
-              description={items.description}
-              inviteUrl={items.invite_url}
-              page="teaching"
-              isCopied={isCopied}
-              CopyInviteLink={CopyInviteLink}
-              key={index}
-            />
-          ))}
+            {filterData.map((items, index) => (
+              <SmallClass
+                id={items._id}
+                imageUrl="https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f"
+                name={items.name}
+                description={items.description}
+                inviteUrl={items.invite_url}
+                page="teaching"
+                isCopied={isCopied}
+                CopyInviteLink={CopyInviteLink}
+                key={index}
+                student_number={items.student_number ? items.student_number : 0}
+                teacher_number={items.teacher_number ? items.teacher_number : 1}
+              />
+            ))}
+          </div>
         </div>
+        <div className="flex items-center justify-center max-w-screen-lg container mx-auto">
+          <PaginationBar
+            total={totalPages}
+            limit={limit}
+            current={page}
+            onChange={(page) => setPage(page)}
+          />
+        </div>
+        {classes &&
+          classes.map((clas, index) => {
+            return <div>{clas.name}</div>;
+          })}
       </div>
-      <div className="flex items-center justify-center max-w-screen-lg container mx-auto">
-        <PaginationBar
-          total={totalPages}
-          limit={limit}
-          current={page}
-          onChange={(page) => setPage(page)}
-        />
-      </div>
-      {classes &&
-        classes.map((clas, index) => {
-          return <div>{clas.name}</div>;
-        })}
-    </div>
-  ) : (
-    <div></div>
-  );
-}
+    ) : (
+      <div><LoadingIndicator/></div>
+    );
+  }

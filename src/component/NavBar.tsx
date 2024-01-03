@@ -22,96 +22,6 @@ import axios from "axios";
 import { UserType } from "@/model/UserType";
 import { ClassType } from "@/model/ClassType";
 
-export const getNotificationsData = async () => {
-  return [
-    {
-      id: "",
-      classId: "class-name",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "teacher",
-      receiverIdList: [],
-      message: "A grade composition is finalized",
-      redirectUrl: "/enrolled/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-    {
-      id: "",
-      classId: "class-name-2",
-      reviewId: "",
-      senderId: "senderId",
-      senderRole: "student",
-      receiverIdList: [],
-      message: "A student has replied",
-      redirectUrl: "/teaching/review",
-      createdAt: "2022-12-31T17:22:05.092+0000",
-      isRead: false,
-    },
-  ];
-};
-
 export default function NavBar() {
   const auth = useAuth();
 
@@ -129,7 +39,6 @@ export default function NavBar() {
     checkCredential();
 }, []);
 
-  console.log("NAVBAR: ", auth);
   const t = useTranslations("Navbar");
 
   const [isNotificationVisible, setIsNotificationVisible] =
@@ -142,11 +51,6 @@ export default function NavBar() {
     []
   );
   useEffect(() => {
-    (async () => {
-      const notificationsData = await getNotificationsData();
-      setNotifications(notificationsData);
-    })();
-
     (async () => {
       // get a list of class id user is in
       // loop the list
@@ -174,9 +78,8 @@ export default function NavBar() {
         })
         .then((response) => {
           (async () => {
-            console.log("Enrolled classes response", response);
-            let tempclasses = [...classes, response.data];
-            classes = tempclasses;
+            console.log("Classes response", response);
+            classes = response.data;
 
             classes.forEach((element) => {
               axios
@@ -190,8 +93,10 @@ export default function NavBar() {
                 )
 
                 .then((response) => {
-                  console.log("Notifications response", response);
-                  setNotifications([...notifications, response.data]);
+                  if (response.data.length > 0) {
+                    console.log("Notifications response", response);
+                    setNotifications([...notifications, ...response.data]);
+                  }
                 })
                 .catch((error) => {
                   console.error("Error fetching notifications:", error);
