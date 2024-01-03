@@ -6,7 +6,7 @@ const nextConfig = {
   experimental: {
     scrollRestoration: true,
   },
-  output: "export",
+  // output: "export",
 };
 
 const withNextIntl = require("next-intl/plugin")();
