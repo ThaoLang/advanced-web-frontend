@@ -1,20 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/[locale]/globals.css";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { AuthProvider } from "@/context/AuthContext";
 import React from "react";
-import {
-  FaAngleLeft,
-  FaBars,
-  FaChartSimple,
-  FaChalkboardUser,
-  FaPerson,
-  FaGear,
-  FaArrowRightFromBracket,
-  FaAngleDown,
-  FaSun,
-  FaMoon,
-} from "react-icons/fa6";
 import { AccountProvider } from "@/context/AccountContext";
 import { ClassroomProvider } from "@/context/ClassroomContext";
 import AdminLayout from "@/component/admin/AdminLayout";

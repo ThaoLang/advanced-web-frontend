@@ -113,6 +113,23 @@ export const getNotificationsData = async () => {
 };
 
 export default function NavBar() {
+  const auth = useAuth();
+
+  useEffect(() => {
+    const checkCredential = async () => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser != null) {
+            // Assuming UserType has a structure like { email: string }
+            const user = JSON.parse(savedUser);
+            if (user) {
+                auth.login(user);
+            }
+        }
+    }
+    checkCredential();
+}, []);
+
+  console.log("NAVBAR: ", auth);
   const t = useTranslations("Navbar");
 
   const [isNotificationVisible, setIsNotificationVisible] =
@@ -120,14 +137,6 @@ export default function NavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const pathname = usePathname();
   const router = useRouter();
-
-  const auth = useAuth();
-
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
 
   const [notifications, setNotifications] = useState<Array<NotificationType>>(
     []
@@ -146,7 +155,7 @@ export default function NavBar() {
       await axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
           headers: {
-            Authorization: `Bearer ${currentUser.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         })
         .then((response) => {
@@ -160,7 +169,7 @@ export default function NavBar() {
       await axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/get-enrolled`, {
           headers: {
-            Authorization: `Bearer ${currentUser.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         })
         .then((response) => {
@@ -175,7 +184,7 @@ export default function NavBar() {
                   `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/list/${element._id}`,
                   {
                     headers: {
-                      Authorization: `Bearer ${currentUser.access_token}`,
+                      Authorization: `Bearer ${auth.user?.access_token}`,
                     },
                   }
                 )
@@ -214,29 +223,12 @@ export default function NavBar() {
   // avatar url
 
   useEffect(() => {
-    const cur_user = localStorage.getItem("user");
-    if (cur_user != null) {
-      const loggedUser = JSON.parse(cur_user);
-
-      if (!loggedUser || !loggedUser.avatarUrl) {
-        const updatedUser = {
-          ...loggedUser,
-          avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-        };
-
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        auth.login(updatedUser);
-      } else {
-        auth.login(loggedUser);
-      }
-
       // socket io notification
-      let user = JSON.parse(cur_user);
-      let accessToken = user.access_token;
+      let user = auth.user;
+      let accessToken = user?.access_token;
       if (accessToken) {
         actions.setAccessToken(accessToken);
         actions.initializeSocket(accessToken);
-      }
     }
   }, []);
 

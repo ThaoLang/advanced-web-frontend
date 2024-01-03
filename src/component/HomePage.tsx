@@ -86,6 +86,7 @@ const classes = [
 
 export default function HomePage() {
   const auth = useAuth();
+
   const t = useTranslations("Homepage");
 
   const maxItemNumber = 3;
@@ -195,7 +196,7 @@ export default function HomePage() {
 
           {filterData.map((items, index) => (
             <SmallClass
-              id={items.id}
+              id={items.id.toString()}
               imageUrl={items.imageUrl}
               name={items.name}
               description={items.description}
