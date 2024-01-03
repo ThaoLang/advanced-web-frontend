@@ -358,9 +358,11 @@ const GradePage: React.FC = () => {
         //const newRubrics = response.data;
         //setRubrics(newRubrics);
         console.log("Update rubrics successfully");
+        toast.success(t("update_rubric_success"));
       }
     } catch (error: any) {
       console.error("Failed to update:", error);
+      toast.error(t("update_rubric_failure"));
     }
   };
 

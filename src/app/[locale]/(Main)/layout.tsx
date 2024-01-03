@@ -1,19 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
-import { FaHouseChimney, FaGear } from "react-icons/fa6";
-import { FaChalkboardTeacher } from "react-icons/fa";
-import { GiGraduateCap } from "react-icons/gi";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { AuthProvider } from "@/context/AuthContext";
 // import StyledComponentsRegistry from "../../../lib/AntdRegistry";
-import { notFound } from "next/navigation";
 import { ReactNode } from "react";
-import {
-  NextIntlClientProvider,
-  useMessages,
-  useTranslations,
-} from "next-intl";
-import { SessionProvider } from "next-auth/react";
+import { NextIntlClientProvider, useMessages } from "next-intl";
 import UserLayout from "@/component/UserLayout";
 
 interface RootLayoutProps {
@@ -38,7 +29,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AuthProvider>
-            <UserLayout children={children} locale={locale}/>
+            <UserLayout children={children} locale={locale} />
           </AuthProvider>
         </NextIntlClientProvider>
       </body>
