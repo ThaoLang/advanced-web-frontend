@@ -16,6 +16,12 @@ export default function Home() {
   }, []);
 
   return (
-    <div>{auth.user && auth.user.email ? <HomePage /> : <LandingPage />}</div>
+    <div>
+      {auth.user && auth.user.email ? (
+        <HomePage data-testid="home-page" />
+      ) : (
+        <LandingPage data-testid="landing-page" />
+      )}
+    </div>
   );
 }
