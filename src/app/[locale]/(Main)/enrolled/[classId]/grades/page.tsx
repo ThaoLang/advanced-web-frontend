@@ -143,8 +143,12 @@ export default function GradePage() {
 
   return (
     <div>
-      <div className="flex items-center justify-center my-20">
-        <div className="max-w-7xl max-h-[450px] overflow-auto bg-white rounded">
+      <div className="flex flex-col items-center justify-center my-5 mx-auto">
+        <h1 className="text-2xl lg:text-3xl mb-8 text-yellow-500">
+          {t("my_grade")}
+        </h1>
+
+        <div className="max-w-7xl max-h-[450px] overflow-auto bg-white rounded border-2 border-yellow-200">
           {/* table */}
           <table className="table table-lg table-pin-cols">
             {/* head */}
@@ -195,28 +199,45 @@ export default function GradePage() {
                   </div>
                 </th>
               </tr>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                {rubrics.length > 0 &&
-                  rubrics.map((item, index) => {
-                    return (
-                      <td>
-                        <button
-                          key={index}
-                          className="hidden md:block btn btn-info bg-yellow-400 text-white text-xs"
-                          onClick={() => {
-                            openModal(item.gradeName, item._id);
-                          }}
-                        >
-                          {t("review")}
-                        </button>
-                      </td>
-                    );
-                  })}
-                <th></th>
-              </tr>
+              {rubrics.length > 0 && (
+                <>
+                  <tr>
+                    <th className="text-lg text-gray-500">{t("status")}</th>
+                    <td></td>
+                    <td></td>
+                    {rubrics.map((item, index) => {
+                      return (
+                        <td>
+                          {t("graded")}
+                          <br />
+                          {t("not_graded")}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                  <tr>
+                    <th className="text-lg text-gray-500">{t("review")}</th>
+                    <td></td>
+                    <td></td>
+                    {rubrics.map((item, index) => {
+                      return (
+                        <td>
+                          <button
+                            key={index}
+                            className="hidden md:block btn btn-info bg-yellow-400 text-white text-xs"
+                            onClick={() => {
+                              openModal(item.gradeName, item._id);
+                            }}
+                          >
+                            {t("review")}
+                          </button>
+                        </td>
+                      );
+                    })}
+                    <th></th>
+                  </tr>
+                </>
+              )}
             </tbody>
           </table>
         </div>

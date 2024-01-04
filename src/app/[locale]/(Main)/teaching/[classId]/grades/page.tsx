@@ -549,7 +549,7 @@ const GradePage: React.FC = () => {
                         })}
                       <th>
                         <div className="text-sm opacity-50 flex justify-center align-middle">
-                          {index + 1}
+                          {/* TODO: update grade here */}0
                         </div>
                       </th>
                     </tr>
@@ -558,18 +558,28 @@ const GradePage: React.FC = () => {
             </tbody>
 
             {/* foot */}
-            {/* <tfoot>
+            <tfoot>
               <tr>
-                <th>{t("number")}</th>
-                <td>{t("fullname")}</td>
-                <td>{t("student_id")}</td>
-                <td>{t("email")}</td>
-                {rubrics.length > 0 &&
-                  rubrics.map((item, index) => {
-                    return <td key={index}>{item.gradeName}</td>;
-                  })}
+                <th className="text-xs text-gray-500">{t("finalize")}</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                {rubrics.map((item, index) => {
+                  return (
+                    <td>
+                      <button
+                        key={index}
+                        className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
+                        onClick={() => finalizeScore()} //TODO: update later
+                      >
+                        {t("finalize")}
+                      </button>
+                    </td>
+                  );
+                })}
+                <th></th>
               </tr>
-            </tfoot> */}
+            </tfoot>
           </table>
         </div>
         <div className="flex items-center justify-center gap-4 mb-2">
@@ -596,9 +606,9 @@ const GradePage: React.FC = () => {
           {grade && (
             <button
               className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
-            ${grade.length == 0 ? "btn-disabled" : ""}
-            `}
-              onClick={() => finalizeScore}
+              `}
+              // ${grade.length == 0 ? "btn-disabled" : ""}
+              onClick={() => finalizeScore()} //TODO: update later
             >
               {t("finalize_score")}
             </button>

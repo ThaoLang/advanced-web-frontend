@@ -10,49 +10,8 @@ import { UserType } from "@/model/UserType";
 import { ClassListType } from "@/model/ClassListType";
 import AddMemberForm from "@/component/AddMemberForm";
 import { useAuth } from "@/context/AuthContext";
-import { ok } from "assert";
-
-const teachers = [
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Teacher 1",
-    email: "name@flaticon.com",
-  },
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Teacher 2",
-    email: "name@flaticon.com",
-  },
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Teacher 3",
-    email: "name@flaticon.com",
-  },
-];
-
-const students = [
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Nguyen Minh Quang",
-    email: "nmq@flaticon.com",
-    studentId: "20127605",
-  },
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Lang Thao Thao",
-    email: "ltt@flaticon.com",
-    studentId: "20127629",
-  },
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Le Hoang Khanh Nguyen",
-    email: "lhkn@flaticon.com",
-    studentId: "20127679",
-  },
-];
 
 export default function MembersPage() {
-  // copy
   const [isCopied, setIsCopied] = useState(false);
   const t = useTranslations("Tabs");
   const [showModal, setShowModal] = useState(false);
@@ -140,7 +99,6 @@ export default function MembersPage() {
         console.log(err);
       });
   };
-  // end copy
 
   const handleDelete = async (member_id: string, role: string = "Student") => {
     try {

@@ -87,7 +87,7 @@ export default function ProfileForm(props: ProfileFormProp) {
                     className="input input-bordered w-full max-w-xs"
                     value={usernameProxy}
                     onChange={(e) => setUsernameProxy(e.target.value)}
-                    maxLength={15}
+                    maxLength={35}
                   />
                 )) || (
                   <label className="text-md text-left inline-block align-bottom mt-2">
