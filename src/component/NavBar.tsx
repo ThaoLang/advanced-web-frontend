@@ -204,7 +204,7 @@ export default function NavBar() {
             </ul>
           )}
         </div>
-        {auth.user && auth.user.email ? (
+        {auth.user ? (
           <div className="flex justify-center gap-2">
             <div className="dropdown dropdown-end">
               <button

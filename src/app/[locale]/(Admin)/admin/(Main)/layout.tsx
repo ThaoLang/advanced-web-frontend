@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import "@/app/[locale]/globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import React from "react";
-import { AccountProvider } from "@/context/AccountContext";
-import { ClassroomProvider } from "@/context/ClassroomContext";
 import AdminLayout from "@/component/admin/AdminLayout";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,11 +22,7 @@ export default function Layout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <AccountProvider>
-            <ClassroomProvider>
-              <AdminLayout children={children}/>
-            </ClassroomProvider>
-          </AccountProvider>
+            <AdminLayout children={children}/>
         </AuthProvider>
       </body>
     </html>
