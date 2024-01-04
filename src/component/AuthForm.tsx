@@ -66,6 +66,7 @@ export default function AuthForm(props: AuthFormProps) {
       );
       if (response.status === 201) {
         const cur_user: UserType = response.data;
+        console.log("Current user: ", response.data);
 
         localStorage.setItem("user", JSON.stringify(cur_user));
       }
@@ -91,8 +92,7 @@ export default function AuthForm(props: AuthFormProps) {
           email: email,
           password: password,
           username: username,
-          role: 'user',
-          avatarUrl: `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`,
+          role: "user",
         }
       );
 
@@ -169,6 +169,7 @@ export default function AuthForm(props: AuthFormProps) {
   const handleGoogleLogin = async () => {
     try {
       router.push(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/google`);
+      // router.push(`http://localhost:4000/auth/google`);
     } catch (error) {
       console.error("Error initiating Google login:", error);
     }
@@ -176,7 +177,8 @@ export default function AuthForm(props: AuthFormProps) {
 
   const handleFacebookLogin = async () => {
     try {
-      router.push(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/facebook`);
+      // router.push(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/facebook`);
+      router.push(`http://localhost:4000/auth/facebook`);
     } catch (error) {
       console.error("Error initiating Facebook login:", error);
     }
