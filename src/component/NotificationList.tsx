@@ -27,6 +27,7 @@ export function Notification(props: NotificationProps) {
   const t = useTranslations("Notification");
 
   const [className, setClassName] = useState("");
+  const [senderName, setSenderName] = useState("");
 
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
@@ -47,13 +48,47 @@ export function Notification(props: NotificationProps) {
           }
         )
         .then((response) => {
-          console.log("Response", response);
           setClassName(response.data.name);
         })
         .catch((error) => {
-          console.error("Error fetching review list:", error);
+          console.error("Error fetching class:", error);
         });
-      //TODO: get sender name
+      //get sender name
+      // if (props.senderRole === "Teacher") {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/${props.senderId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response name", response);
+          setSenderName(response.data.username);
+        })
+        .catch((error) => {
+          console.error("Error fetching user:", error);
+        });
+      // } else if (props.senderRole === "Student") {
+      //   axios
+      //     .get(
+      //       `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}students/${props.senderId}`,
+      //       {
+      //         headers: {
+      //           Authorization: `Bearer ${currentUser?.access_token}`,
+      //         },
+      //       }
+      //     )
+      //     .then((response) => {
+      //       console.log("Response", response);
+      //       // setSenderName(response.data.fullname);
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error fetching student:", error);
+      //     });
+      // }
     })();
   }, []);
 
@@ -69,7 +104,7 @@ export function Notification(props: NotificationProps) {
           )}
         </div>
         <div className="text-xs">
-          {t(props.senderRole)}: <b>{props.senderId}</b>
+          {t(props.senderRole)}: <b>{senderName}</b>
         </div>
         <div className="my-2">{t(props.message)}</div>
         <div className="text-xs font-extralight">

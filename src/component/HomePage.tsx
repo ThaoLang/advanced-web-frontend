@@ -218,7 +218,6 @@ export default function HomePage() {
       .then((response) => {
         console.log("Response", response.data);
         setClasses(response.data);
-        console.log("Response class", classes);
       })
       .catch((error) => {
         console.error("Error fetching classes:", error);

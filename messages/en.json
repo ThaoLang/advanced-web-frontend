@@ -14,7 +14,8 @@
     "header_description_4": "Your learning adventure begins here. Dive into a world of possibilities, connect with peers, and explore subjects in ways you never imagined. LightHub is your portal to a brighter future.",
     "header_5": "See all you can accomplish with",
     "get_started_btn": "Get started",
-    "learn_more_btn": "Learn more"
+    "learn_more_btn": "Learn more",
+    "login_btn": "Login"
   },
   "Navbar": {
     "home": "Home",

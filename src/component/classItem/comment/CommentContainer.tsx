@@ -33,62 +33,117 @@ const CommentContainer = (props: CommentContainerInterface) => {
   }
 
   const [comments, setComments] = useState<CommentType[]>([]);
+  const [trigger, setTrigger] = useState("");
 
   useEffect(() => {
-    let responseData: RawCommentType[];
+    (async () => {
+      let responseData: RawCommentType[];
 
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/getComments/${props.reviewId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Response", response);
-
-        responseData = response.data as RawCommentType[];
-
-        let tempComments = [];
-
-        for (let comment of responseData) {
-          //TODO: update temp values
-          let tempName = comment.isSender ? currentUser.username : "Lâm Ánh Hạ";
-
-          let tempAvatar = comment.isSender
-            ? "https://cdn-icons-png.flaticon.com/128/1077/1077114.png"
-            : "https://i.pravatar.cc/300";
-          // let tempAvatar =
-          //   "https://cdn-icons-png.flaticon.com/128/1077/1077114.png";
-
-          tempComments.push({
-            id: comment._id,
-            reviewId: comment.review_id,
-            user: {
-              id: comment.sender_id,
-              name: tempName,
-              avatar: tempAvatar,
+      await axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/getComments/${props.reviewId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
             },
-            desc: comment.desc,
-            parent: comment.parent ? comment.parent : null,
-            replyOnUser: comment.replyOnUser ? comment.replyOnUser : null,
-            createdAt: comment.createdAt,
-            like: comment.like,
-            isSender: comment.isSender,
-            like_status: false,
-          });
-        }
+          }
+        )
+        .then((response) => {
+          console.log("Response", response);
 
-        console.log("temp comments", tempComments);
+          responseData = response.data as RawCommentType[];
 
-        setComments(tempComments);
-      })
-      .catch((error) => {
-        console.error("Error fetching comment list:", error);
-      });
+          let tempComments: CommentType[] = [];
+
+          for (let comment of responseData) {
+            //TODO: update temp values
+            let tempName = comment.isSender ? currentUser.username : "";
+
+            let tempAvatar = comment.isSender
+              ? currentUser.avatarUrl
+              : "https://cdn-icons-png.flaticon.com/128/1077/1077114.png";
+
+            tempComments.push({
+              id: comment._id,
+              reviewId: comment.review_id,
+              user: {
+                id: comment.sender_id,
+                name: tempName,
+                avatar: tempAvatar,
+              },
+              desc: comment.desc,
+              parent: comment.parent ? comment.parent : null,
+              replyOnUser: comment.replyOnUser ? comment.replyOnUser : null,
+              createdAt: comment.createdAt,
+              like: comment.like,
+              isSender: comment.isSender,
+              like_status: false,
+            });
+          }
+
+          console.log("temp comments", tempComments);
+
+          setComments(tempComments);
+          setTrigger("triggered");
+        })
+        .catch((error) => {
+          console.error("Error fetching comment list:", error);
+        });
+    })();
   }, [props.reviewId]);
+
+  useEffect(() => {
+    (async () => {
+      for (let comment of comments) {
+        console.log(comment.desc);
+        if (!comment.isSender) {
+          //TODO: get sender name
+          // if (props.senderRole === "Teacher") {
+          await axios
+            .get(
+              `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/${comment.user.id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${currentUser?.access_token}`,
+                },
+              }
+            )
+            .then((response) => {
+              console.log("Response name", response);
+              console.log("new name", response.data.username);
+              console.log("new url", response.data.avatarUrl);
+
+              comment.user.name = response.data.username;
+              comment.user.avatar = response.data.avatarUrl;
+
+              console.log("updated comment", comment);
+              setComments([...comments, comment]);
+            })
+            .catch((error) => {
+              console.error("Error fetching user:", error);
+            });
+          // } else if (props.senderRole === "Student") {
+          //   axios
+          //     .get(
+          //       `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}students/${props.senderId}`,
+          //       {
+          //         headers: {
+          //           Authorization: `Bearer ${currentUser?.access_token}`,
+          //         },
+          //       }
+          //     )
+          //     .then((response) => {
+          //       console.log("Response", response);
+          //       // setSenderName(response.data.fullname);
+          //     })
+          //     .catch((error) => {
+          //       console.error("Error fetching student:", error);
+          //     });
+          // }
+        }
+      }
+    })();
+  }, [trigger]);
 
   const mainComments = comments.filter(
     (comment) => comment.parent === null || undefined
@@ -188,26 +243,25 @@ const CommentContainer = (props: CommentContainerInterface) => {
                       }
                     });
                   }
+                  let newNotification: NotificationType;
+                  newNotification = {
+                    id: "",
+                    senderId: "",
+                    classId: classId.toString(),
+                    reviewId: props.reviewId,
+                    senderRole: senderRole,
+                    receiverIdList: receiverIdList,
+                    message: message,
+                    redirectUrl: redirectUrl,
+                    createdAt: newRawComment.createdAt,
+                    isRead: false,
+                  };
+
+                  actions.sendNotification(
+                    currentUser.access_token,
+                    newNotification
+                  );
                 }
-
-                let newNotification: NotificationType;
-                newNotification = {
-                  id: "",
-                  senderId: "",
-                  classId: classId.toString(),
-                  reviewId: props.reviewId,
-                  senderRole: senderRole,
-                  receiverIdList: receiverIdList,
-                  message: message,
-                  redirectUrl: redirectUrl,
-                  createdAt: newRawComment.createdAt,
-                  isRead: false,
-                };
-
-                actions.sendNotification(
-                  currentUser.access_token,
-                  newNotification
-                );
               })
               .catch((error) => {
                 console.error("Error fetching class members:", error);
@@ -225,7 +279,7 @@ const CommentContainer = (props: CommentContainerInterface) => {
       id: newId,
       user: {
         // id: auth.user?._id,
-        id: currentUser?.id,
+        id: currentUser?._id,
         name: auth.user?.username,
         avatar: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
       },
