@@ -97,5 +97,5 @@ export default function AdminLayout(props: AdminLayoutProps) {
                 </aside>
             </div>
         </div>
-    ) : <CredentialError />
+    ) : <CredentialError/>
 }

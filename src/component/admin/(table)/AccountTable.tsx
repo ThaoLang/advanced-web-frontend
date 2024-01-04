@@ -4,7 +4,6 @@ import Pagination from '@/component/admin/Pagination';
 import React, { useState, useEffect } from 'react';
 import DeletePopupModal from '@/component/admin/(modal)/DeletePopupModal';
 import BanPopupModal from '../(modal)/BanPopupModal';
-import { useAccount } from '@/context/AccountContext';
 import { useRouter } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 5;
@@ -19,9 +18,7 @@ interface AccountTableProps {
 }
 
 export default async function AccountTable(props: AccountTableProps) {
-    const context = useAccount();
     const router = useRouter();
-
     const totalPages =
         props.totalItems % ITEMS_PER_PAGE === 0
             ? props.totalItems / ITEMS_PER_PAGE
@@ -72,8 +69,7 @@ export default async function AccountTable(props: AccountTableProps) {
     };
 
     function handleRowDoubleClick(account: any): void {
-        context.account = account;
-        router.push(`/admin/account/${account.id}`);
+        router.push(`/admin/account/${account._id}`);
     }
 
     return (
@@ -101,7 +97,7 @@ export default async function AccountTable(props: AccountTableProps) {
                     {/* head */}
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>No.</th>
                             <th>Username</th>
                             <th>Role</th>
                             <th>Status</th>
@@ -114,7 +110,7 @@ export default async function AccountTable(props: AccountTableProps) {
                                 <tr key={index} 
                                     className="hover:bg-gray-100 cursor-pointer hover:border-1 hover:border-gray-200"
                                     onDoubleClick={() => handleRowDoubleClick(items)}>
-                                    <td>{items.id}</td>
+                                    <td>{(props.currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
                                     <td>
                                         <div className="flex items-center gap-3">
                                             <div className="avatar">
@@ -161,10 +157,8 @@ export default async function AccountTable(props: AccountTableProps) {
                                     <th>
                                         <div className="flex flex-row justify-start space-x-2">
                                             <div className="cursor-pointer hover:text-primary">
-                                                <Link href={`/admin/account/${items.id}`} passHref legacyBehavior>
-                                                    <button onClick={() => context.account = items}>
-                                                        <FaRegEye />
-                                                    </button>
+                                                <Link href={`/admin/account/${items._id}`}>
+                                                    <FaRegEye />
                                                 </Link>
                                             </div>
                                             <button className="cursor-pointer hover:text-primary"

@@ -92,7 +92,7 @@ export default function DetailTeachingClass() {
               {(isAvailableStudentList && (
                 <label className="label">
                   <span className="label-text">{t("view_help_2")}</span>
-                  <Link href="/teaching/grades">
+                  <Link href={`/teaching/${classId}/grades`}>
                     <button className="mb-2 lg:w-80 lg:ml-5 btn btn-info bg-blue-500 text-white">
                       {t("view")}
                     </button>
