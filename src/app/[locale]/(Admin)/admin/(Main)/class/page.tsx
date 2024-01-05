@@ -142,7 +142,7 @@ export default function Classes({
           },
         });
 
-        console.log("Response Accounts", response.data);
+        // console.log("Response Accounts", response.data);
         return response.data as Array<UserType>;
       } catch (error) {
         console.error("Error fetching all users:", error);
@@ -159,7 +159,7 @@ export default function Classes({
           },
         });
 
-        console.log("Response Classes", response.data);
+        // console.log("Response Classes", response.data);
         return response.data as Array<ClassType>;
       } catch (error) {
         console.error("Error fetching all classes:", error);

@@ -1,3 +1,4 @@
+"use client";
 import { FaRegEye, FaRegTrashCan, FaBan } from 'react-icons/fa6'
 import Link from 'next/link';
 import Pagination from '@/component/admin/Pagination';
