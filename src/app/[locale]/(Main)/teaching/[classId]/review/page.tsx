@@ -9,15 +9,17 @@ import axios from "axios";
 import { UserType } from "@/model/UserType";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
+  const auth = useAuth();
 
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
+  // const savedUser = localStorage.getItem("user");
+  // let currentUser: UserType;
+  // if (savedUser) {
+  //   currentUser = JSON.parse(savedUser);
+  // }
   const { classId } = useParams();
 
   const [reviewList, setReviewList] = useState<ReviewType[]>([]);
@@ -30,7 +32,7 @@ export default function ReviewPage() {
           `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/allReviews/${classId}`,
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )

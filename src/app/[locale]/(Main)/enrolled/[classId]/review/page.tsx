@@ -30,15 +30,16 @@ export default function ReviewPage() {
 
   const [rubrics, setRubrics] = useState<RubricType[]>([]);
 
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-    if (currentUser) {
-      studentId = currentUser.studentId;
-    }
-  }
+  // const savedUser = localStorage.getItem("user");
+  // let currentUser: UserType;
+  // if (savedUser) {
+  //   currentUser = JSON.parse(savedUser);
+  //   if (currentUser) {
+  //     studentId = currentUser.studentId;
+  //   }
+  // }
   const { classId } = useParams();
+  const auth = useAuth();
 
   const addReview = (
     gradeComposition: string,
@@ -73,7 +74,7 @@ export default function ReviewPage() {
           },
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )
@@ -101,7 +102,7 @@ export default function ReviewPage() {
                   `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
                   {
                     headers: {
-                      Authorization: `Bearer ${currentUser?.access_token}`,
+                      Authorization: `Bearer ${auth.user?.access_token}`,
                     },
                   }
                 )
@@ -137,7 +138,7 @@ export default function ReviewPage() {
                   };
 
                   actions.sendNotification(
-                    currentUser.access_token,
+                    auth.user?.access_token ? auth.user?.access_token : "",
                     newNotification
                   );
                 })
@@ -164,7 +165,7 @@ export default function ReviewPage() {
     axios
       .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
         headers: {
-          Authorization: `Bearer ${currentUser?.access_token}`,
+          Authorization: `Bearer ${auth.user?.access_token}`,
         },
       })
       .then((response) => {
@@ -181,7 +182,7 @@ export default function ReviewPage() {
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/studentReviews/${classId}/${studentId}`,
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       )

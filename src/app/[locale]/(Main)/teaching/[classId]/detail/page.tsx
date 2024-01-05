@@ -10,6 +10,7 @@ import { ClassType } from "@/model/ClassType";
 import axios from "axios";
 import { UserType } from "@/model/UserType";
 import FileDownloadButton from "@/component/excel/FileDownloadButton";
+import { useAuth } from "@/context/AuthContext";
 
 export default function DetailTeachingClass() {
   const t = useTranslations("Tabs");
@@ -17,12 +18,13 @@ export default function DetailTeachingClass() {
   const [showModal, setShowModal] = useState(false);
   const { classId } = useParams();
   const [classInfo, setClassInfo] = useState<ClassType>();
+  const auth = useAuth();
 
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
+  // const savedUser = localStorage.getItem("user");
+  // let currentUser: UserType;
+  // if (savedUser) {
+  //   currentUser = JSON.parse(savedUser);
+  // }
 
   const handleModal = () => {
     console.log("Modal changed");
@@ -30,11 +32,11 @@ export default function DetailTeachingClass() {
   };
 
   useEffect(() => {
-    console.log("CURRENT", currentUser.access_token);
+    console.log("CURRENT", auth.user?.access_token);
     axios
       .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}`, {
         headers: {
-          Authorization: `Bearer ${currentUser?.access_token}`,
+          Authorization: `Bearer ${auth.user?.access_token}`,
         },
       })
       .then((response) => {

@@ -25,20 +25,6 @@ import { ClassType } from "@/model/ClassType";
 export default function NavBar() {
   const auth = useAuth();
 
-  useEffect(() => {
-    const checkCredential = async () => {
-        const savedUser = localStorage.getItem("user");
-        if (savedUser != null) {
-            // Assuming UserType has a structure like { email: string }
-            const user = JSON.parse(savedUser);
-            if (user) {
-                auth.login(user);
-            }
-        }
-    }
-    checkCredential();
-}, []);
-
   const t = useTranslations("Navbar");
 
   const [isNotificationVisible, setIsNotificationVisible] =
@@ -50,6 +36,48 @@ export default function NavBar() {
   const [notifications, setNotifications] = useState<Array<NotificationType>>(
     []
   );
+
+  const isNotificationClicked = (notification: NotificationType) => {
+    notification.isRead = true;
+    setNotifications(notifications);
+  };
+
+  const handleLanguageChange = (locale: string) => {
+    setIsDropdownOpen(false);
+    router.replace(pathname, { locale: locale });
+  };
+
+  const handleLogout = () => {
+    localStorage.setItem("user", null as any);
+    auth.logout("user");
+  };
+
+  // avatar url
+
+  useEffect(() => {
+    const checkCredential = async () => {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser != null) {
+        // Assuming UserType has a structure like { email: string }
+        const user = JSON.parse(savedUser);
+        if (user) {
+          auth.login(user);
+        }
+      }
+    };
+    checkCredential();
+  }, []);
+
+  useEffect(() => {
+    // socket io notification
+    let user = auth.user;
+    let accessToken = user?.access_token;
+    if (accessToken) {
+      actions.setAccessToken(accessToken);
+      actions.initializeSocket(accessToken);
+    }
+  }, []);
+
   useEffect(() => {
     (async () => {
       // get a list of class id user is in
@@ -108,33 +136,6 @@ export default function NavBar() {
           console.error("Error fetching my enrolled classes:", error);
         });
     })();
-  }, []);
-
-  const isNotificationClicked = (notification: NotificationType) => {
-    notification.isRead = true;
-    setNotifications(notifications);
-  };
-
-  const handleLanguageChange = (locale: string) => {
-    setIsDropdownOpen(false);
-    router.replace(pathname, { locale: locale });
-  };
-
-  const handleLogout = () => {
-    localStorage.setItem("user", null as any);
-    auth.logout("user");
-  };
-
-  // avatar url
-
-  useEffect(() => {
-      // socket io notification
-      let user = auth.user;
-      let accessToken = user?.access_token;
-      if (accessToken) {
-        actions.setAccessToken(accessToken);
-        actions.initializeSocket(accessToken);
-    }
   }, []);
 
   return (

@@ -9,7 +9,7 @@ import { ClassListType } from "@/model/ClassListType";
 interface AddMemberFormProps {
   isAddingStudent: boolean;
   handleAddMember: (isAddingStudent: boolean, inviteEmail: string) => void;
-  members:ClassListType[]
+  members: ClassListType[];
 }
 
 export default function AddMemberForm(props: AddMemberFormProps) {
@@ -22,11 +22,12 @@ export default function AddMemberForm(props: AddMemberFormProps) {
     if (!emailProxy || emailProxy == "") {
       setErrorMsg(t("add_member_empty_error"));
       return false;
+    } else if (
+      props.members.filter((member) => member.email === emailProxy).length > 0
+    ) {
+      setErrorMsg(t("add_existed_member_error"));
+      return false;
     }
-    else if (props.members.filter(member => member.email===emailProxy)) {
-        setErrorMsg(t("add_member_error"));
-        return false;
-      }
     return true;
   };
 
@@ -35,6 +36,7 @@ export default function AddMemberForm(props: AddMemberFormProps) {
 
     props.handleAddMember(props.isAddingStudent, emailProxy);
     setEmailProxy("");
+    toast.success(t("send_invitation_noti"));
   };
 
   return (
