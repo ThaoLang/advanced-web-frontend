@@ -123,9 +123,13 @@ const CommentContainer = (props: CommentContainerInterface) => {
               console.error("Error fetching user:", error);
             });
           // } else if (props.senderRole === "Student") {
+
+          // axios.get `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/${props.senderId}`,
+          // ---> get student ID ---> update request below
+
           //   axios
           //     .get(
-          //       `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}students/${props.senderId}`,
+          //       `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${props.classId}/${student's studentId}`,
           //       {
           //         headers: {
           //           Authorization: `Bearer ${currentUser?.access_token}`,

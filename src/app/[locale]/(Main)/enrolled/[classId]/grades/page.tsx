@@ -15,7 +15,6 @@ import { GradeType } from "@/model/GradeType";
 export default function GradePage() {
   //temp
   const student = {
-    fullname: "Lê Hoàng Khanh Nguyên",
     studentId: "20127679",
     email: "lhkn@gmail.com",
   };
@@ -46,6 +45,8 @@ export default function GradePage() {
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null);
 
   const [grade, setGrade] = useState<GradeType[]>([]);
+  const [finalizedGrade, setFinalizedGrade] = useState();
+  const [fullname, setFullname] = useState();
 
   // const auth = useAuth();
   // student.studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
@@ -132,11 +133,44 @@ export default function GradePage() {
           }
         )
         .then((response) => {
-          console.log("Response", response);
           setGrade(response.data);
         })
         .catch((error) => {
           console.error("Error fetching grade:", error);
+        });
+
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}/${student.studentId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Member response", response);
+          setFullname(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching member:", error);
+        });
+
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/finalizedGrade/${classId}/${student.studentId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Grade response", response);
+          setFinalizedGrade(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching member:", error);
         });
     })();
   }, []);
@@ -167,7 +201,7 @@ export default function GradePage() {
             <tbody>
               <tr>
                 <th>{student.studentId}</th>
-                <td>{student.fullname}</td>
+                <td>{fullname}</td>
                 <td>
                   <input
                     type="text"
@@ -194,22 +228,28 @@ export default function GradePage() {
                   })}
                 <th>
                   <div className="text-sm opacity-50 flex justify-center align-middle">
-                    {/* TODO: update grade here */}
-                    Điểm tổng kết
+                    {finalizedGrade}
                   </div>
                 </th>
               </tr>
               {rubrics.length > 0 && (
                 <>
                   <tr>
+                    <th className="text-lg text-gray-500">%</th>
+                    <td></td>
+                    <td></td>
+                    {rubrics.map((item, index) => {
+                      return <td key={index}>{item.gradeScale}</td>;
+                    })}
+                  </tr>
+                  <tr>
                     <th className="text-lg text-gray-500">{t("status")}</th>
                     <td></td>
                     <td></td>
                     {rubrics.map((item, index) => {
                       return (
-                        <td>
-                          {t("graded")}
-                          <br />
+                        <td key={index}>
+                          {/* {t("graded")} */}
                           {t("not_graded")}
                         </td>
                       );
@@ -221,7 +261,7 @@ export default function GradePage() {
                     <td></td>
                     {rubrics.map((item, index) => {
                       return (
-                        <td>
+                        <td key={index}>
                           <button
                             key={index}
                             className="hidden md:block btn btn-info bg-yellow-400 text-white text-xs"
