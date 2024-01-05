@@ -14,7 +14,6 @@ import { ok } from "assert";
 import { ToastContainer } from "react-toastify";
 
 export default function MembersPage() {
-  // copy
   const [isCopied, setIsCopied] = useState(false);
   const t = useTranslations("Tabs");
   const [showModal, setShowModal] = useState(false);
@@ -102,7 +101,6 @@ export default function MembersPage() {
         console.log(err);
       });
   };
-  // end copy
 
   const handleDelete = async (member_id: string, role: string = "Student") => {
     try {

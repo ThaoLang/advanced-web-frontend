@@ -14,7 +14,8 @@
     "header_description_4": "Your learning adventure begins here. Dive into a world of possibilities, connect with peers, and explore subjects in ways you never imagined. LightHub is your portal to a brighter future.",
     "header_5": "See all you can accomplish with",
     "get_started_btn": "Get started",
-    "learn_more_btn": "Learn more"
+    "learn_more_btn": "Learn more",
+    "login_btn": "Login"
   },
   "Navbar": {
     "home": "Home",
@@ -201,6 +202,11 @@
     "number": "No.",
     "finalized_score": "Finalized score",
     "finalize_score": "Finalize score",
+    "finalize": "Finalize",
+    "my_grade": "My Grade",
+    "status": "Status",
+    "graded": "Graded",
+    "not_graded": "Not graded",
     "cancel_change": "Cancel changes",
     "invalid_grade": "Invalid grade! Please use . for decimal points, score between 0 and 10",
     "review": "Review",

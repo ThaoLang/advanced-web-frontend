@@ -19,8 +19,8 @@ import NotificationList from "./NotificationList";
 import { NotificationType } from "@/model/NotificationType";
 import { actions } from "@/app/[locale]/(Main)/state";
 import axios from "axios";
-import { UserType } from "@/model/UserType";
 import { ClassType } from "@/model/ClassType";
+import { UserType } from "@/model/UserType";
 
 export default function NavBar() {
   const auth = useAuth();
@@ -80,6 +80,20 @@ export default function NavBar() {
 
   useEffect(() => {
     (async () => {
+      const checkCredential = async () => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser != null) {
+          // Assuming UserType has a structure like { email: string }
+          const user = JSON.parse(savedUser);
+          if (user) {
+            auth.login(user);
+            console.log("auth", auth);
+            console.log("user", auth.user);
+          }
+        }
+      };
+      await checkCredential();
+
       // get a list of class id user is in
       // loop the list
       let classes: ClassType[];
@@ -91,49 +105,33 @@ export default function NavBar() {
           },
         })
         .then((response) => {
-          console.log("Teaching classes response", response);
+          console.log("All classes response", response);
           classes = response.data;
+
+          classes.forEach((element) => {
+            axios
+              .get(
+                `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/list/${element._id}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${auth.user?.access_token}`,
+                  },
+                }
+              )
+
+              .then((response) => {
+                if (response.data.length > 0) {
+                  console.log("Notifications response", response);
+                  setNotifications([...notifications, ...response.data]);
+                }
+              })
+              .catch((error) => {
+                console.error("Error fetching notifications:", error);
+              });
+          });
         })
         .catch((error) => {
           console.error("Error fetching my classes:", error);
-        });
-
-      await axios
-        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/get-enrolled`, {
-          headers: {
-            Authorization: `Bearer ${auth.user?.access_token}`,
-          },
-        })
-        .then((response) => {
-          (async () => {
-            console.log("Classes response", response);
-            classes = response.data;
-
-            classes.forEach((element) => {
-              axios
-                .get(
-                  `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/list/${element._id}`,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${auth.user?.access_token}`,
-                    },
-                  }
-                )
-
-                .then((response) => {
-                  if (response.data.length > 0) {
-                    console.log("Notifications response", response);
-                    setNotifications([...notifications, ...response.data]);
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error fetching notifications:", error);
-                });
-            });
-          })();
-        })
-        .catch((error) => {
-          console.error("Error fetching my enrolled classes:", error);
         });
     })();
   }, []);

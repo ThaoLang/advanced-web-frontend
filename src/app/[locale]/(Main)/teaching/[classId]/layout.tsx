@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useParams, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function TeachingLayout({
   children, // will be a page or nested layout
@@ -19,7 +19,19 @@ export default function TeachingLayout({
     { name: t("grades"), href: "/teaching/" + classId + "/grades" },
     { name: t("review"), href: "/teaching/" + classId + "/review" },
   ];
-  const [option, setOpinion] = useState("About");
+
+  const [option, setOpinion] = useState("");
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname.includes("members")) {
+      setOpinion(t("members"));
+    } else if (pathname.includes("grades")) {
+      setOpinion(t("grades"));
+    } else if (pathname.includes("review")) {
+      setOpinion(t("review"));
+    } else setOpinion(t("about"));
+  });
 
   return (
     <section>

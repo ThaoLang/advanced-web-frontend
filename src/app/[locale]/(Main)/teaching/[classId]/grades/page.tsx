@@ -29,6 +29,7 @@ import ExportModal from "@/component/classItem/grade/ExportModal";
 import { ClassListType } from "@/model/ClassListType";
 import { NotificationType } from "@/model/NotificationType";
 import { actions } from "../../../state";
+import { StudentType } from "@/model/StudentType";
 
 interface SortableComponentProps {
   rubrics: RubricType[];
@@ -77,43 +78,22 @@ const GradePage: React.FC = () => {
       {
         fullname: "Nguyễn Minh Quang",
         studentId: "20127605",
-        email: "",
+        // email: "",
       },
-      {
-        fullname: "Lăng Thảo Thảo",
-        studentId: "20127629",
-        email: "",
-      },
-      {
-        fullname: "Lê Hoàng Khanh Nguyên",
-        studentId: "20127679",
-        email: "lhkn@gmail.com",
-      },
-      {
-        fullname: "Lê Hoài Phương",
-        studentId: "20127598",
-        email: "",
-      },
-      {
-        fullname: "Hoàng Hữu Minh An",
-        studentId: "20127102",
-        email: "",
-      },
-      {
-        fullname: "Huỳnh Minh Chiến",
-        studentId: "20127444",
-        email: "20127444@student.hcmus.edu.vn",
-      },
+      // {
+      //   fullname: "Lăng Thảo Thảo",
+      //   studentId: "20127629",
+      //   email: "",
+      // },
+      // {
+      //   fullname: "Lê Hoàng Khanh Nguyên",
+      //   studentId: "20127679",
+      //   email: "lhkn@gmail.com",
+      // },
     ];
   };
 
-  interface StudentProps {
-    fullname: string;
-    studentId: string;
-    email: string;
-  }
-
-  const [students, setStudents] = useState<StudentProps[]>();
+  const [students, setStudents] = useState<StudentType[]>();
   const [grade, setGrade] = useState<GradeType[]>([]);
   const [gradeProxy, setGradeProxy] = useState<GradeType[]>([]);
 
@@ -472,7 +452,7 @@ const GradePage: React.FC = () => {
                 <th>{t("number")}</th>
                 <td>{t("fullname")}</td>
                 <td>{t("student_id")}</td>
-                <td>{t("email")}</td>
+                {/*<td>{t("email")}</td>*/}
                 {rubrics.length > 0 &&
                   rubrics.map((item, index) => {
                     return <td key={index}>{item.gradeName}</td>;
@@ -492,7 +472,7 @@ const GradePage: React.FC = () => {
                       </th>
                       <td>{student.fullname}</td>
                       <td>{student.studentId}</td>
-                      <td>
+                      {/*<td>
                         <input
                           type="text"
                           className="text-md font-light h-8 p-2"
@@ -506,7 +486,7 @@ const GradePage: React.FC = () => {
                             <>{t("unavailable")}</>
                           )}
                         </span>
-                      </td>
+                          </td>*/}
 
                       {rubrics.length > 0 &&
                         rubrics.map((item, index) => {
@@ -552,7 +532,7 @@ const GradePage: React.FC = () => {
                         })}
                       <th>
                         <div className="text-sm opacity-50 flex justify-center align-middle">
-                          {index + 1}
+                          {/* TODO: update grade here */}0
                         </div>
                       </th>
                     </tr>
@@ -561,18 +541,28 @@ const GradePage: React.FC = () => {
             </tbody>
 
             {/* foot */}
-            {/* <tfoot>
+            <tfoot>
               <tr>
-                <th>{t("number")}</th>
-                <td>{t("fullname")}</td>
-                <td>{t("student_id")}</td>
-                <td>{t("email")}</td>
-                {rubrics.length > 0 &&
-                  rubrics.map((item, index) => {
-                    return <td key={index}>{item.gradeName}</td>;
-                  })}
+                <th className="text-xs text-gray-500">{t("finalize")}</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                {rubrics.map((item, index) => {
+                  return (
+                    <td>
+                      <button
+                        key={index}
+                        className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
+                        onClick={() => finalizeScore()} //TODO: update later
+                      >
+                        {t("finalize")}
+                      </button>
+                    </td>
+                  );
+                })}
+                <th></th>
               </tr>
-            </tfoot> */}
+            </tfoot>
           </table>
         </div>
         <div className="flex items-center justify-center gap-4 mb-2">
@@ -599,9 +589,9 @@ const GradePage: React.FC = () => {
           {grade && (
             <button
               className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
-            ${grade.length == 0 ? "btn-disabled" : ""}
-            `}
-              onClick={() => finalizeScore}
+              `}
+              // ${grade.length == 0 ? "btn-disabled" : ""}
+              onClick={() => finalizeScore()} //TODO: update later
             >
               {t("finalize_score")}
             </button>
