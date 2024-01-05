@@ -30,6 +30,7 @@ import { ClassListType } from "@/model/ClassListType";
 import { NotificationType } from "@/model/NotificationType";
 import { actions } from "../../../state";
 import { StudentType } from "@/model/StudentType";
+import { NumericFormat } from "react-number-format";
 
 interface SortableComponentProps {
   rubrics: RubricType[];
@@ -73,29 +74,27 @@ const SortableComponent = (props: SortableComponentProps) => {
 };
 
 const GradePage: React.FC = () => {
-  const getStudents = async () => {
-    return [
-      {
-        fullname: "Nguyễn Minh Quang",
-        studentId: "20127605",
-        // email: "",
-      },
-      // {
-      //   fullname: "Lăng Thảo Thảo",
-      //   studentId: "20127629",
-      //   email: "",
-      // },
-      // {
-      //   fullname: "Lê Hoàng Khanh Nguyên",
-      //   studentId: "20127679",
-      //   email: "lhkn@gmail.com",
-      // },
-    ];
-  };
+  // const getStudents = async () => {
+  //   return [
+  //     {
+  //       fullname: "Lê Hoàng Khanh Nguyên",
+  //       studentId: "20127679",
+  //       // email: "lhkn@gmail.com",
+  //     },
+  //   ];
+  // };
 
   const [students, setStudents] = useState<StudentType[]>();
   const [grade, setGrade] = useState<GradeType[]>([]);
   const [gradeProxy, setGradeProxy] = useState<GradeType[]>([]);
+
+  // interface GradeProps {
+  //   studentId: string;
+  //   grade: number;
+  // }
+  const [finalizeGrades, setFinalizedGrades] = useState<Map<string, number>>(
+    new Map<string, number>()
+  );
 
   const getMyStudentGrade = (studentId: string, rubricId: string) => {
     for (let item of grade) {
@@ -208,8 +207,59 @@ const GradePage: React.FC = () => {
   };
 
   const finalizeScore = () => {
-    // notification
     (async () => {
+      //update finalized score for students
+      if (!students) return;
+
+      students.forEach((student) => {
+        axios
+          .get(
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/finalizedGrade/${classId}/${student.studentId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${currentUser?.access_token}`,
+              },
+            }
+          )
+          .then((response) => {
+            console.log("Grade response", response);
+            let data = response.data as number;
+            finalizeGrades.set(student.studentId, data);
+            setFinalizedGrades(finalizeGrades);
+            console.log("finalizeGrades", finalizeGrades);
+          })
+          .catch((error) => {
+            console.error("Error fetching member:", error);
+          });
+      });
+    })();
+  };
+
+  const finalizeRubric = (rubric: RubricType) => {
+    rubric.status = "graded";
+    setRubrics([...rubrics]);
+
+    (async () => {
+      // update rubric status
+      await axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/finalize/${rubric._id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser?.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Finalize response", response);
+        })
+        .catch((error) => {
+          console.error("Error finalizing rubric:", error);
+          return;
+        });
+
+      // notification
       let senderRole: string,
         message: string,
         redirectUrl: string,
@@ -346,6 +396,10 @@ const GradePage: React.FC = () => {
     }
   };
 
+  const isNotVisible = (status: string) => {
+    return status === "graded";
+  };
+
   useEffect(() => {
     (async () => {
       // console.log("User", currentUser);
@@ -358,6 +412,21 @@ const GradePage: React.FC = () => {
         .then((response) => {
           // console.log("Response", response);
           setRubrics(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching rubrics:", error);
+        });
+
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}`, {
+          headers: {
+            Authorization: `Bearer ${currentUser?.access_token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Students Response", response);
+          let data = response.data[0].students;
+          setStudents(data);
         })
         .catch((error) => {
           console.error("Error fetching rubrics:", error);
@@ -393,12 +462,6 @@ const GradePage: React.FC = () => {
           });
       })();
     });
-
-    (async () => {
-      // TODO: update request
-      const students = await getStudents();
-      setStudents(students);
-    })();
   }, [rubrics]);
 
   useEffect(() => {
@@ -529,7 +592,13 @@ const GradePage: React.FC = () => {
                         })}
                       <th>
                         <div className="text-sm opacity-50 flex justify-center align-middle">
-                          {/* TODO: update grade here */}0
+                          <NumericFormat
+                            value={finalizeGrades.get(student.studentId)}
+                            decimalScale={3}
+                            disabled={true}
+                            maxLength={6}
+                            className="w-20"
+                          />
                         </div>
                       </th>
                     </tr>
@@ -538,28 +607,31 @@ const GradePage: React.FC = () => {
             </tbody>
 
             {/* foot */}
-            <tfoot>
-              <tr>
-                <th className="text-xs text-gray-500">{t("finalize")}</th>
-                <td></td>
-                <td></td>
-                <td></td>
-                {rubrics.map((item, index) => {
-                  return (
-                    <td>
-                      <button
-                        key={index}
-                        className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
-                        onClick={() => finalizeScore()} //TODO: update later
-                      >
-                        {t("finalize")}
-                      </button>
-                    </td>
-                  );
-                })}
-                <th></th>
-              </tr>
-            </tfoot>
+            {students && students.length > 0 && (
+              <tfoot>
+                <tr>
+                  <th className="text-xs text-gray-500">{t("finalize")}</th>
+                  <td></td>
+                  <td></td>
+                  {/* <td></td> */}
+                  {rubrics.map((item, index) => {
+                    return (
+                      <td>
+                        <button
+                          key={index}
+                          className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
+                          disabled={isNotVisible(item.status)}
+                          onClick={() => finalizeRubric(item)}
+                        >
+                          {t("finalize")}
+                        </button>
+                      </td>
+                    );
+                  })}
+                  <th></th>
+                </tr>
+              </tfoot>
+            )}
           </table>
         </div>
         <div className="flex items-center justify-center gap-4 mb-2">
@@ -588,7 +660,7 @@ const GradePage: React.FC = () => {
               className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
               `}
               // ${grade.length == 0 ? "btn-disabled" : ""}
-              onClick={() => finalizeScore()} //TODO: update later
+              onClick={() => finalizeScore()}
             >
               {t("finalize_score")}
             </button>

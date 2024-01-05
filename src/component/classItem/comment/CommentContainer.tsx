@@ -117,7 +117,8 @@ const CommentContainer = (props: CommentContainerInterface) => {
               comment.user.avatar = response.data.avatarUrl;
 
               console.log("updated comment", comment);
-              setComments([...comments, comment]);
+              setComments([...comments]);
+              // setComments([...comments, comment]);
             })
             .catch((error) => {
               console.error("Error fetching user:", error);

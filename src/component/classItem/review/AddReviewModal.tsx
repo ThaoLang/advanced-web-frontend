@@ -113,6 +113,10 @@ export default function AddReviewModal(props: AddReviewProps) {
     }
   };
 
+  const isNotVisible = (status: string) => {
+    return status === "not_graded";
+  };
+
   const handleSelectChange = (
     value: string,
     setter: React.Dispatch<React.SetStateAction<string>>
@@ -140,7 +144,11 @@ export default function AddReviewModal(props: AddReviewProps) {
 
           {props.rubrics &&
             props.rubrics.map((rubric, index) => (
-              <option key={index} value={rubric.gradeName}>
+              <option
+                key={index}
+                value={rubric.gradeName}
+                disabled={isNotVisible(rubric.status)}
+              >
                 {rubric.gradeName}
               </option>
             ))}

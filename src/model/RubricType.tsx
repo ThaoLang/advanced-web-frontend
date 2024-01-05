@@ -4,4 +4,5 @@ export type RubricType = {
   gradeScale: number;
   classId: string;
   order: number;
+  status: string;
 };

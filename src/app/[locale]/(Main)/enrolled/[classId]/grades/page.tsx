@@ -11,6 +11,7 @@ import { ReviewType } from "@/model/ReviewType";
 import { IoMdClose } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 import { GradeType } from "@/model/GradeType";
+import { NumericFormat } from "react-number-format";
 
 export default function GradePage() {
   //temp
@@ -47,6 +48,7 @@ export default function GradePage() {
   const [grade, setGrade] = useState<GradeType[]>([]);
   const [finalizedGrade, setFinalizedGrade] = useState();
   const [fullname, setFullname] = useState();
+  const [isFinalized, setIsFinalized] = useState(false);
 
   // const auth = useAuth();
   // student.studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
@@ -118,6 +120,14 @@ export default function GradePage() {
         })
         .then((response) => {
           setRubrics(response.data);
+
+          setIsFinalized(true);
+          const rubrics = response.data as RubricType[];
+          rubrics.forEach((rubric) => {
+            if (rubric.status === "not_graded") {
+              setIsFinalized(false);
+            }
+          });
         })
         .catch((error) => {
           console.error("Error fetching rubrics:", error);
@@ -215,20 +225,30 @@ export default function GradePage() {
                 {rubrics.length > 0 &&
                   rubrics.map((item, index) => {
                     return (
-                      <td key={index}>
-                        {grade
-                          .filter((oneGrade) => {
-                            if (item._id === oneGrade.rubricId) return oneGrade;
-                          })
-                          .map((oneGrade) => (
-                            <>{oneGrade.grade}</>
-                          ))}
-                      </td>
+                      <>
+                        <td key={index}>
+                          {item.status === "graded" &&
+                            grade
+                              .filter((oneGrade) => {
+                                if (item._id === oneGrade.rubricId)
+                                  return oneGrade;
+                              })
+                              .map((oneGrade) => <>{oneGrade.grade}</>)}
+                        </td>
+                      </>
                     );
                   })}
                 <th>
                   <div className="text-sm opacity-50 flex justify-center align-middle">
-                    {finalizedGrade}
+                    {isFinalized && (
+                      <NumericFormat
+                        value={finalizedGrade}
+                        decimalScale={3}
+                        disabled={true}
+                        maxLength={6}
+                        className="w-20"
+                      />
+                    )}
                   </div>
                 </th>
               </tr>
@@ -241,19 +261,16 @@ export default function GradePage() {
                     {rubrics.map((item, index) => {
                       return <td key={index}>{item.gradeScale}</td>;
                     })}
+                    <th></th>
                   </tr>
                   <tr>
                     <th className="text-lg text-gray-500">{t("status")}</th>
                     <td></td>
                     <td></td>
                     {rubrics.map((item, index) => {
-                      return (
-                        <td key={index}>
-                          {/* {t("graded")} */}
-                          {t("not_graded")}
-                        </td>
-                      );
+                      return <td key={index}>{t(item.status)}</td>;
                     })}
+                    <th></th>
                   </tr>
                   <tr>
                     <th className="text-lg text-gray-500">{t("review")}</th>
@@ -261,17 +278,21 @@ export default function GradePage() {
                     <td></td>
                     {rubrics.map((item, index) => {
                       return (
-                        <td key={index}>
-                          <button
-                            key={index}
-                            className="hidden md:block btn btn-info bg-yellow-400 text-white text-xs"
-                            onClick={() => {
-                              openModal(item.gradeName, item._id);
-                            }}
-                          >
-                            {t("review")}
-                          </button>
-                        </td>
+                        <>
+                          {item.status === "graded" && (
+                            <td key={index}>
+                              <button
+                                key={index}
+                                className="hidden md:block btn btn-info bg-yellow-400 text-white text-xs"
+                                onClick={() => {
+                                  openModal(item.gradeName, item._id);
+                                }}
+                              >
+                                {t("review")}
+                              </button>
+                            </td>
+                          )}
+                        </>
                       );
                     })}
                     <th></th>

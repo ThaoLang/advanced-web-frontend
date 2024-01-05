@@ -33,6 +33,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "react-icons": "^4.12.0",
+    "react-number-format": "^5.3.1",
     "react-router-dom": "^6.20.1",
     "react-sortable-hoc": "^2.0.0",
     "react-toastify": "^9.1.3",
