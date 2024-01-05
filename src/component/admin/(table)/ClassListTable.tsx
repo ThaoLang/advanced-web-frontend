@@ -1,9 +1,11 @@
+"use client";
 import { FaRegEye, FaRegTrashCan, FaBan, FaPenToSquare } from 'react-icons/fa6'
 import Link from 'next/link';
 import Pagination from '@/component/admin/Pagination';
 import React, { useState, useEffect } from 'react';
 import DeletePopupModal from '@/component/admin/(modal)/DeletePopupModal';
 import EditFieldModal from '@/component/admin/(modal)/EditFieldModal';
+import { useAuth } from '@/context/AuthContext';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -17,7 +19,6 @@ interface ClassListTableProps {
 }
 
 export default async function ClassListTable(props: ClassListTableProps) {
-    // const context = useClassList();
     const totalPages =
         props.totalItems % ITEMS_PER_PAGE === 0
             ? props.totalItems / ITEMS_PER_PAGE
@@ -83,7 +84,7 @@ export default async function ClassListTable(props: ClassListTableProps) {
                     {/* head */}
                     <thead>
                         <tr>
-                            <th>ClassID</th>
+                            <th>No.</th>
                             <th>UserID</th>
                             <th>FullName</th>
                             <th>Role</th>
@@ -93,13 +94,13 @@ export default async function ClassListTable(props: ClassListTableProps) {
                     </thead>
                     <tbody>
                         {
-                            props.paginatedResult.map((items: any, index: number) => (
+                            props.paginatedResult?.map((items: any, index: number) => (
                                 <tr key={index}
                                     className="hover:bg-gray-100 cursor-pointer hover:border-1 hover:border-gray-200"
                                 >
-                                    <td>{items.class_id}</td>
+                                    <td>{(props.currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
                                     <td>{items.user_id}</td>
-                                    <td>{items.fullname}</td>
+                                    <td>{items.fullName}</td>
                                     {
                                         items.role === 'teacher' ?
                                             (
