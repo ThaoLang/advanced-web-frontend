@@ -185,7 +185,7 @@ const GradePage: React.FC = () => {
             `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/allGrades/${element._id}`,
             {
               headers: {
-                Authorization: `Bearer ${currentUser?.access_token}`,
+                Authorization: `Bearer ${auth.user?.access_token}`,
               },
             }
           )
@@ -273,7 +273,7 @@ const GradePage: React.FC = () => {
           `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )
@@ -306,7 +306,10 @@ const GradePage: React.FC = () => {
             isRead: false,
           };
 
-          actions.sendNotification(currentUser.access_token, newNotification);
+          actions.sendNotification(
+            auth.user?.access_token ? auth.user.access_token : "",
+            newNotification
+          );
         })
         .catch((error) => {
           console.error("Error fetching class members:", error);
@@ -323,11 +326,11 @@ const GradePage: React.FC = () => {
   const [rubrics, setRubrics] = useState<RubricType[]>([]);
   const [isDisabledUpdatedBtn, setIsDisabledUpdatedBtn] = useState(true);
   const auth = useAuth();
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
+  // const savedUser = localStorage.getItem("user");
+  // let currentUser: UserType;
+  // if (savedUser) {
+  //   currentUser = JSON.parse(savedUser);
+  // }
   const { classId } = useParams();
   const handleModal = () => {
     console.log("Modal changed");
@@ -356,7 +359,7 @@ const GradePage: React.FC = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       );
@@ -380,7 +383,7 @@ const GradePage: React.FC = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       );
@@ -406,7 +409,7 @@ const GradePage: React.FC = () => {
       axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         })
         .then((response) => {
@@ -445,7 +448,7 @@ const GradePage: React.FC = () => {
             `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/allGrades/${element._id}`,
             {
               headers: {
-                Authorization: `Bearer ${currentUser?.access_token}`,
+                Authorization: `Bearer ${auth.user?.access_token}`,
               },
             }
           )

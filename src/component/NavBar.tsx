@@ -24,25 +24,6 @@ import { UserType } from "@/model/UserType";
 
 export default function NavBar() {
   const auth = useAuth();
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
-
-  // useEffect(() => {
-  //   const checkCredential = async () => {
-  //     const savedUser = localStorage.getItem("user");
-  //     if (savedUser != null) {
-  //       // Assuming UserType has a structure like { email: string }
-  //       const user = JSON.parse(savedUser);
-  //       if (user) {
-  //         auth.login(user);
-  //       }
-  //     }
-  //   };
-  //   checkCredential();
-  // }, []);
 
   const t = useTranslations("Navbar");
 
@@ -55,6 +36,48 @@ export default function NavBar() {
   const [notifications, setNotifications] = useState<Array<NotificationType>>(
     []
   );
+
+  const isNotificationClicked = (notification: NotificationType) => {
+    notification.isRead = true;
+    setNotifications(notifications);
+  };
+
+  const handleLanguageChange = (locale: string) => {
+    setIsDropdownOpen(false);
+    router.replace(pathname, { locale: locale });
+  };
+
+  const handleLogout = () => {
+    localStorage.setItem("user", null as any);
+    auth.logout("user");
+  };
+
+  // avatar url
+
+  useEffect(() => {
+    const checkCredential = async () => {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser != null) {
+        // Assuming UserType has a structure like { email: string }
+        const user = JSON.parse(savedUser);
+        if (user) {
+          auth.login(user);
+        }
+      }
+    };
+    checkCredential();
+  }, []);
+
+  useEffect(() => {
+    // socket io notification
+    let user = auth.user;
+    let accessToken = user?.access_token;
+    if (accessToken) {
+      actions.setAccessToken(accessToken);
+      actions.initializeSocket(accessToken);
+    }
+  }, []);
+
   useEffect(() => {
     (async () => {
       const checkCredential = async () => {
@@ -78,7 +101,7 @@ export default function NavBar() {
       await axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         })
         .then((response) => {
@@ -91,7 +114,7 @@ export default function NavBar() {
                 `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/list/${element._id}`,
                 {
                   headers: {
-                    Authorization: `Bearer ${currentUser?.access_token}`,
+                    Authorization: `Bearer ${auth.user?.access_token}`,
                   },
                 }
               )
@@ -111,33 +134,6 @@ export default function NavBar() {
           console.error("Error fetching my classes:", error);
         });
     })();
-  }, []);
-
-  const isNotificationClicked = (notification: NotificationType) => {
-    notification.isRead = true;
-    setNotifications(notifications);
-  };
-
-  const handleLanguageChange = (locale: string) => {
-    setIsDropdownOpen(false);
-    router.replace(pathname, { locale: locale });
-  };
-
-  const handleLogout = () => {
-    localStorage.setItem("user", null as any);
-    auth.logout("user");
-  };
-
-  // avatar url
-
-  useEffect(() => {
-    // socket io notification
-    let user = auth.user;
-    let accessToken = user?.access_token;
-    if (accessToken) {
-      actions.setAccessToken(accessToken);
-      actions.initializeSocket(accessToken);
-    }
   }, []);
 
   return (

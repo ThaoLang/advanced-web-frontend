@@ -15,6 +15,7 @@ import { RubricType } from "@/model/RubricType";
 import { ClassListType } from "@/model/ClassListType";
 import { NotificationType } from "@/model/NotificationType";
 import { actions } from "@/app/[locale]/(Main)/state";
+import { useAuth } from "@/context/AuthContext";
 
 export default function DetailedReviewPage() {
   const t = useTranslations("Review");
@@ -24,13 +25,14 @@ export default function DetailedReviewPage() {
     setShowModal(!showModal);
   };
 
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
+  // const savedUser = localStorage.getItem("user");
+  // let currentUser: UserType;
+  // if (savedUser) {
+  //   currentUser = JSON.parse(savedUser);
+  // }
   const { classId } = useParams();
   const { reviewId } = useParams();
+  const auth = useAuth();
 
   const [reviewList, setReviewList] = useState<ReviewType[]>([]);
 
@@ -56,7 +58,7 @@ export default function DetailedReviewPage() {
               `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
               {
                 headers: {
-                  Authorization: `Bearer ${currentUser?.access_token}`,
+                  Authorization: `Bearer ${auth.user?.access_token}`,
                 },
               }
             )
@@ -93,7 +95,7 @@ export default function DetailedReviewPage() {
               };
 
               actions.sendNotification(
-                currentUser.access_token,
+                auth.user?.access_token ? auth.user?.access_token : "",
                 newNotification
               );
             })
@@ -127,7 +129,7 @@ export default function DetailedReviewPage() {
           },
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )
@@ -148,7 +150,7 @@ export default function DetailedReviewPage() {
         axios
           .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           })
           .then((response) => {
@@ -171,7 +173,7 @@ export default function DetailedReviewPage() {
                     },
                     {
                       headers: {
-                        Authorization: `Bearer ${currentUser?.access_token}`,
+                        Authorization: `Bearer ${auth.user?.access_token}`,
                       },
                     }
                   )
@@ -199,7 +201,7 @@ export default function DetailedReviewPage() {
           `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/allReviews/${classId}`,
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )

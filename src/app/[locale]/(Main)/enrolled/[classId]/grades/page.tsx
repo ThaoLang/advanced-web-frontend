@@ -54,13 +54,14 @@ export default function GradePage() {
   // student.studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
   const savedUser = localStorage.getItem("user");
   let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-    if (currentUser) {
-      student.email = currentUser.email;
-      student.studentId = currentUser.studentId;
-    }
-  }
+  const auth = useAuth();
+  // if (savedUser) {
+  //   currentUser = JSON.parse(savedUser);
+  //   if (currentUser) {
+  //     student.email = currentUser.email;
+  //     student.studentId = currentUser.studentId;
+  //   }
+  // }
   const { classId } = useParams();
 
   const addReview = (
@@ -94,7 +95,7 @@ export default function GradePage() {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       )
@@ -115,7 +116,7 @@ export default function GradePage() {
       axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         })
         .then((response) => {
@@ -138,7 +139,7 @@ export default function GradePage() {
           `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/studentGrades/${student.studentId}`,
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )
