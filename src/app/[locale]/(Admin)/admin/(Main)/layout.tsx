@@ -14,19 +14,15 @@ export const metadata: Metadata = {
   description: "Education for life",
 };
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
           <AccountProvider>
             <ClassroomProvider>
-              <AdminLayout children={children}/>
+              {/* <AdminLayout children={children} /> */}
+              <AdminLayout>{children}</AdminLayout>
             </ClassroomProvider>
           </AccountProvider>
         </AuthProvider>

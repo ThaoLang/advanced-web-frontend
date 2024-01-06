@@ -21,6 +21,7 @@ import { actions } from "@/app/[locale]/(Main)/state";
 import axios from "axios";
 import { UserType } from "@/model/UserType";
 import { ClassType } from "@/model/ClassType";
+import Image from "next/image";
 
 export default function NavBar() {
   const auth = useAuth();
@@ -251,7 +252,12 @@ export default function NavBar() {
             <div className="dropdown dropdown-end dropdown-hover">
               <div tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
-                  <img alt="avatar" src={auth.user.avatarUrl} />
+                  <Image
+                    alt="avatar"
+                    src={auth.user.avatarUrl}
+                    width={10}
+                    height={10}
+                  />
                 </div>
               </div>
               <ul
