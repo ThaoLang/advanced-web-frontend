@@ -60,6 +60,17 @@ const SortableComponent = (props: SortableComponentProps) => {
       setRubrics={props.setRubrics}
       onSortEnd={onSortEnd}
       useDragHandle
+      rubric={{
+        _id: "",
+        gradeName: "",
+        gradeScale: 0,
+        classId: "",
+        order: 0,
+        status: "",
+      }}
+      handleUpdate={function (updatedRubric: RubricType): void {
+        throw new Error("Function not implemented.");
+      }}
     />
   );
 };
