@@ -30,7 +30,8 @@ export default function RootLayout({
       <body className="">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AuthProvider>
-            <UserLayout children={children} locale={locale} />
+            {/* <UserLayout children={children} locale={locale} /> */}
+            <UserLayout locale={locale}>{children}</UserLayout>
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

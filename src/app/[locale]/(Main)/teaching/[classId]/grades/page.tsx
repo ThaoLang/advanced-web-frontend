@@ -603,7 +603,7 @@ const GradePage: React.FC = () => {
                   {/* <td></td> */}
                   {rubrics.map((item, index) => {
                     return (
-                      <td>
+                      <td key={index}>
                         <button
                           key={index}
                           className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"

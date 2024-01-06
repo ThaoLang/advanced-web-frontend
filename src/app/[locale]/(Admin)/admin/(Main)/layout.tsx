@@ -29,7 +29,8 @@ export default function Layout({
       <body className="">
         <AuthProvider>
           <NextIntlClientProvider locale={locale} messages={messages}>
-            <AdminLayout children={children} />
+            {/* <AdminLayout children={children} /> */}
+            <AdminLayout>{children}</AdminLayout>
           </NextIntlClientProvider>
         </AuthProvider>
       </body>
