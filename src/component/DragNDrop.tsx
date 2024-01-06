@@ -21,12 +21,10 @@ function DragNDrop(props: ImageProp) {
       "image/*": [".png", ".gif", ".jpeg", ".jpg"],
     },
     onDrop: (acceptedFiles) => {
-      console.log("acceptedFiles", acceptedFiles[0].name); 
-      props.saveRawImage(acceptedFiles[0]);
-      
-      const fileUrl = URL.createObjectURL(acceptedFiles[0]);
-      props.saveImageUrl(fileUrl);
-    },
+        props.saveRawImage(acceptedFiles[0]);
+        const fileUrl = URL.createObjectURL(acceptedFiles[0]);
+        props.saveImageUrl(fileUrl);
+      }
   });
   const t = useTranslations("Profile");
 
