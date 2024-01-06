@@ -264,10 +264,8 @@ export default function Page({ params, searchParams }:
     const handleFileUpload = async (data: any) => {
         // Handle the parsed CSV data
         const convertedData: StudentType[] = data.map((item: any) => ({
-            // class_id: item.class_id,
-            // user_id: item.user_id.toString(), // Convert user_id to string if it's a number
-            fullName: item.fullname,
-            student_id: item.student_id ? item.student_id.toString() : '', // Convert student_id to string if it's a number, or use an empty string if undefined
+            fullname: item.fullname ? item.fullname.toString() : '',
+            studentId: item.studentId ? item.studentId.toString() : '', 
         }));
         const classId = params.slug;
         await fetchSaveCSV(convertedData, classId).catch(console.error);

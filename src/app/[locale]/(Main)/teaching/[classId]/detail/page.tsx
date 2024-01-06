@@ -65,8 +65,8 @@ export default function DetailTeachingClass() {
   const handleFileUpload = async (data: any) => {
     // Handle the parsed CSV data
     const convertedData: StudentType[] = data.map((item: any) => ({
-      fullName: item.fullname ? item.fullname.toString() : "",
-      student_id: item.student_id ? item.student_id.toString() : "",
+        fullname: item.fullname ? item.fullname.toString() : '',
+        studentId: item.studentId ? item.studentId.toString() : '', 
     }));
     await fetchSaveCSV(convertedData, classId as string).catch(console.error);
     setIsAvailable(true);
