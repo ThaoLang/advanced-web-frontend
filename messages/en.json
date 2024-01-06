@@ -213,7 +213,9 @@
     "add_review_success": "Add review successfully!",
     "add_review_failure": "Add review failed...",
     "update_rubric_success": "Update rubric successfully!",
-    "update_rubric_failure": "Update rubric failed..."
+    "update_rubric_failure": "Update rubric failed...",
+    "update_grade_success": "Update grade successfully!",
+    "update_grade_failure": "Update grade failed..."
   },
   "Notification": {
     "grade_finalize": "A grade composition is finalized",
