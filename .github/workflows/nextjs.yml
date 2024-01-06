@@ -82,12 +82,12 @@ jobs:
       #   with:
       #     path: ./out
       - name: Upload artifact
-        uses: actions/upload-artifact@v2.2.0
+        uses: actions/upload-pages-artifact@v2.2.0
          with:
            path: ./out
         # with:
         # name: upload-artifact
-        # path: mywebapp/**
+        # path: mywebapp/**ssssssss
         # if-no-files-found:error
         # retention-days:90
 
