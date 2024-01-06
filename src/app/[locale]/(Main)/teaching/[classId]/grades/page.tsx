@@ -309,6 +309,8 @@ const GradePage: React.FC = () => {
     // end send notification
   };
 
+  const updateGrade = () => {};
+
   const t = useTranslations("GradePage");
 
   const [showModal, setShowModal] = useState(false);
@@ -415,11 +417,7 @@ const GradePage: React.FC = () => {
         .then((response) => {
           console.log("Students Response", response);
           let data = response.data[0].students;
-          const convertedData: StudentType[] = data.map((item: any) => ({
-            fullname: item.fullName,
-            studentId: item.student_id,
-          }));
-          setStudents(convertedData);
+          setStudents(data);
         })
         .catch((error) => {
           console.error("Error fetching rubrics:", error);
@@ -470,13 +468,7 @@ const GradePage: React.FC = () => {
     <div className="grid grid-cols-6 gap-10 mx-10">
       <div className="col-span-6 lg:col-span-4">
         <div className="flex items-center justify-center gap-4 mb-2">
-          {/* <button
-            className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
-            // onClick={() => {}}
-          > */}
-          {/* </button> */}
-
-          {t("download_help")}
+          <div className="hidden md:block">{t("download_help")}</div>
           <FileDownloadButton
             templateCategory="Grade"
             filename="Grade_Template"
