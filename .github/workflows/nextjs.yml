@@ -83,6 +83,8 @@ jobs:
       #     path: ./out
       - name: Upload artifact
         uses: actions/upload-artifact@v2.2.0
+         with:
+           path: ./out
         # with:
         # name: upload-artifact
         # path: mywebapp/**
