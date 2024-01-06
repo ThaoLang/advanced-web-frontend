@@ -6,6 +6,7 @@ const nextConfig = {
   experimental: {
     scrollRestoration: true,
   },
+  swcMinify: true,
   // output: "export",
 };
 
