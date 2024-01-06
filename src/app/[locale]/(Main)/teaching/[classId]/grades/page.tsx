@@ -82,6 +82,7 @@ const GradePage: React.FC = () => {
   const [finalizeGrades, setFinalizedGrades] = useState<Map<string, number>>(
     new Map<string, number>()
   );
+  const [isFinalized, setIsFinalized] = useState(false);
 
   const getMyStudentGrade = (studentId: string, rubricId: string) => {
     for (let item of grade) {
@@ -250,27 +251,29 @@ const GradePage: React.FC = () => {
       //update finalized score for students
       if (!students) return;
 
-      students.forEach((student) => {
-        axios
-          .get(
-            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/finalizedGrade/${classId}/${student.studentId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${auth.user?.access_token}`,
-              },
-            }
-          )
-          .then((response) => {
-            console.log("Grade response", response);
-            let data = response.data as number;
-            finalizeGrades.set(student.studentId, data);
-            setFinalizedGrades(finalizeGrades);
-            console.log("finalizeGrades", finalizeGrades);
-          })
-          .catch((error) => {
-            console.error("Error fetching member:", error);
-          });
-      });
+      await (async () => {
+        students.forEach((student) => {
+          axios
+            .get(
+              `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/finalizedGrade/${classId}/${student.studentId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${auth.user?.access_token}`,
+                },
+              }
+            )
+            .then((response) => {
+              console.log("Grade response", response);
+              let data = response.data as number;
+              finalizeGrades.set(student.studentId, data);
+              setFinalizedGrades(finalizeGrades);
+            })
+            .catch((error) => {
+              console.error("Error fetching member:", error);
+            });
+        });
+      })();
+      await setIsFinalized(!isFinalized);
     })();
   };
 
@@ -533,6 +536,10 @@ const GradePage: React.FC = () => {
   }, [rubrics]);
 
   useEffect(() => {
+    console.log("finalizeGrades 2", finalizeGrades);
+  }, [isFinalized]);
+
+  useEffect(() => {
     console.log("List Rubrics:", rubrics);
     if (isDisabledUpdatedBtn) {
       setIsDisabledUpdatedBtn(!isDisabledUpdatedBtn);
@@ -667,11 +674,13 @@ const GradePage: React.FC = () => {
                               );
                             })}
                           <th>
-                            <div className="text-sm opacity-50 flex justify-center align-middle">
+                            <div
+                              className="text-sm opacity-50 flex justify-center align-middle pointer-events-none"
+                              contentEditable={false}
+                            >
                               <NumericFormat
                                 value={finalizeGrades.get(student.studentId)}
                                 decimalScale={3}
-                                disabled={true}
                                 maxLength={6}
                                 className="w-20"
                               />
