@@ -2,9 +2,9 @@ name: Continuous Integration Workflow
 
 on:
   push:
-    branches: ["master","ci-cd"]
+    branches: ["master", "ci-cd"]
   pull_request:
-    branches: ["master","ci-cd"]
+    branches: ["master", "ci-cd"]
 
 jobs:
   test:

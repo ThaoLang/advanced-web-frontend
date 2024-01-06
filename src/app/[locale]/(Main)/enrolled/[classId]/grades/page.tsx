@@ -213,7 +213,7 @@ export default function GradePage() {
                 {rubrics.length > 0 &&
                   rubrics.map((item, index) => {
                     return (
-                      <>
+                      <div key={index}>
                         <td key={index}>
                           {item.status === "graded" &&
                             grade
@@ -221,9 +221,11 @@ export default function GradePage() {
                                 if (item._id === oneGrade.rubricId)
                                   return oneGrade;
                               })
-                              .map((oneGrade) => <>{oneGrade.grade}</>)}
+                              .map((oneGrade, _index) => (
+                                <div key={_index}>{oneGrade.grade}</div>
+                              ))}
                         </td>
-                      </>
+                      </div>
                     );
                   })}
                 <th>

@@ -5,7 +5,9 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import {
   SortableContainer,
+  SortableContainerProps,
   SortableElement,
+  SortableElementProps,
   SortableHandle,
 } from "react-sortable-hoc";
 import EditGradeForm from "./EditGradeForm";
@@ -25,7 +27,9 @@ interface SortableItemProps {
   handleUpdate: (updatedRubric: RubricType) => void;
 }
 const DragHandle = SortableHandle(() => <RxDragHandleDots2 />);
-const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
+const SortableItem: React.ComponentClass<
+  RubricType & SortableElementProps & SortableItemProps
+> = SortableElement((props: SortableItemProps) => {
   const [showEditModal, setEditShowModal] = React.useState(false);
   const [showDeleteModal, setDeleteShowModal] = React.useState(false);
   const auth = useAuth();
@@ -142,7 +146,9 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
   );
 });
 
-const SortableList = SortableContainer((props: SortableListProps) => {
+const SortableList: React.ComponentClass<
+  SortableListProps & SortableItemProps & SortableContainerProps
+> = SortableContainer((props: SortableListProps) => {
   console.log("Sort List Item", props.items);
   const handleUpdate = (updatedRubric: RubricType) => {
     const updatedItems = props.items.map((item) =>
@@ -162,6 +168,12 @@ const SortableList = SortableContainer((props: SortableListProps) => {
             rubric={value}
             setRubrics={props.setRubrics}
             handleUpdate={handleUpdate}
+            _id={""}
+            gradeName={""}
+            gradeScale={0}
+            classId={""}
+            order={0}
+            status={""}
           />
         ))}
     </ul>

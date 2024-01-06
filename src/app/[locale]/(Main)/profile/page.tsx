@@ -14,17 +14,20 @@ export default function Profile() {
   const t = useTranslations("Profile");
   const [rawImage, setRawImage] = useState<any>(null);
 
-  // Create an S3 instance
-const s3 = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_DO_SPACES_URL}`,
-  headers: {
-    'Content-Type': 'application/octet-stream',
-    'x-amz-acl': 'public-read',
-    'Authorization': `Bearer ${auth.user?.access_token}`,
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
-  },
-});
+  //   // Create an S3 instance
+  // const s3 = axios.create({
+  //   baseURL: `${process.env.NEXT_PUBLIC_DO_SPACES_URL}`,
+  //   headers: {
+  //     'Content-Type': 'application/octet-stream',
+  //     'x-amz-acl': 'public-read',
+  //     'Authorization': `Bearer ${auth.user?.access_token}`,
+  //     'Access-Control-Allow-Origin': "*",
+  //     'Access-Control-Allow-Methods': "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+  //     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+  //     'Access-Control-Allow-Credentials':'true',
+  //     'Access-Control-Max-Age': '600',
+  //   },
+  // });
 
   const updateProfile = async (
     _username: string,
@@ -53,20 +56,16 @@ const s3 = axios.create({
 
     try {
       console.log("USE", _username);
-      console.log("USE", _profilePicture) ;
-      console.log("USE", rawImage.name) ;
-      
-      console.log("EXTENSION: ", getFileExtension(rawImage.name));
-
       const avatarFileName = `/avatar/${extractUsernameFromEmail(auth.user?.email!)}.${getFileExtension(rawImage.name)}`;
-      console.log("AVATAR FILE NAME: ", avatarFileName);  
-      await fetchUploadAvatar(rawImage, avatarFileName).catch(console.error);
-      const response = await axios.put(
+      console.log("AVATAR FILE NAME: ", avatarFileName);
+      const responseUploadAvatar = await fetchUploadAvatar(rawImage, avatarFileName);
+      console.log('RESPONSE:', responseUploadAvatar);
+      await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/update`,
         {
           // email: _email,
           username: _username,
-          avatarUrl: avatarFileName,
+          avatarUrl: responseUploadAvatar.location,
           studentId: _studentId,
         },
         {
@@ -74,24 +73,25 @@ const s3 = axios.create({
             Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
-      );
-      if (response.status === 200) {
-        setShowSuccessMsg(true);
-        setTimeout(() => {
-          setShowSuccessMsg(false);
-        }, 2000);
-      }
+      ).then(response => {
+        if (response.status === 200) {
+          setShowSuccessMsg(true);
+          setTimeout(() => {
+            setShowSuccessMsg(false);
+          }, 2000);
+        }
+      })
     } catch (error: any) {
       setShowFailedMsg(true);
       setTimeout(() => {
         setShowFailedMsg(false);
       }, 2000);
-    }
+    };
   };
 
-  const extractUsernameFromEmail = (email: string) =>{
+  const extractUsernameFromEmail = (email: string) => {
     const atIndex = email.indexOf('@');
-  
+
     if (atIndex !== -1) {
       return email.slice(0, atIndex);
     } else {
@@ -105,13 +105,32 @@ const s3 = axios.create({
 
   const fetchUploadAvatar = async (file: any, fileName: string) => {
     try {
-      const response = await s3.put(`/${process.env.NEXT_PUBLIC_DO_SPACES_BUCKET}${fileName}`, file);
+      console.log("FILE", file);
+      console.log("FIlENAME", fileName);
+      let formData = new FormData();
+      formData.append('file', file, fileName);
+      console.log("FORMDATA", formData);
+      // const response = await s3.put(`/${process.env.NEXT_PUBLIC_DO_SPACES_BUCKET}${fileName}`, file);
+      const response = await axios
+        .post(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}upload/avatar`, formData,
+          {
+            headers: {
+              Authorization: `Bearer ${auth.user?.access_token}`,
+              'Content-Type': 'multipart/form-data',
+              'x-amz-acl': 'public-read',
+            },
+          }
+        )
       console.log('Upload successful:', response.data);
+      return response.data;
     } catch (error) {
+
       console.error('Error uploading file:', error);
+      return null;
     }
   };
-  
+
 
   const handleSaveInfo = async (
     _username: string | undefined,
@@ -119,7 +138,7 @@ const s3 = axios.create({
     _studentId: string | undefined,
     _profilePicture: any
   ) => {
-    
+
     auth.updateUser(_username, _profilePicture, _studentId);
     if (auth.user)
       await updateProfile(
@@ -177,10 +196,10 @@ const s3 = axios.create({
           <span>{t("update_error")}</span>
         </div>
       )}
-      {auth.user && <ProfileForm 
-        user={auth.user} 
-        saveInfo={handleSaveInfo} 
-        setRawImage={setRawImage}/>}
+      {auth.user && <ProfileForm
+        user={auth.user}
+        saveInfo={handleSaveInfo}
+        setRawImage={setRawImage} />}
     </div>
   );
 }

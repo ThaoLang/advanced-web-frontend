@@ -16,7 +16,7 @@ interface ProfileFormProp {
     studentId: string | undefined,
     profilePicture: any
   ) => void;
-  setRawImage: (image: Blob) => void;
+  setRawImage: (image: any) => void;
 
 }
 
@@ -24,7 +24,7 @@ export default function ProfileForm(props: ProfileFormProp) {
   // const [emailProxy, setEmailProxy] = useState(props.user?.email);
   const [studentIdProxy, setStudentIdProxy] = useState(props.user?.studentId);
   const [usernameProxy, setUsernameProxy] = useState(props.user?.username);
-  const [profilePictureProxy, setProfilePictureProxy] = useState(props.user?.avatarUrl);
+  const [profilePictureProxy, setProfilePictureProxy] = useState<any>(props.user?.avatarUrl);
   const [isEditable, setIsEditable] = useState(false);
   const [option, setOption] = useState("tab_1");
   const t = useTranslations("Profile");

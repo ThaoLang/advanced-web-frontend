@@ -60,6 +60,17 @@ const SortableComponent = (props: SortableComponentProps) => {
       setRubrics={props.setRubrics}
       onSortEnd={onSortEnd}
       useDragHandle
+      rubric={{
+        _id: "",
+        gradeName: "",
+        gradeScale: 0,
+        classId: "",
+        order: 0,
+        status: "",
+      }}
+      handleUpdate={function (updatedRubric: RubricType): void {
+        throw new Error("Function not implemented.");
+      }}
     />
   );
 };
@@ -92,15 +103,6 @@ const GradePage: React.FC = () => {
     }
     return "";
   };
-
-  // const getProxyStudentGrade = (studentId: string, rubricId: string) => {
-  //   for (let item of gradeProxy) {
-  //     if (item.studentId == studentId && item.rubricId == rubricId) {
-  //       return item.grade;
-  //     }
-  //   }
-  //   return "";
-  // };
 
   const isGrade = (grade: string) => {
     const regex = /^(\d*\.)?\d+$/;
@@ -211,12 +213,12 @@ const GradePage: React.FC = () => {
     })();
   };
 
-  //TODO: REVISE THIS
   // const handleResetBtn = () => {
   //   setGradeProxy([]);
   //   setGrade([]);
 
   //   let newData: GradeType[];
+  //   newData = [];
 
   //   rubrics.forEach((element) => {
   //     (async () => {
@@ -267,6 +269,7 @@ const GradePage: React.FC = () => {
               let data = response.data as number;
               finalizeGrades.set(student.studentId, data);
               setFinalizedGrades(finalizeGrades);
+              console.log("finalizeGrades", finalizeGrades);
             })
             .catch((error) => {
               console.error("Error fetching member:", error);
@@ -576,7 +579,7 @@ const GradePage: React.FC = () => {
                 </button>
               )}
             </div>
-            <div className="max-h-[450px] overflow-auto bg-white rounded border-2 border-blue-200 m-5">
+            <div className="max-h-[450px] overflow-auto bg-white rounded">
               {/* table */}
               <table className="table table-sm table-pin-rows table-pin-cols z-0">
                 {/* head */}
@@ -599,7 +602,7 @@ const GradePage: React.FC = () => {
                     students.length > 0 &&
                     students.map((student, index) => {
                       return (
-                        <tr>
+                        <tr key={index}>
                           <th>
                             <div className="text-sm opacity-50">
                               {index + 1}
@@ -701,7 +704,7 @@ const GradePage: React.FC = () => {
                       {/* <td></td> */}
                       {rubrics.map((item, index) => {
                         return (
-                          <td>
+                          <td key={index}>
                             <button
                               key={index}
                               className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
@@ -731,19 +734,19 @@ const GradePage: React.FC = () => {
                 {t("update")}
               </button>
               {/* <button
-                className={`btn btn-info bg-blue-500 text-white text-xs ${
-                  invalidGrade.length == 0 && newGrade.length == 0
-                    ? "btn-disabled"
-                    : ""
-                }`}
-                onClick={() => handleResetBtn()}
-              >
-                {t("cancel_change")}
-              </button> */}
+            className={`btn btn-info bg-blue-500 text-white text-xs ${
+              invalidGrade.length == 0 && newGrade.length == 0
+                ? "btn-disabled"
+                : ""
+            }`}
+            onClick={() => handleResetBtn()}
+          >
+            {t("cancel_change")}
+          </button> */}
               {grade && (
                 <button
                   className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md
-                  grade.length == 0 ? "btn-disabled" : ""
+               ${grade.length == 0 ? "btn-disabled" : ""}
               `}
                   onClick={() => finalizeScore()}
                 >
