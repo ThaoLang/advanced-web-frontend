@@ -6,7 +6,7 @@ import { UserType } from "@/model/UserType";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { FaUser, FaAngleDown } from 'react-icons/fa6'
+import { FaUser, FaAngleDown } from "react-icons/fa6";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const auth = useAuth();
@@ -20,15 +20,16 @@ export default function Page({ params }: { params: { slug: string } }) {
   const roles = [
     {
       name: "Admin",
-      key: "admin"
+      key: "admin",
     },
     {
       name: "User",
-      key: "user"
+      key: "user",
     },
   ];
-  const [userClassList, setUserClassList] = useState<Array<ClassType> | null>(null);
-
+  const [userClassList, setUserClassList] = useState<Array<ClassType> | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchAccountDetails = async () => {
@@ -39,13 +40,12 @@ export default function Page({ params }: { params: { slug: string } }) {
           },
         })
         .then((response) => {
-
           // setInfoMessage(`${response.status}: User ${user.email} has been deleted!`);
           //     setTimeout(() => {
           //         setInfoMessage(null);
           // }, 2000);
           let ResponseData = response.data;
-          setUser(ResponseData)
+          setUser(ResponseData);
           setUsername(ResponseData.username);
           setStudentId(ResponseData.student_id);
           setRole(ResponseData.role);
@@ -55,7 +55,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         .catch((error) => {
           console.error("Error fetching user details:", error);
         });
-    }
+    };
 
     fetchAccountDetails();
   }, []);
@@ -66,52 +66,53 @@ export default function Page({ params }: { params: { slug: string } }) {
       if (!user) return;
 
       await axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
-        headers: {
-          Authorization: `Bearer ${user.refresh_token}`,
-        },
-      })
-      .then((response) => {
-        // setInfoMessage(`${response.status}: User ${user.email} has been deleted!`);
-        //     setTimeout(() => {
-        //         setInfoMessage(null);
-        // }, 2000);
-        let ResponseData = response.data;
-        console.log("All classes of this user: ", ResponseData);
-        setUserClassList(ResponseData);
-      })
-      .catch((error) => {
-        console.error("Error fetching delete user:", error);
-      });
-    }
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
+          headers: {
+            Authorization: `Bearer ${user.refresh_token}`,
+          },
+        })
+        .then((response) => {
+          // setInfoMessage(`${response.status}: User ${user.email} has been deleted!`);
+          //     setTimeout(() => {
+          //         setInfoMessage(null);
+          // }, 2000);
+          let ResponseData = response.data;
+          console.log("All classes of this user: ", ResponseData);
+          setUserClassList(ResponseData);
+        })
+        .catch((error) => {
+          console.error("Error fetching delete user:", error);
+        });
+    };
     loadClassInfo();
-}, [user]);
+  }, [user]);
 
   const handleCancel = () => {
     setUsername(user?.username as string);
     setStudentId(user?.studentId ?? "");
     setRole(user?.role as string);
     setIsEditable(false);
-  }
+  };
 
   const handleEdit = () => {
     setIsEditable(true);
-  }
+  };
 
   const saveInformation = async () => {
-
-    await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/${user?._id}`,
-      {
-        username: username,
-        studentId: studentId,
-        role: role,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${auth.admin?.access_token}`,
+    await axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/${user?._id}`,
+        {
+          username: username,
+          studentId: studentId,
+          role: role,
         },
-      }
-    )
+        {
+          headers: {
+            Authorization: `Bearer ${auth.admin?.access_token}`,
+          },
+        }
+      )
       .then((response) => {
         // setInfoMessage(`${response.status}: User ${user.email} has been deleted!`);
         //     setTimeout(() => {
@@ -122,26 +123,32 @@ export default function Page({ params }: { params: { slug: string } }) {
           ...user,
           username: username,
           studentId: studentId,
-          role: role
-        } as UserType)
+          role: role,
+        } as UserType);
 
         setIsEditable(false);
-
       })
       .catch((error) => {
         console.error("Error while change user infos:", error);
       });
-  }
-
+  };
 
   return (
     <React.Fragment>
       <div className="mx-auto max-w-screen-2xl min-h-screen p-4 md:p-6 2xl:p-10 bg-slate-100">
         <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
           <ul>
-            <li><Link href="/admin/">Home</Link></li>
-            <li><Link href="/admin/account">Account</Link></li>
-            <li><Link href={`/admin/account/${params.slug}`}><b>{params.slug}</b></Link></li>
+            <li>
+              <Link href="/admin/">Home</Link>
+            </li>
+            <li>
+              <Link href="/admin/account">Account</Link>
+            </li>
+            <li>
+              <Link href={`/admin/account/${params.slug}`}>
+                <b>{params.slug}</b>
+              </Link>
+            </li>
           </ul>
         </div>
         <div className="mt-10 mx-4 md:mx-6 2xl:mx-10 grid grid-cols-5 gap-8">
@@ -157,7 +164,9 @@ export default function Page({ params }: { params: { slug: string } }) {
                   <label className="block text-lg text-black dark:text-white">
                     Username
                   </label>
-                  <input type="text" disabled={!isEditable}
+                  <input
+                    type="text"
+                    disabled={!isEditable}
                     onChange={(e) => setUsername(e.target.value)}
                     value={username as string}
                     className="mt-3 w-full rounded-lg border-[1.5px]
@@ -165,12 +174,15 @@ export default function Page({ params }: { params: { slug: string } }) {
                       border-stroke bg-transparent py-3 px-5 
                       outline-none transition focus:border-primary active:border-primary 
                       disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark 
-                      dark:bg-form-input dark:focus:border-primary" />
+                      dark:bg-form-input dark:focus:border-primary"
+                  />
 
                   <label className="mt-5 block text-lg text-black dark:text-white">
                     StudentId
                   </label>
-                  <input type="text" disabled={!isEditable}
+                  <input
+                    type="text"
+                    disabled={!isEditable}
                     onChange={(e) => setStudentId(e.target.value)}
                     className="mt-3 w-full rounded-lg border-[1.5px] 
                       disabled:bg-gray-100 
@@ -178,11 +190,14 @@ export default function Page({ params }: { params: { slug: string } }) {
                       outline-none transition focus:border-primary active:border-primary 
                       disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark 
                       dark:bg-form-input dark:focus:border-primary"
-                    value={studentId as string} />
+                    value={studentId as string}
+                  />
                   <label className="mt-5 block text-lg text-black dark:text-white">
                     Email Address
                   </label>
-                  <input type="text" disabled
+                  <input
+                    type="text"
+                    disabled
                     placeholder="example@domain.com"
                     onChange={(e) => setEmail(e.target.value)}
                     value={user?.email}
@@ -191,16 +206,21 @@ export default function Page({ params }: { params: { slug: string } }) {
                       border-stroke bg-transparent py-3 px-5 
                       outline-none transition
                       disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark 
-                      dark:bg-form-input dark:focus:border-primary" />
-
+                      dark:bg-form-input dark:focus:border-primary"
+                  />
                 </div>
                 <label className="mt-5 block text-lg text-black dark:text-white">
                   Role
                 </label>
                 <div className="mt-3 relative z-20 w-48 bg-white dark:bg-form-input">
-                  <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2"><FaUser /></span>
-                  <span className="absolute top-1/2 right-4 -translate-y-1/2"><FaAngleDown /></span>
-                  <select className="relative z-20 w-full appearance-none rounded 
+                  <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
+                    <FaUser />
+                  </span>
+                  <span className="absolute top-1/2 right-4 -translate-y-1/2">
+                    <FaAngleDown />
+                  </span>
+                  <select
+                    className="relative z-20 w-full appearance-none rounded 
                 border border-stroke bg-transparent py-3 px-12 outline-none transition 
                 focus:border-primary active:border-primary dark:border-form-strokedark 
                 dark:bg-form-input disabled:bg-gray-100"
@@ -208,36 +228,40 @@ export default function Page({ params }: { params: { slug: string } }) {
                     value={role as string}
                     onChange={(e) => setRole(e.target.value)}
                   >
-                    {
-                      roles.map((items, index) => (
-                        <option key={index} value={items.key}>{items.name}</option>
-                      ))
-                    }
+                    {roles.map((items, index) => (
+                      <option key={index} value={items.key}>
+                        {items.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 {isEditable ? (
                   <div className="flex justify-end gap-4.5 space-x-5">
-                    <button className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      onClick={handleCancel}>
+                    <button
+                      className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
+                      onClick={handleCancel}
+                    >
                       Cancel
                     </button>
-                    <button className="flex justify-center rounded bg-info py-2 px-6 font-medium text-gray hover:bg-opacity-90"
+                    <button
+                      className="flex justify-center rounded bg-info py-2 px-6 font-medium text-gray hover:bg-opacity-90"
                       onClick={() => {
                         saveInformation();
-                      }}>
+                      }}
+                    >
                       Save
                     </button>
                   </div>
-                ) :
-                  (
-                    <div className="flex justify-end gap-4.5 space-x-5">
-                      <button className="flex justify-center rounded bg-info py-2 px-6 font-medium text-gray hover:bg-opacity-90"
-                        onClick={handleEdit}>
-                        Edit
-                      </button>
-                    </div>
-                  )
-                }
+                ) : (
+                  <div className="flex justify-end gap-4.5 space-x-5">
+                    <button
+                      className="flex justify-center rounded bg-info py-2 px-6 font-medium text-gray hover:bg-opacity-90"
+                      onClick={handleEdit}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -251,20 +275,25 @@ export default function Page({ params }: { params: { slug: string } }) {
               <div className="p-7">
                 <div>
                   <div className="mb-4 flex flex-col items-center justify-center space-y-2">
-                    <img className="h-48 w-48 border rounded-full"
-                      src={user?.avatarUrl} alt="User" />
+                    <img
+                      className="h-48 w-48 border rounded-full"
+                      src={user?.avatarUrl}
+                      alt="User"
+                    />
                     <div>
                       <span className="font-medium text-lg text-black dark:text-white">
                         {user?.username}
                       </span>
                     </div>
-                    {
-                      user?.status === "ban" ? (
-                        <span className="badge bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">Ban</span>
-                      ) : (
-                        <span className="badge bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">Normal</span>
-                      )
-                    }
+                    {user?.status === "ban" ? (
+                      <span className="badge bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">
+                        Ban
+                      </span>
+                    ) : (
+                      <span className="badge bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
+                        Normal
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -277,33 +306,36 @@ export default function Page({ params }: { params: { slug: string } }) {
                 </h3>
               </div>
               <div className="p-7">
-                {
-                  userClassList?.length === 0 ? (
-                    <div className="lg:text-sm text-lg">
-                      No classrooms have been assigned to this user yet.
-                    </div>
-                  ) : (
-                    userClassList?.map((items, index) =>
-                      <div key={index} className={`mb-5 card card-side 
-                        ${items.type === "teaching" ? `bg-yellow-200` : `bg-green-200`} 
-                      shadow-lg`}>
-                        {/* <figure><img src={items.imageUrl}></img></figure> */}
-                        <div className="card-body">
-                          <h2 className="card-title">{items.name}</h2>
-                          <p>{items.description}</p>
-                          <p>Status: {items.type}</p>
-                        </div>
+                {userClassList?.length === 0 ? (
+                  <div className="lg:text-sm text-lg">
+                    No classrooms have been assigned to this user yet.
+                  </div>
+                ) : (
+                  userClassList?.map((items, index) => (
+                    <div
+                      key={index}
+                      className={`mb-5 card card-side 
+                        ${
+                          items.type === "teaching"
+                            ? `bg-yellow-200`
+                            : `bg-green-200`
+                        } 
+                      shadow-lg`}
+                    >
+                      {/* <figure><img src={items.imageUrl}></img></figure> */}
+                      <div className="card-body">
+                        <h2 className="card-title">{items.name}</h2>
+                        <p>{items.description}</p>
+                        <p>Status: {items.type}</p>
                       </div>
-                    ))
-                }
-
+                    </div>
+                  ))
+                )}
               </div>
             </div>
-
           </div>
-
         </div>
       </div>
     </React.Fragment>
-  )
+  );
 }

@@ -56,7 +56,10 @@ export default function ReviewPage() {
                 {reviewList
                   .filter((review) => review.status === "In Progress")
                   .map((review, index) => (
-                    <Link href={`/teaching/${classId}/review/${review._id}`}>
+                    <Link
+                      key={index}
+                      href={`/teaching/${classId}/review/${review._id}`}
+                    >
                       <div key={index} className="flex flex-row">
                         <input
                           type="radio"
@@ -88,7 +91,10 @@ export default function ReviewPage() {
                 {reviewList
                   .filter((review) => review.status === "Completed")
                   .map((review, index) => (
-                    <Link href={`/teaching/${classId}/review/${review._id}`}>
+                    <Link
+                      key={index}
+                      href={`/teaching/${classId}/review/${review._id}`}
+                    >
                       <div key={index} className="flex flex-row">
                         <input
                           type="radio"
