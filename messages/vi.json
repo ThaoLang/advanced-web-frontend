@@ -141,7 +141,9 @@
     "empty": "Trống",
     "duplicate_class_error_msg": "Lớp học đã tồn tại!",
     "leave_class_option": "Rời khỏi lớp",
-    "join_class_code_error_msg": "Tham gia vào lớp học thất bại!"
+    "join_class_code_error_msg": "Tham gia vào lớp học thất bại!",
+    "add_existed_member_error": "Thành viên đã tồn tại trong lớp!",
+    "send_invitation_noti": "Gửi lời mời thành công!"
   },
   "Comment": {
     "comments": " bình luận",

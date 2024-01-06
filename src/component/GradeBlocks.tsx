@@ -69,6 +69,7 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
       gradeName: gradeName,
       gradeScale: gradeScale,
       order: props.rubric.order,
+      status: props.rubric.status,
     };
     props.handleUpdate(newRubric);
     handleEditModal();

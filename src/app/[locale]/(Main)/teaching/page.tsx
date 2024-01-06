@@ -42,10 +42,7 @@ export default function TeachingPage() {
     setShowModal(!showModal);
   };
 
-  const handleAddNewClass = async (
-    className: string,
-    description: string
-  ) => {
+  const handleAddNewClass = async (className: string, description: string) => {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/create`,
@@ -117,33 +114,27 @@ export default function TeachingPage() {
   };
   // end copy invite link
 
-  // useEffect(() => {
-  //   const savedUser = localStorage.getItem("user");
-  //   if (savedUser) {
-  //     // Assuming UserType has a structure like { email: string }
-  //     auth.login(JSON.parse(savedUser));
-  //     console.log("TEACHING PAGE USER: ", auth.user);
-  //   }
-  // }, []);
   useEffect(() => {
     const fetchClasses = async () => {
-    await axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
-        headers: {
-          Authorization: `Bearer ${auth.user?.access_token}`,
-        },
-      })
-      .then((response) => {
-        console.log("Response", response.data);
-        setClasses(response.data);
-        console.log("Response class", classes);
-      })
-      .catch((error) => {
-        console.error("Error fetching classes:", error);
-      });
-    }
-    fetchClasses
+      await axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
+          headers: {
+            Authorization: `Bearer ${auth.user?.access_token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Response", response.data);
+          setClasses(response.data);
+          console.log("Response class", classes);
+        })
+        .catch((error) => {
+          console.error("Error fetching classes:", error);
+        });
+    };
+    fetchClasses();
   }, []);
+
+  console.log("Teaching classes", auth.user);
 
   return auth.user ? (
     <div className="mx-20 my-10">
@@ -183,33 +174,33 @@ export default function TeachingPage() {
             </form>
           </dialog>
 
-            {filterData.map((items, index) => (
-              <SmallClass
-                id={items._id}
-                imageUrl="https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f"
-                name={items.name}
-                description={items.description}
-                inviteUrl={items.invite_url}
-                page="teaching"
-                isCopied={isCopied}
-                CopyInviteLink={CopyInviteLink}
-                key={index}
-                student_number={items.student_number ? items.student_number : 0}
-                teacher_number={items.teacher_number ? items.teacher_number : 1}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="flex items-center justify-center max-w-screen-lg container mx-auto">
-          <PaginationBar
-            total={totalPages}
-            limit={limit}
-            current={page}
-            onChange={(page) => setPage(page)}
-          />
+          {filterData.map((items, index) => (
+            <SmallClass
+              id={items._id}
+              imageUrl="https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f"
+              name={items.name}
+              description={items.description}
+              inviteUrl={items.invite_url}
+              page="teaching"
+              isCopied={isCopied}
+              CopyInviteLink={CopyInviteLink}
+              key={index}
+              student_number={items.student_number ? items.student_number : 0}
+              teacher_number={items.teacher_number ? items.teacher_number : 1}
+            />
+          ))}
         </div>
       </div>
-    ) : (
-      <div><LoadingIndicator/></div>
-    );
-  }
+      <div className="flex items-center justify-center max-w-screen-lg container mx-auto">
+        <PaginationBar
+          total={totalPages}
+          limit={limit}
+          current={page}
+          onChange={(page) => setPage(page)}
+        />
+      </div>
+    </div>
+  ) : (
+    <div>{/* <LoadingIndicator /> */}</div>
+  );
+}

@@ -10,6 +10,8 @@ import { UserType } from "@/model/UserType";
 import { ClassListType } from "@/model/ClassListType";
 import AddMemberForm from "@/component/AddMemberForm";
 import { useAuth } from "@/context/AuthContext";
+import { ok } from "assert";
+import { ToastContainer } from "react-toastify";
 
 export default function MembersPage() {
   const [isCopied, setIsCopied] = useState(false);
@@ -19,15 +21,15 @@ export default function MembersPage() {
   const { classId } = useParams();
   const auth = useAuth();
   const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
+  // let currentUser: UserType;
+  // if (savedUser) {
+  //   currentUser = JSON.parse(savedUser);
+  // }
   const [teacherList, setTeacherList] = useState<ClassListType[]>([]);
   const [studentList, setStudentList] = useState<ClassListType[]>([]);
   const [hostUser, setHostUser] = useState<UserType>();
-  // const [showTeacherModal,setShowTeacherModal]=useState(false);
-  // const [showStudentModal,setShowStudentModal]=useState(false);
+  const defaultAvatarUrl =
+    "https://cdn-icons-png.flaticon.com/128/1144/1144760.png";
 
   const handleModal = () => {
     setShowModal(!showModal);
@@ -54,7 +56,7 @@ export default function MembersPage() {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       );
@@ -106,7 +108,7 @@ export default function MembersPage() {
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members/${member_id}`,
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       );
@@ -141,21 +143,31 @@ export default function MembersPage() {
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       )
       .then((response) => {
         console.log("Response", response.data);
         setHostUser(response.data.host_user);
+        let students: ClassListType[] = [];
+        let teachers: ClassListType[] = [];
 
         response.data.members.map((item: ClassListType) => {
           if (item.role === "Student") {
-            setStudentList((prevStudentList) => [...prevStudentList, item]);
+            // setStudentList((prevStudentList) => [...prevStudentList, item]);
+            students.push(item);
           } else {
-            setTeacherList((prevTeacherList) => [...prevTeacherList, item]);
+            // setTeacherList((prevTeacherList) => [...prevTeacherList, item]);
+            teachers.push(item);
           }
         });
+
+        console.log("Student", students);
+        console.log("Teacher", teachers);
+
+        setStudentList(students);
+        setTeacherList(teachers);
       })
       .catch((error) => {
         console.error("Error fetching classes:", error);
@@ -196,7 +208,12 @@ export default function MembersPage() {
             <a>
               <div tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
-                  <img alt="avatar" src={teacher.avatar_url} />
+                  <img
+                    alt="avatar"
+                    src={
+                      teacher.avatar_url ? teacher.avatar_url : defaultAvatarUrl
+                    }
+                  />
                 </div>
               </div>
               <div className="flex flex-col">{teacher.fullName}</div>
@@ -315,6 +332,18 @@ export default function MembersPage() {
           <button onClick={handleModal}>close</button>
         </form>
       </dialog>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
