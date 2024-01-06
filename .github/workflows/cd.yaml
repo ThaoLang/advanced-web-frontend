@@ -78,9 +78,12 @@ jobs:
       # - name: Static HTML export with Next.js
       #   run: ${{ steps.detect-package-manager.outputs.runner }} next export
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        # with:
-        #   path: dist
+        uses: actions/upload-artifact@v2.2.0
+        with:
+        name: upload-artifact
+        path: mywebapp/**
+        if-no-files-found:error
+        retention-days:90
 
   # # Deployment job
   # deploy:
