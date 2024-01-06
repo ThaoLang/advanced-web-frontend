@@ -18,6 +18,7 @@ export default function DetailTeachingClass() {
   const [showModal, setShowModal] = useState(false);
   const { classId } = useParams();
   const [classInfo, setClassInfo] = useState<ClassType>();
+  const [studentList, setStudentList] = useState<Array<StudentType>>();
   const auth = useAuth();
 
   const handleModal = () => {
@@ -27,7 +28,9 @@ export default function DetailTeachingClass() {
 
   useEffect(() => {
     console.log("CURRENT", auth.user?.access_token);
-    axios
+
+    const fetchClassInfo = async(classId: string) => {
+      return await axios
       .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}`, {
         headers: {
           Authorization: `Bearer ${auth.user?.access_token}`,
@@ -41,6 +44,25 @@ export default function DetailTeachingClass() {
       .catch((error) => {
         console.error("Error fetching classes:", error);
       });
+    } 
+    
+    const fetchStudentList = async(classId: string) => {
+    await axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}`, {
+        headers: {
+          Authorization: `Bearer ${auth.user?.access_token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Response", response.data[0].students);
+        setStudentList(response.data[0].students as Array<StudentType>);
+      })
+      .catch((error) => {
+        console.error("Error fetching classes:", error);
+      });
+    }
+    fetchClassInfo(classId as string);
+    fetchStudentList(classId as string);
   }, []);
 
   const fetchSaveCSV = async (students: any, classId: string) => {
@@ -149,7 +171,11 @@ export default function DetailTeachingClass() {
             //
             title={t("import")}
             closeModal={handleModal}
-            data={undefined}
+            data={
+              studentList?.map((item: StudentType) => ({
+                fullname: item.fullname,
+                studentId: item.studentId, 
+              }))}
             onFileUpload={handleFileUpload}
           />
         </div>
