@@ -7,7 +7,7 @@ name: Deploy Next.js site to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["master","ci-cd"]
+    branches: ["master", "ci-cd"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -77,10 +77,13 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       # - name: Static HTML export with Next.js
       #   run: ${{ steps.detect-package-manager.outputs.runner }} next export
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: ./out
+      # - name: Upload artifact
+      #   uses: actions/upload-artifact@v2.2.0
+      #   with:
+      #   name: upload-artifact
+      #   path: mywebapp/**
+      #   if-no-files-found:error
+      #   retention-days:90
 
   # # Deployment job
   # deploy:
@@ -104,5 +107,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3
-        with:
-          path: out
+        # with:
+        #   path: out
