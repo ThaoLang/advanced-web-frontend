@@ -15,7 +15,7 @@ const nextConfig = {
       },
     ],
   },
-  output: "export",
+  // output: "export",
 };
 
 const withNextIntl = require("next-intl/plugin")();
