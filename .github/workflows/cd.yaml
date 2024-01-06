@@ -77,9 +77,11 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       # - name: Static HTML export with Next.js
       #   run: ${{ steps.detect-package-manager.outputs.runner }} next export
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v2.2.0
-      #   with:
+     - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./out
+      
       #   name: upload-artifact
       #   path: mywebapp/**
       #   if-no-files-found:error
@@ -107,5 +109,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3
-        # with:
-        #   path: out
+        with:
+          path: out
