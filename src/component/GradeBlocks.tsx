@@ -6,11 +6,8 @@ import { RxDragHandleDots2 } from "react-icons/rx";
 import {
   SortableContainer,
   SortableElement,
-  SortableContainerProps,
-  SortableElementProps,
   SortableHandle,
 } from "react-sortable-hoc";
-import AddGradeForm from "./AddGradeForm";
 import EditGradeForm from "./EditGradeForm";
 import DeleteGradeForm from "./DeleteGradeForm";
 import axios from "axios";
@@ -69,6 +66,7 @@ const SortableItem = SortableElement<RubricType>((props: SortableItemProps) => {
       gradeName: gradeName,
       gradeScale: gradeScale,
       order: props.rubric.order,
+      status: props.rubric.status,
     };
     props.handleUpdate(newRubric);
     handleEditModal();

@@ -3,72 +3,27 @@ import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdClose, IoMdPersonAdd } from "react-icons/io";
 import { useTranslations } from "next-intl";
-import AddGradeForm from "@/component/AddGradeForm";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { UserType } from "@/model/UserType";
 import { ClassListType } from "@/model/ClassListType";
 import AddMemberForm from "@/component/AddMemberForm";
 import { useAuth } from "@/context/AuthContext";
-import { ok } from "assert";
-
-const teachers = [
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Teacher 1",
-    email: "name@flaticon.com",
-  },
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Teacher 2",
-    email: "name@flaticon.com",
-  },
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Teacher 3",
-    email: "name@flaticon.com",
-  },
-];
-
-const students = [
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Nguyen Minh Quang",
-    email: "nmq@flaticon.com",
-    studentId: "20127605",
-  },
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Lang Thao Thao",
-    email: "ltt@flaticon.com",
-    studentId: "20127629",
-  },
-  {
-    avatarUrl: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
-    name: "Le Hoang Khanh Nguyen",
-    email: "lhkn@flaticon.com",
-    studentId: "20127679",
-  },
-];
+import { ToastContainer } from "react-toastify";
 
 export default function MembersPage() {
-  // copy
   const [isCopied, setIsCopied] = useState(false);
   const t = useTranslations("Tabs");
   const [showModal, setShowModal] = useState(false);
   const [isAddingStudent, setIsAddingStudent] = useState(true);
   const { classId } = useParams();
   const auth = useAuth();
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
+
   const [teacherList, setTeacherList] = useState<ClassListType[]>([]);
   const [studentList, setStudentList] = useState<ClassListType[]>([]);
   const [hostUser, setHostUser] = useState<UserType>();
-  // const [showTeacherModal,setShowTeacherModal]=useState(false);
-  // const [showStudentModal,setShowStudentModal]=useState(false);
+  const defaultAvatarUrl =
+    "https://cdn-icons-png.flaticon.com/128/1144/1144760.png";
 
   const handleModal = () => {
     setShowModal(!showModal);
@@ -95,7 +50,7 @@ export default function MembersPage() {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       );
@@ -140,7 +95,6 @@ export default function MembersPage() {
         console.log(err);
       });
   };
-  // end copy
 
   const handleDelete = async (member_id: string, role: string = "Student") => {
     try {
@@ -148,7 +102,7 @@ export default function MembersPage() {
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members/${member_id}`,
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       );
@@ -183,21 +137,31 @@ export default function MembersPage() {
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       )
       .then((response) => {
         console.log("Response", response.data);
         setHostUser(response.data.host_user);
+        let students: ClassListType[] = [];
+        let teachers: ClassListType[] = [];
 
         response.data.members.map((item: ClassListType) => {
           if (item.role === "Student") {
-            setStudentList((prevStudentList) => [...prevStudentList, item]);
+            // setStudentList((prevStudentList) => [...prevStudentList, item]);
+            students.push(item);
           } else {
-            setTeacherList((prevTeacherList) => [...prevTeacherList, item]);
+            // setTeacherList((prevTeacherList) => [...prevTeacherList, item]);
+            teachers.push(item);
           }
         });
+
+        console.log("Student", students);
+        console.log("Teacher", teachers);
+
+        setStudentList(students);
+        setTeacherList(teachers);
       })
       .catch((error) => {
         console.error("Error fetching classes:", error);
@@ -238,7 +202,12 @@ export default function MembersPage() {
             <a>
               <div tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
-                  <img alt="avatar" src={teacher.avatar_url} />
+                  <img
+                    alt="avatar"
+                    src={
+                      teacher.avatar_url ? teacher.avatar_url : defaultAvatarUrl
+                    }
+                  />
                 </div>
               </div>
               <div className="flex flex-col">{teacher.fullName}</div>
@@ -357,6 +326,18 @@ export default function MembersPage() {
           <button onClick={handleModal}>close</button>
         </form>
       </dialog>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

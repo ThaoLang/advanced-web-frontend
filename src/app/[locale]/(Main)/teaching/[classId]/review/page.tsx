@@ -1,198 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import TeacherReviewForm from "@/component/classItem/review/TeacherReviewForm";
-import { IoMdClose } from "react-icons/io";
-import UpdateReviewModal from "@/component/classItem/review/UpdateReviewModal";
 import { ReviewType } from "@/model/ReviewType";
 import DetailedMiniReview from "@/component/classItem/review/DetailedMiniReview";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { actions } from "../../../state";
 import axios from "axios";
-import { UserType } from "@/model/UserType";
 import { useParams } from "next/navigation";
-import { RubricType } from "@/model/RubricType";
-import { ClassListType } from "@/model/ClassListType";
-import { NotificationType } from "@/model/NotificationType";
+import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
-  const [showModal, setShowModal] = useState(false);
-  const handleModal = () => {
-    console.log("Modal changed");
-    setShowModal(!showModal);
-  };
+  const auth = useAuth();
 
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
   const { classId } = useParams();
 
   const [reviewList, setReviewList] = useState<ReviewType[]>([]);
-
-  const [selectedReview, setSelectedReview] = useState<ReviewType>();
-
-  const handleStatus = (currentStatus: string, currentGrade: string) => {
-    if (selectedReview) {
-      if (currentStatus === "In Progress") {
-        selectedReview.status = "Completed";
-
-        // notification
-        (async () => {
-          let senderRole: string,
-            message: string,
-            redirectUrl: string,
-            receiverIdList: string[],
-            allMembersList: ClassListType[];
-
-          receiverIdList = [];
-
-          await axios
-            .get(
-              `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
-              {
-                headers: {
-                  Authorization: `Bearer ${currentUser?.access_token}`,
-                },
-              }
-            )
-            .then((response) => {
-              allMembersList = response.data.members;
-
-              senderRole = "Teacher";
-              message = "review_finalize";
-              redirectUrl = `/enrolled/${classId}/review`;
-
-              if (allMembersList.length > 0) {
-                allMembersList.forEach((member) => {
-                  if (
-                    member.role === "Student" &&
-                    member.student_id === selectedReview.studentId
-                  ) {
-                    receiverIdList.push(member.user_id);
-                  }
-                });
-              }
-
-              let newNotification: NotificationType;
-              newNotification = {
-                id: "",
-                senderId: "",
-                classId: classId.toString(),
-                reviewId: selectedReview._id,
-                senderRole: senderRole,
-                receiverIdList: receiverIdList,
-                message: message,
-                redirectUrl: redirectUrl,
-                createdAt: new Date().toISOString(),
-                isRead: false,
-              };
-
-              actions.sendNotification(
-                currentUser.access_token,
-                newNotification
-              );
-            })
-            .catch((error) => {
-              console.error("Error fetching class members:", error);
-            });
-        })();
-        // end send notification
-      } else if (currentStatus === "Completed") {
-        selectedReview.status = "In Progress";
-      }
-
-      if (currentGrade !== selectedReview.currentGrade) {
-        selectedReview.currentGrade = currentGrade;
-      }
-
-      setSelectedReview(selectedReview);
-
-      // update selected review to review list
-      setReviewList(reviewList);
-
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/update`,
-          {
-            classId: classId,
-            studentId: selectedReview.studentId,
-            gradeComposition: selectedReview.gradeComposition,
-            status: selectedReview.status,
-            currentGrade: selectedReview.currentGrade,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
-            },
-          }
-        )
-        .then((response) => {
-          toast.success(t("update_review_success"));
-        })
-        .catch((error) => {
-          console.error("Error updating review:", error);
-          toast.error(t("update_review_failure"));
-          return;
-        });
-    }
-  };
-
-  // TODO: need to update grade data
-  // const [updatedGrade, setUpdatedGrade] = useState("");
-  // const [note, setNote] = useState("");
-
-  const updateGrade = (updateGrade: string) => {
-    if (selectedReview) {
-      (async () => {
-        axios
-          .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
-            headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
-            },
-          })
-          .then((response) => {
-            let rubrics: RubricType[];
-            rubrics = response.data;
-
-            let currentRubricId = "";
-            rubrics.forEach((element) => {
-              if (element.gradeName === selectedReview.gradeComposition) {
-                currentRubricId = element._id;
-              }
-              (async () => {
-                await axios
-                  .put(
-                    `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/update`,
-                    {
-                      studentId: selectedReview.studentId,
-                      rubricId: currentRubricId,
-                      grade: Number.parseFloat(updateGrade),
-                    },
-                    {
-                      headers: {
-                        Authorization: `Bearer ${currentUser?.access_token}`,
-                      },
-                    }
-                  )
-                  .then((response) => {
-                    console.log("Response", response);
-                  })
-                  .catch((error) => {
-                    console.error("Error updating grade:", error);
-                  });
-              })();
-            });
-          })
-          .catch((error) => {
-            console.error("Error fetching rubrics:", error);
-          });
-      })();
-    }
-  };
 
   useEffect(() => {
     // get review list
@@ -202,7 +26,7 @@ export default function ReviewPage() {
           `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/allReviews/${classId}`,
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )
@@ -232,29 +56,27 @@ export default function ReviewPage() {
                 {reviewList
                   .filter((review) => review.status === "In Progress")
                   .map((review, index) => (
-                    <div
-                      key={index}
-                      onClick={() => setSelectedReview(review)}
-                      className="flex flex-row"
-                    >
-                      <input
-                        type="radio"
-                        name="radio-1"
-                        className="radio"
-                        checked={selectedReview === review}
-                        onChange={() => {}}
-                      />
-                      <DetailedMiniReview
-                        _id={review._id}
-                        classId={review.classId}
-                        studentId={review.studentId}
-                        gradeComposition={review.gradeComposition}
-                        currentGrade={review.currentGrade}
-                        expectationGrade={review.expectationGrade}
-                        explanation={review.explanation}
-                        status={review.status}
-                      />
-                    </div>
+                    <Link href={`/teaching/${classId}/review/${review._id}`}>
+                      <div key={index} className="flex flex-row">
+                        <input
+                          type="radio"
+                          name="radio-1"
+                          className="radio"
+                          checked={false}
+                          onChange={() => {}}
+                        />
+                        <DetailedMiniReview
+                          _id={review._id}
+                          classId={review.classId}
+                          studentId={review.studentId}
+                          gradeComposition={review.gradeComposition}
+                          currentGrade={review.currentGrade}
+                          expectationGrade={review.expectationGrade}
+                          explanation={review.explanation}
+                          status={review.status}
+                        />
+                      </div>
+                    </Link>
                   ))}
               </div>
             </div>
@@ -266,87 +88,32 @@ export default function ReviewPage() {
                 {reviewList
                   .filter((review) => review.status === "Completed")
                   .map((review, index) => (
-                    <div
-                      key={index}
-                      onClick={() => setSelectedReview(review)}
-                      className="flex flex-row"
-                    >
-                      <input
-                        type="radio"
-                        name="radio-1"
-                        className="radio"
-                        checked={selectedReview === review}
-                        onChange={() => {}}
-                      />
-                      <DetailedMiniReview
-                        _id={review._id}
-                        classId={review.classId}
-                        studentId={review.studentId}
-                        gradeComposition={review.gradeComposition}
-                        currentGrade={review.currentGrade}
-                        expectationGrade={review.expectationGrade}
-                        explanation={review.explanation}
-                        status={review.status}
-                      />
-                    </div>
+                    <Link href={`/teaching/${classId}/review/${review._id}`}>
+                      <div key={index} className="flex flex-row">
+                        <input
+                          type="radio"
+                          name="radio-1"
+                          className="radio"
+                          checked={false}
+                          onChange={() => {}}
+                        />
+                        <DetailedMiniReview
+                          _id={review._id}
+                          classId={review.classId}
+                          studentId={review.studentId}
+                          gradeComposition={review.gradeComposition}
+                          currentGrade={review.currentGrade}
+                          expectationGrade={review.expectationGrade}
+                          explanation={review.explanation}
+                          status={review.status}
+                        />
+                      </div>
+                    </Link>
                   ))}
               </div>
             </div>
           </div>
         </div>
-        {selectedReview && (
-          <div className="flex-col col-span-2 lg:col-span-1">
-            <div className="p-3 text-2xl lg:text-3xl text-blue-600 flex flex-row items-center justify-between">
-              {t("review_detail")}
-              <button
-                className="btn btn-info max-w-xs bg-blue-500 text-white"
-                onClick={() => handleModal()}
-              >
-                {t("update")}
-              </button>
-            </div>
-            <TeacherReviewForm
-              _id={selectedReview._id}
-              classId={selectedReview.classId}
-              studentId={selectedReview.studentId}
-              gradeComposition={selectedReview.gradeComposition}
-              currentGrade={selectedReview.currentGrade}
-              expectationGrade={selectedReview.expectationGrade}
-              explanation={selectedReview.explanation}
-              status={selectedReview.status}
-            />
-            {/* temp */}
-            {/* <div>Updated grade: {updatedGrade}</div> */}
-            {/* <div>Note: {note}</div> */}
-            {/* temp */}
-
-            {/* Modal */}
-            <dialog className={`modal ${showModal ? "modal-open" : ""}`}>
-              <div className="modal-box">
-                <div className="flex flex-row justify-between">
-                  <p className="text-sm text-gray-500">
-                    {/* Press X or click outside to close */}
-                  </p>
-                  <button onClick={handleModal}>
-                    <IoMdClose />
-                  </button>
-                </div>
-                <UpdateReviewModal
-                  gradeComposition={selectedReview.gradeComposition}
-                  currentGrade={selectedReview.currentGrade}
-                  status={selectedReview.status}
-                  toggleStatus={handleStatus}
-                  setUpdatedGrade={updateGrade}
-                  // setNote={setNote}
-                  closeModal={handleModal}
-                />
-              </div>
-              <form method="dialog" className="modal-backdrop">
-                <button onClick={handleModal}>close</button>
-              </form>
-            </dialog>
-          </div>
-        )}
       </div>
       <ToastContainer
         position="bottom-right"

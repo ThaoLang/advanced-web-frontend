@@ -141,7 +141,9 @@
     "empty": "Trống",
     "duplicate_class_error_msg": "Lớp học đã tồn tại!",
     "leave_class_option": "Rời khỏi lớp",
-    "join_class_code_error_msg": "Tham gia vào lớp học thất bại!"
+    "join_class_code_error_msg": "Tham gia vào lớp học thất bại!",
+    "add_existed_member_error": "Thành viên đã tồn tại trong lớp!",
+    "send_invitation_noti": "Gửi lời mời thành công!"
   },
   "Comment": {
     "comments": " bình luận",
@@ -197,9 +199,18 @@
     "number": "STT",
     "finalized_score": "Điểm tổng kết",
     "finalize_score": "Tổng kết điểm",
+    "finalize": "Tổng kết",
+    "my_grade": "Xem Điểm",
+    "status": "Trạng thái",
+    "graded": "Đã chấm",
+    "not_graded": "Chưa chấm",
     "cancel_change": "Hủy thay đổi",
     "invalid_grade": "Điểm không hợp lệ! Vui lòng dùng . cho số thập phân, điểm trên thang 10",
-    "review": "Phúc khảo"
+    "review": "Phúc khảo",
+    "add_review_success": "Thêm phúc khảo thành công!",
+    "add_review_failure": "Thêm phúc khảo thất bại...",
+    "update_rubric_success": "Cập nhật thang điểm thành công!",
+    "update_rubric_failure": "Cập nhật thang điểm thất bại..."
   },
   "Notification": {
     "grade_finalize": "Điểm thành phần đã được tổng kết",

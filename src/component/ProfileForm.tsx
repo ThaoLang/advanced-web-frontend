@@ -14,17 +14,17 @@ interface ProfileFormProp {
     username: string | undefined,
     // email: string | undefined,
     studentId: string | undefined,
-    profilePicture: string | any
+    profilePicture: any
   ) => void;
+  setRawImage: (image: Blob) => void;
+
 }
 
 export default function ProfileForm(props: ProfileFormProp) {
   // const [emailProxy, setEmailProxy] = useState(props.user?.email);
   const [studentIdProxy, setStudentIdProxy] = useState(props.user?.studentId);
   const [usernameProxy, setUsernameProxy] = useState(props.user?.username);
-  const [profilePictureProxy, setProfilePictureProxy] = useState(
-    props.user?.avatarUrl
-  );
+  const [profilePictureProxy, setProfilePictureProxy] = useState(props.user?.avatarUrl);
   const [isEditable, setIsEditable] = useState(false);
   const [option, setOption] = useState("tab_1");
   const t = useTranslations("Profile");
@@ -64,8 +64,8 @@ export default function ProfileForm(props: ProfileFormProp) {
             )}
             <div className={`w-44 ${isEditable ? "active" : "invisible"}`}>
               <DragNDrop
-                imageUrl={profilePictureProxy}
                 saveImageUrl={setProfilePictureProxy}
+                saveRawImage={props.setRawImage}
               />
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function ProfileForm(props: ProfileFormProp) {
                     className="input input-bordered w-full max-w-xs"
                     value={usernameProxy}
                     onChange={(e) => setUsernameProxy(e.target.value)}
-                    maxLength={15}
+                    maxLength={35}
                   />
                 )) || (
                   <label className="text-md text-left inline-block align-bottom mt-2">

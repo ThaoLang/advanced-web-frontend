@@ -8,8 +8,9 @@ import ImportExportModal from "@/component/classItem/detail/ImportExportModal";
 import { useParams } from "next/navigation";
 import { ClassType } from "@/model/ClassType";
 import axios from "axios";
-import { UserType } from "@/model/UserType";
 import FileDownloadButton from "@/component/excel/FileDownloadButton";
+import { useAuth } from "@/context/AuthContext";
+import { StudentType } from "@/model/StudentType";
 
 export default function DetailTeachingClass() {
   const t = useTranslations("Tabs");
@@ -17,12 +18,7 @@ export default function DetailTeachingClass() {
   const [showModal, setShowModal] = useState(false);
   const { classId } = useParams();
   const [classInfo, setClassInfo] = useState<ClassType>();
-
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
+  const auth = useAuth();
 
   const handleModal = () => {
     console.log("Modal changed");
@@ -30,11 +26,11 @@ export default function DetailTeachingClass() {
   };
 
   useEffect(() => {
-    console.log("CURRENT", currentUser.access_token);
+    console.log("CURRENT", auth.user?.access_token);
     axios
       .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}`, {
         headers: {
-          Authorization: `Bearer ${currentUser?.access_token}`,
+          Authorization: `Bearer ${auth.user?.access_token}`,
         },
       })
       .then((response) => {
@@ -46,6 +42,36 @@ export default function DetailTeachingClass() {
         console.error("Error fetching classes:", error);
       });
   }, []);
+
+  const fetchSaveCSV = async (students: any, classId: string) => {
+    await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}/import`,
+        {
+          students: students,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.admin?.access_token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch(console.error);
+  };
+
+  const handleFileUpload = async (data: any) => {
+    // Handle the parsed CSV data
+    const convertedData: StudentType[] = data.map((item: any) => ({
+        fullname: item.fullname ? item.fullname.toString() : '',
+        studentId: item.studentId ? item.studentId.toString() : '', 
+    }));
+    await fetchSaveCSV(convertedData, classId as string).catch(console.error);
+    setIsAvailable(true);
+    setShowModal(false);
+  };
 
   return (
     <>
@@ -80,7 +106,8 @@ export default function DetailTeachingClass() {
                   type="checkbox"
                   checked={isAvailableStudentList}
                   onChange={() => setIsAvailable(!isAvailableStudentList)} //replace with real check in the future
-                  className="checkbox checkbox-warning mx-2 cursor-default"
+                  className="checkbox checkbox-warning mx-2 cursor-default disabled-checkbox"
+                  disabled
                 />
                 <button
                   className="mb-2 lg:w-80 lg:ml-5 btn btn-info bg-blue-500 text-white"
@@ -92,7 +119,7 @@ export default function DetailTeachingClass() {
               {(isAvailableStudentList && (
                 <label className="label">
                   <span className="label-text">{t("view_help_2")}</span>
-                  <Link href="/teaching/grades">
+                  <Link href={`/teaching/${classId}/grades`}>
                     <button className="mb-2 lg:w-80 lg:ml-5 btn btn-info bg-blue-500 text-white">
                       {t("view")}
                     </button>
@@ -120,9 +147,10 @@ export default function DetailTeachingClass() {
           </div>
           <ImportExportModal
             //
-            setIsAvailable={setIsAvailable}
+            title={t("import")}
             closeModal={handleModal}
             data={undefined}
+            onFileUpload={handleFileUpload}
           />
         </div>
         <form method="dialog" className="modal-backdrop">

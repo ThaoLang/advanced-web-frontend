@@ -14,7 +14,8 @@
     "header_description_4": "Your learning adventure begins here. Dive into a world of possibilities, connect with peers, and explore subjects in ways you never imagined. LightHub is your portal to a brighter future.",
     "header_5": "See all you can accomplish with",
     "get_started_btn": "Get started",
-    "learn_more_btn": "Learn more"
+    "learn_more_btn": "Learn more",
+    "login_btn": "Login"
   },
   "Navbar": {
     "home": "Home",
@@ -143,7 +144,9 @@
     "duplicate_class_error_msg": "Class already exists!",
     "leave_class_option": "Leave class",
     "join_class_code_error_msg": "Failed to join the class!",
-    "rubric_scale_empty_error": "Rubric must not be empty!"
+    "rubric_scale_empty_error": "Rubric must not be empty!",
+    "add_existed_member_error": "Member already exists!",
+    "send_invitation_noti": "Send invitation successfully!"
   },
   "Comment": {
     "comments": " comment(s)",
@@ -199,9 +202,18 @@
     "number": "No.",
     "finalized_score": "Finalized score",
     "finalize_score": "Finalize score",
+    "finalize": "Finalize",
+    "my_grade": "My Grade",
+    "status": "Status",
+    "graded": "Graded",
+    "not_graded": "Not graded",
     "cancel_change": "Cancel changes",
     "invalid_grade": "Invalid grade! Please use . for decimal points, score between 0 and 10",
-    "review": "Review"
+    "review": "Review",
+    "add_review_success": "Add review successfully!",
+    "add_review_failure": "Add review failed...",
+    "update_rubric_success": "Update rubric successfully!",
+    "update_rubric_failure": "Update rubric failed..."
   },
   "Notification": {
     "grade_finalize": "A grade composition is finalized",

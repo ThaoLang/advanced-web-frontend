@@ -49,7 +49,7 @@ export default function CreateClassForm(props: CreateClassFormProps) {
           className="input input-bordered w-full max-w-xs"
           value={nameProxy}
           onChange={(e) => setNameProxy(e.target.value)}
-          maxLength={15}
+          maxLength={20}
         />
         <input
           type="text"
@@ -57,7 +57,7 @@ export default function CreateClassForm(props: CreateClassFormProps) {
           className="input input-bordered w-full max-w-xs"
           value={descriptionProxy}
           onChange={(e) => setDescriptionProxy(e.target.value)}
-          maxLength={30}
+          maxLength={50}
         />
         {errorMsg && (
           <label className="flex text-center items-center justify-center my-3 text-red-700">

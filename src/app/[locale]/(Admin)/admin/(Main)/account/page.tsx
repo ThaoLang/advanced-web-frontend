@@ -10,6 +10,11 @@ import filterAndSortArray from "@/utils/ArrayFilterUtils";
 import LoadingIndicator from "@/component/admin/LoadingIndicator";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
+import FileDownloadButton from "@/component/excel/FileDownloadButton";
+import ExportModal from "@/component/classItem/grade/ExportModal";
+import ImportModal from "@/component/classItem/grade/ImportModal";
+import { IoMdClose } from "react-icons/io";
+import { TfiExport, TfiImport } from "react-icons/tfi";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -22,6 +27,7 @@ export default function Account({
   };
 }) {
   const auth = useAuth();
+  const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [accounts, setAccounts] = useState<any>(null);
   const [query, setQuery] = useState(searchParams?.query || "");
   const [currentPage, setCurrentPage] = useState(
@@ -29,11 +35,11 @@ export default function Account({
   );
   const [paginatedResult, setPaginatedResult] = useState<Array<any>>([]);
   const [totalItems, setTotalItems] = useState(0);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
 
-  const [idSelectOptions, setIdSelectOptions] = useState<Array<string>>([]);
   const [nameSelectOptions, setNameSelectOptions] = useState<Array<string>>([]);
   const accountTableHeaders = [
-    { header_name: "ID", key: "id" },
     { header_name: "Name", key: "username" },
     { header_name: "Role", key: "role" },
     { header_name: "Status", key: "status" },
@@ -41,9 +47,8 @@ export default function Account({
   const roleSelectOptions: any[] = ["User", "Admin"];
   const statusSelectOptions: any[] = ["Normal", "Ban"];
 
-  const [sortBy, setSortBy] = useState<string | null>("id");
+  const [sortBy, setSortBy] = useState<string | null>("username");
   const [orderBy, setOrderBy] = useState<string>("asc");
-  const [idFilter, setIdFilter] = useState<string | null>(null);
   const [nameFilter, setNameFilter] = useState<string | null>(null);
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
@@ -66,20 +71,15 @@ export default function Account({
   };
 
   const handleClearFilters = () => {
-    setIdFilter(null);
     setNameFilter(null);
     setRoleFilter(null);
     setStatusFilter(null);
   };
 
   useEffect(() => {
-
     const fetchData = async () => {
       const userData = await fetchAccountsData();
       setAccounts(userData);
-      // Dynamically generate nameSelectOptions based on unique names
-      const uniqueIds = Array.from(new Set(userData.map((user) => user.id)));
-      setIdSelectOptions(uniqueIds);
       const uniqueNames = Array.from(
         new Set(userData.map((user) => user.username))
       );
@@ -89,7 +89,6 @@ export default function Account({
   }, []);
 
   useEffect(() => {
-    console.log("Account Table Render");
     // Save the current scroll position
     scrollRef.current = window.scrollY;
 
@@ -100,7 +99,6 @@ export default function Account({
       }
 
       const result = filterAndSortArray(accounts, query, sortBy, orderBy, {
-        id: idFilter,
         username: nameFilter,
         role: roleFilter,
         status: statusFilter,
@@ -128,7 +126,6 @@ export default function Account({
     query,
     sortBy,
     orderBy,
-    idFilter,
     nameFilter,
     roleFilter,
     statusFilter,
@@ -137,51 +134,90 @@ export default function Account({
   ]); // Run this effect when currentPage or accounts changes
 
   const fetchAccountsData = async () => {
+    console.log('Fetching accounts: ', auth.admin)
     let ResponseData: Array<UserType> = [];
-      await axios
-        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile`, {
-          headers: {
-            Authorization: `Bearer ${auth.admin?.access_token}`,
-          },
-        })
-        .then((response) => {
-          console.log("Response", response.data);
-          ResponseData = response.data as Array<UserType>;
-        })
-        .catch((error) => {
-          console.error("Error fetching all users:", error);
-        });
+    await axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile`, {
+        headers: {
+          Authorization: `Bearer ${auth.admin?.access_token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Response", response.data);
+        ResponseData = response.data as Array<UserType>;
+      })
+      .catch((error) => {
+        console.error("Error fetching all users:", error);
+      });
     return ResponseData;
   };
 
-  const deleteAccountHandler = (currentUser: any) => {
+  const fetchBanAccount = async (user: any, status: string) => {
+    await axios
+      .post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/ban`, {
+        headers: {
+          Authorization: `Bearer ${auth.admin?.access_token}`,
+        },
+        email: user.email,
+        status: status
+      })
+      .then((response) => {
+        setInfoMessage(`${response.status}: User successfully banned!`);
+        setTimeout(() => {
+          setInfoMessage(null);
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error("Error fetching ban user:", error);
+      });
+  }
+
+  const fetchDeleteAccount = async (user: any) => {
+    await axios
+      .delete(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/${user._id}`, {
+        headers: {
+          Authorization: `Bearer ${auth.admin?.access_token}`,
+        },
+      })
+      .then((response) => {
+        setInfoMessage(`${response.status}: User ${user.email} has been deleted!`);
+        setTimeout(() => {
+          setInfoMessage(null);
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error("Error fetching delete user:", error);
+      });
+  }
+
+  const deleteAccountHandler = async (currentUser: any) => {
     if (!accounts) {
       // Handle the case where accounts is still loading or null
       return;
     }
 
     const updatedUsers = accounts.filter((user: any) => {
-      return user.id !== currentUser.id;
+      return user._id !== currentUser._id;
     });
+    await fetchDeleteAccount(currentUser).catch(console.error);
     setAccounts(updatedUsers);
   };
 
-  const banAccountHandler = (currentUser: any) => {
+  const banAccountHandler = async (currentUser: any) => {
     if (!accounts) {
       // Handle the case where accounts is still loading or null
       return;
     }
+
+    const updatedStatus = currentUser.status === "normal" ? "ban" : "normal";
     const updatedUsers = accounts.map((user: any) => {
-      if (user.id === currentUser.id && currentUser.status === "ban") {
-        return { ...user, status: "normal" };
-      } else if (
-        user.id === currentUser.id &&
-        currentUser.status === "normal"
-      ) {
-        return { ...user, status: "ban" };
+      if (user._id === currentUser._id) {
+        return { ...user, status: updatedStatus };
       }
       return user;
     });
+
+    await fetchBanAccount(currentUser, updatedStatus).catch(console.error);
     setAccounts(updatedUsers);
   };
 
@@ -190,8 +226,58 @@ export default function Account({
     return <LoadingIndicator />;
   }
 
+  const handleImportModal = () => {
+    setShowImportModal(!showImportModal);
+  }
+
+  const handleExportModal = () => {
+    setShowExportModal(!showExportModal);
+  }
+
+  const fetchImportCSV = async(data: any) => {
+    return await axios
+    .post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/import`, {
+      studentIds: data,
+      headers: {
+        Authorization: `Bearer ${auth.admin?.access_token}`,
+      },
+    })
+    .then((response) => {
+      setInfoMessage(`${response.status}: Import successfully!`);
+      setTimeout(() => {
+        setInfoMessage(null);
+      }, 2000);
+    })
+    .catch((error) => {
+      console.error("Error fetching mapping user with student_id:", error);
+    });
+  }
+
+  const handleFileUpload = async (data: any) => {
+    type MappingStudentIdType = {
+      email: string, 
+      studentId: string,
+    }
+    const convertedData: MappingStudentIdType[] = data.map((item: any) => ({
+      // class_id: item.class_id,
+      // user_id: item.user_id.toString(), // Convert user_id to string if it's a number
+      email: item.email,
+      studentId: item.student_id ? item.student_id.toString() : '', // Convert student_id to string if it's a number, or use an empty string if undefined
+    }));
+    await fetchImportCSV(convertedData).catch(console.error);
+  }
+
   return (
     <React.Fragment>
+      {infoMessage ? (
+        <div className="toast toast-end z-[100]">
+
+          <div role="alert" className="z-[100] mx-auto mt-4 alert">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span>{infoMessage}</span>
+          </div>
+        </div>
+      ) : null}
       <div className="mx-auto max-w-screen-2xl min-h-screen p-4 md:p-6 2xl:p-10 bg-slate-100">
         <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
           <ul>
@@ -270,31 +356,13 @@ export default function Account({
               <div className="flex flex-row space-x-10">
                 <select
                   className="select select-bordered w-full max-w-sm"
-                  value={idFilter || ""}
-                  onChange={(e) =>
-                    handleSelectChange(e.target.value, setIdFilter)
-                  }
-                >
-                  <option disabled selected value={""}>
-                    ID
-                  </option>
-                  {idSelectOptions.map((items, index) => {
-                    return (
-                      <option key={index} value={items}>
-                        {items}
-                      </option>
-                    );
-                  })}
-                </select>
-                <select
-                  className="select select-bordered w-full max-w-sm"
                   value={nameFilter || ""}
                   onChange={(e) =>
                     handleSelectChange(e.target.value, setNameFilter)
                   }
                 >
                   <option disabled selected value={""}>
-                    Username
+                    Name
                   </option>
                   {nameSelectOptions.map((items, index) => {
                     return (
@@ -349,6 +417,29 @@ export default function Account({
               </div>
             </div>
           </div>
+          <div className="lg:col-start-0 lg:col-span-3 mt-5">
+            <div className="flex items-center justify-end gap-4 mb-2">
+              Select data template
+              <FileDownloadButton
+                templateCategory="Account"
+                filename="Account_Template"
+              />
+              <button
+                className="btn btn-info bg-blue-500 text-white text-xs"
+                onClick={handleImportModal}
+              >
+                Import
+                <TfiImport/>
+              </button>
+              <button
+                className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md`}
+                onClick={handleExportModal}
+              >
+                Export
+                <TfiExport/>
+              </button>
+            </div>
+          </div>
           <div className="lg:col-start-0 lg:col-span-3">
             <Suspense key={query + currentPage}>
               <AccountTable
@@ -362,6 +453,53 @@ export default function Account({
             </Suspense>
           </div>
         </div>
+        {/* Import Modal */}
+        <dialog className={`modal ${showImportModal ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <div className="flex flex-row justify-between">
+              <p className="text-sm text-gray-500">
+                {/* Press X or click outside to close */}
+              </p>
+              <button onClick={handleImportModal}>
+                <IoMdClose />
+              </button>
+            </div>
+            <ImportModal
+              //
+              title="Import Account Student Id Mapping"
+              closeModal={handleImportModal} 
+              onFileUpload={handleFileUpload}/>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={handleImportModal}>close</button>
+          </form>
+        </dialog>
+        {/* Export Modal */}
+        <dialog className={`modal ${showExportModal ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <div className="flex flex-row justify-between">
+              <p className="text-sm text-gray-500">
+                {/* Press X or click outside to close */}
+              </p>
+              <button onClick={handleExportModal}>
+                <IoMdClose />
+              </button>
+            </div>
+            <ExportModal
+              //
+              title="Export Account Table"
+              closeModal={handleExportModal}
+              data={
+                accounts.map((item: any) => ({
+                  email: item.email,
+                  student_id: item.student_id, 
+                }))}
+            />
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={handleExportModal}>close</button>
+          </form>
+        </dialog>
       </div>
     </React.Fragment>
   );

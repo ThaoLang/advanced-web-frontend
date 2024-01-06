@@ -8,6 +8,8 @@ import { ClassType } from "@/model/ClassType";
 import { UserType } from "@/model/UserType";
 import filterAndSortArray from "@/utils/ArrayFilterUtils";
 import LoadingIndicator from "@/component/admin/LoadingIndicator";
+import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -19,6 +21,7 @@ export default function Classes({
     page?: string;
   };
 }) {
+  const auth = useAuth();
   const [classes, setClasses] = useState<any>(null);
   const [query, setQuery] = useState(searchParams?.query || "");
   const [currentPage, setCurrentPage] = useState(
@@ -27,13 +30,11 @@ export default function Classes({
   const [paginatedResult, setPaginatedResult] = useState<Array<any>>([]);
   const [totalItems, setTotalItems] = useState(0);
 
-  const [idSelectOptions, setIdSelectOptions] = useState<Array<string>>([]);
   const [nameSelectOptions, setNameSelectOptions] = useState<Array<string>>([]);
   const [hostNameSelectOptions, setHostNameSelectOptions] = useState<
     Array<string>
   >([]);
   const classroomTableHeaders = [
-    { header_name: "ID", key: "_id" },
     { header_name: "Name", key: "name" },
     { header_name: "Host name", key: "host_username" },
     { header_name: "Description", key: "description" },
@@ -41,9 +42,8 @@ export default function Classes({
   ];
   const statusSelectOptions: any[] = ["Active", "Inactive"];
 
-  const [sortBy, setSortBy] = useState<string | null>("_id");
+  const [sortBy, setSortBy] = useState<string | null>("name");
   const [orderBy, setOrderBy] = useState<string>("asc");
-  const [idFilter, setIdFilter] = useState<string | null>(null);
   const [nameFilter, setNameFilter] = useState<string | null>(null);
   const [hostNameFilter, setHostNameFilter] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
@@ -66,23 +66,16 @@ export default function Classes({
   };
 
   const handleClearFilters = () => {
-    setIdFilter(null);
     setNameFilter(null);
     setHostNameFilter(null);
     setStatusFilter(null);
   };
 
   useEffect(() => {
-    console.log("render page.tsx");
-
     const fetchData = async () => {
       const classData = await fetchClassesData();
       setClasses(classData);
       // Dynamically generate nameSelectOptions based on unique names
-      const uniqueIds = Array.from(
-        new Set(classData.map((classroom) => classroom._id))
-      );
-      setIdSelectOptions(uniqueIds);
       const uniqueNames = Array.from(
         new Set(classData.map((classroom) => classroom.name))
       );
@@ -106,7 +99,6 @@ export default function Classes({
       }
 
       const result = filterAndSortArray(classes, query, sortBy, orderBy, {
-        _id: idFilter,
         name: nameFilter,
         host_username: hostNameFilter,
         status: statusFilter,
@@ -134,291 +126,53 @@ export default function Classes({
     orderBy,
     nameFilter,
     hostNameFilter,
-    idFilter,
     statusFilter,
     currentPage,
     classes,
   ]);
 
   const fetchClassesData = async () => {
-    const templateClasses: Array<ClassType> = [
-      {
-        _id: "class1",
-        host_id: "1",
-        description: "Introduction to Mathematics",
-        name: "Mathematics 101",
-        class_code: "MATH101",
-        status: "active",
-        invite_url: "https://example.com/invite/math101",
-      },
-      {
-        _id: "class2",
-        host_id: "1",
-        description: "Programming Fundamentals",
-        name: "Programming 101",
-        class_code: "CS101",
-        status: "active",
-        invite_url: "https://example.com/invite/cs101",
-      },
-      {
-        _id: "class3",
-        host_id: "3",
-        description: "Literature Appreciation",
-        name: "English Literature",
-        class_code: "ENG101",
-        status: "inactive",
-        invite_url: "https://example.com/invite/eng101",
-      },
-      {
-        _id: "class4",
-        host_id: "5",
-        description: "Chemistry Basics",
-        name: "Chemistry 101",
-        class_code: "CHEM101",
-        status: "active",
-        invite_url: "https://example.com/invite/chem101",
-      },
-      {
-        _id: "class5",
-        host_id: "5",
-        description: "History of Art",
-        name: "Art History",
-        class_code: "ART101",
-        status: "active",
-        invite_url: "https://example.com/invite/art101",
-      },
-      {
-        _id: "class6",
-        host_id: "7",
-        description: "Web Development Workshop",
-        name: "Web Dev Workshop",
-        class_code: "WEBDEV101",
-        status: "active",
-        invite_url: "https://example.com/invite/webdev101",
-      },
-      {
-        _id: "class7",
-        host_id: "7",
-        description: "Physics Principles",
-        name: "Physics 101",
-        class_code: "PHYSICS101",
-        status: "active",
-        invite_url: "https://example.com/invite/physics101",
-      },
-      {
-        _id: "class8",
-        host_id: "11",
-        description: "Introduction to Psychology",
-        name: "Psychology 101",
-        class_code: "PSYCH101",
-        status: "active",
-        invite_url: "https://example.com/invite/psych101",
-      },
-      {
-        _id: "class9",
-        host_id: "9",
-        description: "Computer Networks",
-        name: "Networking Basics",
-        class_code: "NETWORK101",
-        status: "active",
-        invite_url: "https://example.com/invite/network101",
-      },
-      {
-        _id: "class10",
-        host_id: "11",
-        description: "Human Anatomy",
-        name: "Anatomy 101",
-        class_code: "ANATOMY101",
-        status: "inactive",
-        invite_url: "https://example.com/invite/anatomy101",
-      },
-      {
-        _id: "class11",
-        host_id: "11",
-        description: "Environmental Science",
-        name: "Environmental Science",
-        class_code: "ENVSCI101",
-        status: "active",
-        invite_url: "https://example.com/invite/envsci101",
-      },
-      {
-        _id: "class12",
-        host_id: "7",
-        description: "Data Structures and Algorithms",
-        name: "DSA Workshop",
-        class_code: "DSA101",
-        status: "active",
-        invite_url: "https://example.com/invite/dsa101",
-      },
-      {
-        _id: "class13",
-        host_id: "3",
-        description: "Microeconomics Basics",
-        name: "Microeconomics 101",
-        class_code: "ECON101",
-        status: "inactive",
-        invite_url: "https://example.com/invite/econ101",
-      },
-      {
-        _id: "class14",
-        host_id: "1",
-        description: "Introduction to Sociology",
-        name: "Sociology 101",
-        class_code: "SOCIO101",
-        status: "active",
-        invite_url: "https://example.com/invite/socio101",
-      },
-      {
-        _id: "class15",
-        host_id: "5",
-        description: "Digital Marketing Strategies",
-        name: "Marketing 101",
-        class_code: "MARKETING101",
-        status: "active",
-        invite_url: "https://example.com/invite/marketing101",
-      },
-    ];
-    const templateAccounts: Array<UserType> = [
-      {
-        id: "1",
-        studentId: "",
-        username: "Nguyễn Minh Quang",
-        email: "20127605@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=1",
-        role: "user",
-        status: "ban",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "2",
-        studentId: "",
-        username: "Lê Hoàng Khanh Nguyên",
-        email: "20127679@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=2",
-        role: "user",
-        status: "ban",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "3",
-        studentId: "",
-        username: "Lăng Thảo Thảo",
-        email: "20127629@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=3",
-        role: "admin",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "4",
-        studentId: "",
-        username: "Lê Hoài Phương",
-        email: "20127598@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=4",
-        role: "admin",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "5",
-        studentId: "",
-        username: "Hoàng Hữu Minh An",
-        email: "20127102@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=5",
-        role: "admin",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "6",
-        studentId: "",
-        username: "Huỳnh Minh Chiến",
-        email: "20127444@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=6",
-        role: "user",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "7",
-        studentId: "",
-        username: "Nguyễn Hoàng Phúc",
-        email: "20127523@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=7",
-        role: "user",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "8",
-        studentId: "",
-        username: "Lê Duẩn",
-        email: "20127123@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=8",
-        role: "user",
-        status: "ban",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "9",
-        studentId: "",
-        username: "Lê Cung Tiến",
-        email: "20127034@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=9",
-        role: "user",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "10",
-        studentId: "",
-        username: "Nguyễn Đăng Khoa",
-        email: "20127528@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=10",
-        role: "user",
-        status: "normal",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "11",
-        studentId: "",
-        username: "Bùi Thị Dung",
-        email: "20127349@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=11",
-        role: "admin",
-        status: "ban",
-        refresh_token: "",
-        access_token: "",
-      },
-      {
-        id: "12",
-        studentId: "",
-        username: "Bành Hảo Toàn",
-        email: "20127646@student.hcmus.edu.vn",
-        avatarUrl: "https://i.pravatar.cc/150?u=12",
-        role: "user",
-        status: "ban",
-        refresh_token: "",
-        access_token: "",
-      },
-    ];
 
+    // Fetch all accounts from the database
+    const fetchAccounts = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile`, {
+          headers: {
+            Authorization: `Bearer ${auth.admin?.access_token}`,
+          },
+        });
+
+        // console.log("Response Accounts", response.data);
+        return response.data as Array<UserType>;
+      } catch (error) {
+        console.error("Error fetching all users:", error);
+        return [];
+      }
+    };
+
+    //Fetch all classes from the database
+    const fetchClasses = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/teaching/exist`, {
+          headers: {
+            Authorization: `Bearer ${auth.admin?.access_token}`,
+          },
+        });
+
+        // console.log("Response Classes", response.data);
+        return response.data as Array<ClassType>;
+      } catch (error) {
+        console.error("Error fetching all classes:", error);
+        return [];
+      }
+    }
+    
     const addHostInfo = (
       classes: Array<ClassType>,
       accounts: Array<UserType>
     ): Array<ClassType> => {
       return classes.map((cls) => {
-        const host = accounts.find((account) => account.id === cls.host_id);
+        const host = accounts.find((account) => account._id === cls.host_id);
         return {
           ...cls,
           host_username: host?.username,
@@ -427,15 +181,48 @@ export default function Classes({
       });
     };
 
+    const Classes: Array<ClassType> = await fetchClasses();
+    const Accounts: Array<UserType> = await fetchAccounts();
+
     const classesWithHostInfo: Array<any> = addHostInfo(
-      templateClasses,
-      templateAccounts
+      Classes,
+      Accounts
     );
 
     return classesWithHostInfo;
   };
 
-  const deleteClassHandler = (currentClass: any) => {
+  const fetchSetClassStatus = async(action: string, classId: string) => {
+    await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${action}/${classId}`, null, {
+      headers: {
+        Authorization: `Bearer ${auth.admin?.access_token}`,
+      },
+    })
+    .then((response) => {
+      console.log(`${response.status}: Update status successfully!`);
+    })
+    .catch((error) => {
+      console.error("Error setting class status: ", error);
+    }); 
+  }
+
+  const fetchDeleteClass = async(classId: string) => {
+    await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}`, {
+      headers: {
+        Authorization: `Bearer ${auth.admin?.access_token}`,
+      },
+    })
+    .then((response) => {
+      console.log(`${response.status}: Remove successfully!`);
+    })
+    .catch((error) => {
+      console.error("Error while remove class: ", error);
+    }); 
+  }
+
+
+  //TODO: INCOMPLETE HANDLE, NEED TO IMPLEMENT "IMPORT/EXPORT FROM THE BACK-END SIDE" TO CONTINUE THIS TASK
+  const deleteClassHandler = async (currentClass: any) => {
     if (!classes) {
       // Handle the case where classes is still loading or null
       return;
@@ -444,27 +231,26 @@ export default function Classes({
     const updatedClasses = classes.filter((classItem: any) => {
       return classItem._id !== currentClass._id;
     });
+    await fetchDeleteClass(currentClass._id).catch(console.error);
     setClasses(updatedClasses);
   };
 
-  const banClassHandler = (currentClass: any) => {
+  const banClassHandler = async (currentClass: any) => {
     if (!classes) {
       // Handle the case where classes is still loading or null
       return;
     }
-    const updatedClasses = classes.map((classItem: any) => {
-      let updatedItem = {...classItem };
 
-      if (classItem._id === currentClass._id && currentClass.status === "inactive") {
-        updatedItem.status = "active";
-      } else if (
-        classItem._id === currentClass._id &&
-        currentClass.status === "active"
-      ) {
-        updatedItem.status = "inactive";
+    const updatedStatus = currentClass.status === "inactive" ? "active" : "inactive";
+
+    const updatedClasses = classes.map((classItem: any) => {
+      if (classItem._id === currentClass._id) {
+          return {...classItem, status: updatedStatus}
       }
-      return updatedItem;
+      return classItem;
     });
+    
+    await fetchSetClassStatus(updatedStatus, currentClass._id).catch(console.error);
     setClasses(updatedClasses);
   };
 
@@ -551,24 +337,6 @@ export default function Classes({
               <span className="label-text">Filters</span>
             </div>
             <div className="flex flex-row space-x-10">
-              <select
-                className="select select-bordered w-full max-w-sm"
-                value={nameFilter || ""}
-                onChange={(e) =>
-                  handleSelectChange(e.target.value, setIdFilter)
-                }
-              >
-                <option disabled selected value={""}>
-                  ID
-                </option>
-                {idSelectOptions.map((items, index) => {
-                  return (
-                    <option key={index} value={items}>
-                      {items}
-                    </option>
-                  );
-                })}
-              </select>
               <select
                 className="select select-bordered w-full max-w-sm"
                 value={nameFilter || ""}

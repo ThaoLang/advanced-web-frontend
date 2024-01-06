@@ -1,11 +1,12 @@
+"use client";
 import { FaRegEye, FaRegTrashCan, FaBan } from 'react-icons/fa6'
 import Link from 'next/link';
 import Pagination from '@/component/admin/Pagination';
 import React, { useState, useEffect } from 'react';
 import DeletePopupModal from '@/component/admin/(modal)/DeletePopupModal';
 import BanPopupModal from '../(modal)/BanPopupModal';
-import { useClassroom } from '@/context/ClassroomContext';
 import { UserType } from '@/model/UserType';
+import { useRouter } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -19,7 +20,7 @@ interface ClassTableProps {
 }
 
 export default async function ClassTable(props: ClassTableProps) {
-    const context = useClassroom();
+    const router = useRouter();
     const totalPages =
         props.totalItems % ITEMS_PER_PAGE === 0
             ? props.totalItems / ITEMS_PER_PAGE
@@ -76,6 +77,10 @@ export default async function ClassTable(props: ClassTableProps) {
         closeBanModal();
     };
 
+    function handleRowDoubleClick(_class: any): void {
+        router.push(`/admin/class/${_class._id}`);
+    }
+
     return (
         <React.Fragment>
             {isDeleteModalOpen && (
@@ -102,7 +107,7 @@ export default async function ClassTable(props: ClassTableProps) {
                     {/* head */}
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>No.</th>
                             <th>Name</th>
                             <th>Host name</th>
                             <th>Description</th>
@@ -115,8 +120,10 @@ export default async function ClassTable(props: ClassTableProps) {
                         {
                             props.paginatedResult.map((items: any, index: number) => {
                                 return (
-                                <tr key={index} className="hover:bg-gray-100 cursor-pointer hover:border-1 hover:border-gray-200">
-                                    <td>{items._id}</td>
+                                <tr key={index} 
+                                className="hover:bg-gray-100 cursor-pointer hover:border-1 hover:border-gray-200"
+                                onDoubleClick={() => handleRowDoubleClick(items)}>
+                                    <td>{(props.currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
                                     <td>{items.name}</td>
                                     <td>
                                         <div className="flex items-center gap-3">
@@ -149,10 +156,8 @@ export default async function ClassTable(props: ClassTableProps) {
                                     <th>
                                         <div className="flex flex-row justify-start space-x-2">
                                             <div className="cursor-pointer hover:text-primary">
-                                                <Link href={`/admin/class/${items._id}`} passHref legacyBehavior>
-                                                    <button onClick={() => context.classroom = items}>
-                                                        <FaRegEye />
-                                                    </button>
+                                                <Link href={`/admin/class/${items._id}`}>
+                                                    <FaRegEye />
                                                 </Link>
                                             </div>
                                             <button className="cursor-pointer hover:text-primary"

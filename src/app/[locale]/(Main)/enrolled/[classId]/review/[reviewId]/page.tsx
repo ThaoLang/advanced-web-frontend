@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import ReviewForm from "@/component/classItem/review/ReviewForm";
 import { IoMdClose } from "react-icons/io";
 import AddReviewModal from "@/component/classItem/review/AddReviewModal";
 import { useAuth } from "@/context/AuthContext";
@@ -13,8 +14,7 @@ import { useParams } from "next/navigation";
 import axios from "axios";
 import { ClassListType } from "@/model/ClassListType";
 import { NotificationType } from "@/model/NotificationType";
-import { actions } from "../../../state";
-import Link from "next/link";
+import { actions } from "@/app/[locale]/(Main)/state";
 
 export default function ReviewPage() {
   const t = useTranslations("Review");
@@ -27,7 +27,10 @@ export default function ReviewPage() {
   const [rubrics, setRubrics] = useState<RubricType[]>([]);
 
   const { classId } = useParams();
+  const { reviewId } = useParams();
   const auth = useAuth();
+
+  const [selectedReview, setSelectedReview] = useState<ReviewType>();
 
   const addReview = (
     gradeComposition: string,
@@ -178,7 +181,18 @@ export default function ReviewPage() {
       )
       .then((response) => {
         console.log("Response", response);
-        setReviewList(response.data);
+        if (response.data.length > 0) {
+          let data: ReviewType[];
+          data = response.data;
+          setReviewList(data);
+
+          data.forEach((element) => {
+            if (element._id === reviewId) {
+              setSelectedReview(element);
+              return;
+            }
+          });
+        }
       })
       .catch((error) => {
         console.error("Error fetching review list:", error);
@@ -188,7 +202,11 @@ export default function ReviewPage() {
   return (
     <div>
       <div className="grid grid-cols-2 mx-20">
-        <div className="col-span-2 lg:col-span-1">
+        <div
+          className={`${
+            selectedReview ? "hidden lg:block" : "col-span-2"
+          } lg:col-span-1`}
+        >
           <div className="m-3 mx-10 text-2xl lg:text-3xl text-yellow-500 flex flex-row items-center justify-between">
             {t("my_review")}
             {rubrics.length > 0 && auth.user && (
@@ -210,27 +228,29 @@ export default function ReviewPage() {
                 {reviewList
                   .filter((review) => review.status === "In Progress")
                   .map((review, index) => (
-                    <Link href={`/enrolled/${classId}/review/${review._id}`}>
-                      <div key={index} className="flex flex-row">
-                        <input
-                          type="radio"
-                          name="radio-1"
-                          className="radio"
-                          checked={false}
-                          onChange={() => {}}
-                        />
-                        <MiniReview
-                          _id={review._id}
-                          classId={review.classId}
-                          studentId={review.studentId}
-                          gradeComposition={review.gradeComposition}
-                          currentGrade={review.currentGrade}
-                          expectationGrade={review.expectationGrade}
-                          explanation={review.explanation}
-                          status={review.status}
-                        />
-                      </div>
-                    </Link>
+                    <div
+                      key={index}
+                      onClick={() => setSelectedReview(review)}
+                      className="flex flex-row"
+                    >
+                      <input
+                        type="radio"
+                        name="radio-1"
+                        className="radio"
+                        checked={selectedReview === review}
+                        onChange={() => {}}
+                      />
+                      <MiniReview
+                        _id={review._id}
+                        classId={review.classId}
+                        studentId={review.studentId}
+                        gradeComposition={review.gradeComposition}
+                        currentGrade={review.currentGrade}
+                        expectationGrade={review.expectationGrade}
+                        explanation={review.explanation}
+                        status={review.status}
+                      />
+                    </div>
                   ))}
               </div>
             </div>
@@ -242,32 +262,51 @@ export default function ReviewPage() {
                 {reviewList
                   .filter((review) => review.status === "Completed")
                   .map((review, index) => (
-                    <Link href={`/enrolled/${classId}/review/${review._id}`}>
-                      <div key={index} className="flex flex-row">
-                        <input
-                          type="radio"
-                          name="radio-1"
-                          className="radio"
-                          checked={false}
-                          onChange={() => {}}
-                        />
-                        <MiniReview
-                          _id={review._id}
-                          classId={review.classId}
-                          studentId={review.studentId}
-                          gradeComposition={review.gradeComposition}
-                          currentGrade={review.currentGrade}
-                          expectationGrade={review.expectationGrade}
-                          explanation={review.explanation}
-                          status={review.status}
-                        />
-                      </div>
-                    </Link>
+                    <div
+                      key={index}
+                      onClick={() => setSelectedReview(review)}
+                      className="flex flex-row"
+                    >
+                      <input
+                        type="radio"
+                        name="radio-1"
+                        className="radio"
+                        checked={selectedReview === review}
+                        onChange={() => {}}
+                      />
+                      <MiniReview
+                        _id={review._id}
+                        classId={review.classId}
+                        studentId={review.studentId}
+                        gradeComposition={review.gradeComposition}
+                        currentGrade={review.currentGrade}
+                        expectationGrade={review.expectationGrade}
+                        explanation={review.explanation}
+                        status={review.status}
+                      />
+                    </div>
                   ))}
               </div>
             </div>
           </div>
         </div>
+        {selectedReview && (
+          <div className="m-3 flex-col col-span-2 lg:col-span-1">
+            <div className="m-3 text-2xl lg:text-3xl text-yellow-500">
+              {t("review_detail")}
+            </div>
+            <ReviewForm
+              _id={selectedReview._id}
+              classId={selectedReview.classId}
+              studentId={selectedReview.studentId}
+              gradeComposition={selectedReview.gradeComposition}
+              currentGrade={selectedReview.currentGrade}
+              expectationGrade={selectedReview.expectationGrade}
+              explanation={selectedReview.explanation}
+              status={selectedReview.status}
+            />
+          </div>
+        )}
       </div>
 
       {/* Modal */}

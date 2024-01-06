@@ -2,27 +2,14 @@
 import Banner from "@/component/classItem/detail/Banner";
 import { useAuth } from "@/context/AuthContext";
 import { ClassType } from "@/model/ClassType";
-import { UserType } from "@/model/UserType";
 import axios from "axios";
-import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function DetailEnrolledClass() {
-  const t = useTranslations("Tabs");
-  const auth = useAuth();
-  const [isAvailableStudentList, setIsAvailable] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const { classId } = useParams();
   const [classInfo, setClassInfo] = useState<ClassType>();
-  // const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  const handleModal = () => {
-    console.log("Modal changed");
-    setShowModal(!showModal);
-  };
+  const auth = useAuth();
 
   useEffect(() => {
     axios

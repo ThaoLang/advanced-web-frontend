@@ -10,7 +10,6 @@ import {
 } from "@/model/CommentType";
 import { useTranslations } from "next-intl";
 import axios from "axios";
-import { UserType } from "@/model/UserType";
 import { actions } from "@/app/[locale]/(Main)/state";
 import { useParams, usePathname } from "next/navigation";
 import { NotificationType } from "@/model/NotificationType";
@@ -26,69 +25,128 @@ const CommentContainer = (props: CommentContainerInterface) => {
   const { classId } = useParams();
   const pathname = usePathname();
   const t = useTranslations("Comment");
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
 
   const [comments, setComments] = useState<CommentType[]>([]);
+  const [trigger, setTrigger] = useState("");
 
   useEffect(() => {
-    let responseData: RawCommentType[];
+    (async () => {
+      let responseData: RawCommentType[];
 
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/getComments/${props.reviewId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Response", response);
-
-        responseData = response.data as RawCommentType[];
-
-        let tempComments = [];
-
-        for (let comment of responseData) {
-          //TODO: update temp values
-          let tempName = comment.isSender ? currentUser.username : "Lâm Ánh Hạ";
-
-          let tempAvatar = comment.isSender
-            ? "https://cdn-icons-png.flaticon.com/128/1077/1077114.png"
-            : "https://i.pravatar.cc/300";
-          // let tempAvatar =
-          //   "https://cdn-icons-png.flaticon.com/128/1077/1077114.png";
-
-          tempComments.push({
-            id: comment._id,
-            reviewId: comment.review_id,
-            user: {
-              id: comment.sender_id,
-              name: tempName,
-              avatar: tempAvatar,
+      await axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/getComments/${props.reviewId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
-            desc: comment.desc,
-            parent: comment.parent ? comment.parent : null,
-            replyOnUser: comment.replyOnUser ? comment.replyOnUser : null,
-            createdAt: comment.createdAt,
-            like: comment.like,
-            isSender: comment.isSender,
-            like_status: false,
-          });
-        }
+          }
+        )
+        .then((response) => {
+          if (auth.user && auth.user != null) {
+            console.log("Response", response);
 
-        console.log("temp comments", tempComments);
+            responseData = response.data as RawCommentType[];
 
-        setComments(tempComments);
-      })
-      .catch((error) => {
-        console.error("Error fetching comment list:", error);
-      });
+            let tempComments: CommentType[] = [];
+
+            for (let comment of responseData) {
+              //TODO: update temp values
+              let tempName = comment.isSender ? auth.user.username : "";
+
+              let tempAvatar = comment.isSender
+                ? auth.user.avatarUrl
+                : "https://cdn-icons-png.flaticon.com/128/1077/1077114.png";
+
+              tempComments.push({
+                id: comment._id,
+                reviewId: comment.review_id,
+                user: {
+                  id: comment.sender_id,
+                  name: tempName,
+                  avatar: tempAvatar,
+                },
+                desc: comment.desc,
+                parent: comment.parent ? comment.parent : null,
+                replyOnUser: comment.replyOnUser ? comment.replyOnUser : null,
+                createdAt: comment.createdAt,
+                like: comment.like,
+                isSender: comment.isSender,
+                like_status: false,
+              });
+            }
+
+            console.log("temp comments", tempComments);
+
+            setComments(tempComments);
+            setTrigger("triggered");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching comment list:", error);
+        });
+    })();
   }, [props.reviewId]);
+
+  useEffect(() => {
+    (async () => {
+      for (let comment of comments) {
+        console.log(comment.desc);
+        if (!comment.isSender) {
+          if (auth.user && auth.user != null) {
+            //TODO: get sender name
+            // if (props.senderRole === "Teacher") {
+            await axios
+              .get(
+                `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/${comment.user.id}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${auth.user.access_token}`,
+                  },
+                }
+              )
+              .then((response) => {
+                console.log("Response name", response);
+                console.log("new name", response.data.username);
+                console.log("new url", response.data.avatarUrl);
+
+                comment.user.name = response.data.username;
+                comment.user.avatar = response.data.avatarUrl;
+
+                console.log("updated comment", comment);
+                setComments([...comments]);
+                // setComments([...comments, comment]);
+              })
+              .catch((error) => {
+                console.error("Error fetching user:", error);
+              });
+            // } else if (props.senderRole === "Student") {
+
+            // axios.get `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/${props.senderId}`,
+            // ---> get student ID ---> update request below
+
+            //   axios
+            //     .get(
+            //       `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${props.classId}/${student's studentId}`,
+            //       {
+            //         headers: {
+            //           Authorization: `Bearer ${auth.user?.access_token}`,
+            //         },
+            //       }
+            //     )
+            //     .then((response) => {
+            //       console.log("Response", response);
+            //       // setSenderName(response.data.fullname);
+            //     })
+            //     .catch((error) => {
+            //       console.error("Error fetching student:", error);
+            //     });
+            // }
+          }
+        }
+      }
+    })();
+  }, [trigger]);
 
   const mainComments = comments.filter(
     (comment) => comment.parent === null || undefined
@@ -102,6 +160,8 @@ const CommentContainer = (props: CommentContainerInterface) => {
     replyOnUser: string | null
   ) => {
     if (value === "") return;
+    if (!auth.user || auth.user == null) return;
+
     const newRawComment = {
       review_id: props.reviewId,
       desc: value,
@@ -128,7 +188,7 @@ const CommentContainer = (props: CommentContainerInterface) => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user.access_token}`,
           },
         }
       )
@@ -141,6 +201,8 @@ const CommentContainer = (props: CommentContainerInterface) => {
 
           // notification
           (async () => {
+            if (!auth.user || auth.user == null) return;
+
             let senderRole: string,
               message: string,
               redirectUrl: string,
@@ -154,18 +216,20 @@ const CommentContainer = (props: CommentContainerInterface) => {
                 `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
                 {
                   headers: {
-                    Authorization: `Bearer ${currentUser?.access_token}`,
+                    Authorization: `Bearer ${auth.user.access_token}`,
                   },
                 }
               )
               .then((response) => {
+                if (!auth.user || auth.user == null) return;
+
                 allMembersList = response.data.members;
 
                 if (allMembersList.length > 0) {
                   if (pathname.includes("teaching")) {
                     senderRole = "Teacher";
                     message = "teacher_reply";
-                    redirectUrl = `/enrolled/${classId}/review`;
+                    redirectUrl = `/enrolled/${classId}/review/${props.reviewId}`;
 
                     allMembersList.forEach((member) => {
                       if (
@@ -180,7 +244,7 @@ const CommentContainer = (props: CommentContainerInterface) => {
 
                     senderRole = "Student";
                     message = "student_reply";
-                    redirectUrl = `/teaching/${classId}/review`;
+                    redirectUrl = `/teaching/${classId}/review/${props.reviewId}`;
 
                     allMembersList.forEach((member) => {
                       if (member.role === "Teacher") {
@@ -188,26 +252,25 @@ const CommentContainer = (props: CommentContainerInterface) => {
                       }
                     });
                   }
+                  let newNotification: NotificationType;
+                  newNotification = {
+                    id: "",
+                    senderId: "",
+                    classId: classId.toString(),
+                    reviewId: props.reviewId,
+                    senderRole: senderRole,
+                    receiverIdList: receiverIdList,
+                    message: message,
+                    redirectUrl: redirectUrl,
+                    createdAt: newRawComment.createdAt,
+                    isRead: false,
+                  };
+
+                  actions.sendNotification(
+                    auth.user.access_token,
+                    newNotification
+                  );
                 }
-
-                let newNotification: NotificationType;
-                newNotification = {
-                  id: "",
-                  senderId: "",
-                  classId: classId.toString(),
-                  reviewId: props.reviewId,
-                  senderRole: senderRole,
-                  receiverIdList: receiverIdList,
-                  message: message,
-                  redirectUrl: redirectUrl,
-                  createdAt: newRawComment.createdAt,
-                  isRead: false,
-                };
-
-                actions.sendNotification(
-                  currentUser.access_token,
-                  newNotification
-                );
               })
               .catch((error) => {
                 console.error("Error fetching class members:", error);
@@ -224,9 +287,8 @@ const CommentContainer = (props: CommentContainerInterface) => {
     const newComment = {
       id: newId,
       user: {
-        // id: auth.user?._id,
-        id: currentUser?.id,
-        name: auth.user?.username,
+        id: auth.user._id,
+        name: auth.user.username,
         avatar: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
       },
       desc: value,
@@ -244,6 +306,8 @@ const CommentContainer = (props: CommentContainerInterface) => {
   };
 
   const updateCommentHandler = async (value: string, commentId: string) => {
+    if (!auth.user || auth.user == null) return;
+
     await axios
       .put(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/updateComment`,
@@ -254,7 +318,7 @@ const CommentContainer = (props: CommentContainerInterface) => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user.access_token}`,
           },
         }
       )
@@ -281,13 +345,14 @@ const CommentContainer = (props: CommentContainerInterface) => {
 
   const deleteCommentHandler = async (commentId: string) => {
     console.log("Delete commentId:", commentId);
+    if (!auth.user || auth.user == null) return;
 
     await axios
       .delete(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/deleteComment/${commentId}`,
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user.access_token}`,
           },
         }
       )

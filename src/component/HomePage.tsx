@@ -9,83 +9,7 @@ import NewClass from "@/component/classItem/NewClass";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { UserType } from "@/model/UserType";
 import { ClassType } from "@/model/ClassType";
-
-// const classes = [
-//   {
-//     id: 1,
-//     imageUrl:
-//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "enrolled",
-//   },
-//   {
-//     id: 2,
-//     imageUrl:
-//       "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "teaching",
-//   },
-//   {
-//     id: 3,
-//     imageUrl:
-//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "enrolled",
-//   },
-//   {
-//     id: 1,
-//     imageUrl:
-//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-//     name: "My Class Name 2",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "enrolled",
-//   },
-//   {
-//     id: 2,
-//     imageUrl:
-//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-//     name: "My Class Name 2",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "enrolled",
-//   },
-//   {
-//     id: 3,
-//     imageUrl:
-//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-//     name: "My Class Name 2",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "enrolled",
-//   },
-//   {
-//     id: 1,
-//     imageUrl:
-//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "enrolled",
-//   },
-//   {
-//     id: 2,
-//     imageUrl:
-//       "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "enrolled",
-//   },
-// ];
 
 export default function HomePage() {
   const t_homepage = useTranslations("Homepage");
@@ -111,11 +35,6 @@ export default function HomePage() {
 
   const [showModal, setShowModal] = useState(false);
   const auth = useAuth();
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -148,7 +67,7 @@ export default function HomePage() {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       );
@@ -188,7 +107,7 @@ export default function HomePage() {
         {},
         {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       );
@@ -209,16 +128,16 @@ export default function HomePage() {
   };
 
   useEffect(() => {
+    console.log("Homepage user", auth);
     axios
       .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
         headers: {
-          Authorization: `Bearer ${currentUser?.access_token}`,
+          Authorization: `Bearer ${auth.user?.access_token}`,
         },
       })
       .then((response) => {
         console.log("Response", response.data);
         setClasses(response.data);
-        console.log("Response class", classes);
       })
       .catch((error) => {
         console.error("Error fetching classes:", error);

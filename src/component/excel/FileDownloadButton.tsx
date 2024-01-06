@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { saveAs } from 'file-saver'
 import { FaFileExport } from 'react-icons/fa6';
+import { TfiDownload } from 'react-icons/tfi';
 
 interface FileDownloadButtonProps {
     filename: string,
@@ -24,6 +25,11 @@ export default function FileDownloadButton(props: FileDownloadButtonProps) {
                 return {
                     csv: `${process.env.NEXT_PUBLIC_GRADE_TEMPLATE_CSV}`,
                     xlsx: `${process.env.NEXT_PUBLIC_GRADE_TEMPLATE_XLSX}`,
+                };
+            case 'Account':
+                return {
+                    csv: `${process.env.NEXT_PUBLIC_ACCOUNT_MAPPING_TEMPLATE_CSV}`,
+                    xlsx: `${process.env.NEXT_PUBLIC_ACCOUNT_MAPPING_TEMPLATE_XLSX}`,
                 };
             default:
                 return {
@@ -63,7 +69,7 @@ export default function FileDownloadButton(props: FileDownloadButtonProps) {
     };
 
     return (
-        <label className="form-control w-full max-w-xs flex flex-row space-x-5 justify-between lg:ml-5">
+        <label className="form-control w-full max-w-xs flex flex-row space-x-5 lg:ml-5">
             {/* <div className="label">
                 <span className="label-text">Save template</span>
             </div> */}
@@ -76,6 +82,7 @@ export default function FileDownloadButton(props: FileDownloadButtonProps) {
                 <button className="text-white btn btn-info bg-blue-500 text-white"
                     onClick={handleDownload}>
                     <span>DOWNLOAD</span>
+                    <TfiDownload />
                 </button>
             </div>
         </label>

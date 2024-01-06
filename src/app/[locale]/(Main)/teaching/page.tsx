@@ -12,36 +12,6 @@ import { ClassType } from "@/model/ClassType";
 import { UserType } from "@/model/UserType";
 import LoadingIndicator from "@/component/admin/LoadingIndicator";
 
-// const tempclasses = [
-//   {
-//     id: 2,
-//     imageUrl:
-//       "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "teaching",
-//   },
-//   {
-//     id: 2,
-//     imageUrl:
-//       "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "teaching",
-//   },
-//   {
-//     id: 2,
-//     imageUrl:
-//       "https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f",
-//     name: "My Class Name",
-//     description: "This is the class",
-//     inviteUrl: "inviteurl",
-//     page: "teaching",
-//   },
-// ];
-
 export default function TeachingPage() {
   const auth = useAuth();
   const [classes, setClasses] = useState<ClassType[]>([]);
@@ -144,14 +114,6 @@ export default function TeachingPage() {
   };
   // end copy invite link
 
-  // useEffect(() => {
-  //   const savedUser = localStorage.getItem("user");
-  //   if (savedUser) {
-  //     // Assuming UserType has a structure like { email: string }
-  //     auth.login(JSON.parse(savedUser));
-  //     console.log("TEACHING PAGE USER: ", auth.user);
-  //   }
-  // }, []);
   useEffect(() => {
     const fetchClasses = async () => {
       await axios
@@ -169,8 +131,10 @@ export default function TeachingPage() {
           console.error("Error fetching classes:", error);
         });
     };
-    fetchClasses;
+    fetchClasses();
   }, []);
+
+  console.log("Teaching classes", auth.user);
 
   return auth.user ? (
     <div className="mx-20 my-10">
@@ -235,14 +199,8 @@ export default function TeachingPage() {
           onChange={(page) => setPage(page)}
         />
       </div>
-      {classes &&
-        classes.map((clas, index) => {
-          return <div key={index}>{clas.name}</div>;
-        })}
     </div>
   ) : (
-    <div>
-      <LoadingIndicator />
-    </div>
+    <div>{/* <LoadingIndicator /> */}</div>
   );
 }
