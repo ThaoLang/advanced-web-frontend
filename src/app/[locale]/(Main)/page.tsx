@@ -16,10 +16,5 @@ export default function Home() {
     }
   }, []);
 
-  return (
-    <div>
-      {
-        auth.user ? <HomePage /> : <LandingPage />
-      }</div>
-  );
+  return <div>{auth.user ? <HomePage /> : <LandingPage />}</div>;
 }

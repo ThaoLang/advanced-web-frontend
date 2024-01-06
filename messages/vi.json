@@ -210,7 +210,9 @@
     "add_review_success": "Thêm phúc khảo thành công!",
     "add_review_failure": "Thêm phúc khảo thất bại...",
     "update_rubric_success": "Cập nhật thang điểm thành công!",
-    "update_rubric_failure": "Cập nhật thang điểm thất bại..."
+    "update_rubric_failure": "Cập nhật thang điểm thất bại...",
+    "update_grade_success": "Cập nhật điểm thành công!",
+    "update_grade_failure": "Cập nhật điểm thất bại..."
   },
   "Notification": {
     "grade_finalize": "Điểm thành phần đã được tổng kết",

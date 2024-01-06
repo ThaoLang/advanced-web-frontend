@@ -6,6 +6,15 @@ const nextConfig = {
   experimental: {
     scrollRestoration: true,
   },
+  swcMinify: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
   // output: "export",
 };
 

@@ -60,6 +60,17 @@ const SortableComponent = (props: SortableComponentProps) => {
       setRubrics={props.setRubrics}
       onSortEnd={onSortEnd}
       useDragHandle
+      rubric={{
+        _id: "",
+        gradeName: "",
+        gradeScale: 0,
+        classId: "",
+        order: 0,
+        status: "",
+      }}
+      handleUpdate={function (updatedRubric: RubricType): void {
+        throw new Error("Function not implemented.");
+      }}
     />
   );
 };
@@ -309,6 +320,8 @@ const GradePage: React.FC = () => {
     // end send notification
   };
 
+  const updateGrade = () => {};
+
   const t = useTranslations("GradePage");
 
   const [showModal, setShowModal] = useState(false);
@@ -415,11 +428,7 @@ const GradePage: React.FC = () => {
         .then((response) => {
           console.log("Students Response", response);
           let data = response.data[0].students;
-          const convertedData: StudentType[] = data.map((item: any) => ({
-            fullname: item.fullname,
-            studentId: item.studentId
-          }))
-          setStudents(convertedData);
+          setStudents(data);
         })
         .catch((error) => {
           console.error("Error fetching rubrics:", error);
@@ -470,13 +479,7 @@ const GradePage: React.FC = () => {
     <div className="grid grid-cols-6 gap-10 mx-10">
       <div className="col-span-6 lg:col-span-4">
         <div className="flex items-center justify-center gap-4 mb-2">
-          {/* <button
-            className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
-            // onClick={() => {}}
-          > */}
-          {/* </button> */}
-
-          {t("download_help")}
+          <div className="hidden md:block">{t("download_help")}</div>
           <FileDownloadButton
             templateCategory="Grade"
             filename="Grade_Template"
@@ -521,7 +524,7 @@ const GradePage: React.FC = () => {
                 students.length > 0 &&
                 students.map((student, index) => {
                   return (
-                    <tr>
+                    <tr key={index}>
                       <th>
                         <div className="text-sm opacity-50">{index + 1}</div>
                       </th>
@@ -611,7 +614,7 @@ const GradePage: React.FC = () => {
                   {/* <td></td> */}
                   {rubrics.map((item, index) => {
                     return (
-                      <td>
+                      <td key={index}>
                         <button
                           key={index}
                           className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
