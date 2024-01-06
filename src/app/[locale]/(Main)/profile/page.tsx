@@ -12,12 +12,25 @@ export default function Profile() {
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   const [showFailedMsg, setShowFailedMsg] = useState(false);
   const t = useTranslations("Profile");
+  const [rawImage, setRawImage] = useState<any>(null);
+
+  // Create an S3 instance
+const s3 = axios.create({
+  baseURL: `${process.env.NEXT_PUBLIC_DO_SPACES_URL}`,
+  headers: {
+    'Content-Type': 'application/octet-stream',
+    'x-amz-acl': 'public-read',
+    'Authorization': `Bearer ${auth.user?.access_token}`,
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+  },
+});
 
   const updateProfile = async (
     _username: string,
     // _email: string,
     _studentId: string,
-    _profilePicture: string
+    _profilePicture: any
   ) => {
     // setUser((prevUser: UserType | null) => {
     //   if (!prevUser) {
@@ -40,12 +53,20 @@ export default function Profile() {
 
     try {
       console.log("USE", _username);
+      console.log("USE", _profilePicture) ;
+      console.log("USE", rawImage.name) ;
+      
+      console.log("EXTENSION: ", getFileExtension(rawImage.name));
+
+      const avatarFileName = `/avatar/${extractUsernameFromEmail(auth.user?.email!)}.${getFileExtension(rawImage.name)}`;
+      console.log("AVATAR FILE NAME: ", avatarFileName);  
+      await fetchUploadAvatar(rawImage, avatarFileName).catch(console.error);
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/update`,
         {
           // email: _email,
           username: _username,
-          // avatarUrl: _profilePicture,
+          avatarUrl: avatarFileName,
           studentId: _studentId,
         },
         {
@@ -68,19 +89,44 @@ export default function Profile() {
     }
   };
 
+  const extractUsernameFromEmail = (email: string) =>{
+    const atIndex = email.indexOf('@');
+  
+    if (atIndex !== -1) {
+      return email.slice(0, atIndex);
+    } else {
+      throw new Error('Invalid email format');
+    }
+  }
+
+  function getFileExtension(filename: string): string {
+    return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
+  }
+
+  const fetchUploadAvatar = async (file: any, fileName: string) => {
+    try {
+      const response = await s3.put(`/${process.env.NEXT_PUBLIC_DO_SPACES_BUCKET}${fileName}`, file);
+      console.log('Upload successful:', response.data);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
+  
+
   const handleSaveInfo = async (
     _username: string | undefined,
     // _email: string | undefined,
     _studentId: string | undefined,
-    _profilePicture: string | undefined
+    _profilePicture: any
   ) => {
+    
     auth.updateUser(_username, _profilePicture, _studentId);
     if (auth.user)
       await updateProfile(
         _username ? _username : "",
         // _email ? _email : "",
         _studentId ? _studentId : "",
-        auth.user.avatarUrl
+        _profilePicture
       );
   };
 
@@ -131,7 +177,10 @@ export default function Profile() {
           <span>{t("update_error")}</span>
         </div>
       )}
-      {auth.user && <ProfileForm user={auth.user} saveInfo={handleSaveInfo} />}
+      {auth.user && <ProfileForm 
+        user={auth.user} 
+        saveInfo={handleSaveInfo} 
+        setRawImage={setRawImage}/>}
     </div>
   );
 }

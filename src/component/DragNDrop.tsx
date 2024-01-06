@@ -3,8 +3,8 @@ import React from "react";
 import { useDropzone } from "react-dropzone";
 
 interface ImageProp {
-  imageUrl: string | undefined;
-  saveImageUrl: (imageUrl: string) => void;
+  saveImageUrl: (imageUrl: any) => void;
+  saveRawImage: (image: any) => void;
 }
 
 const dropzoneStyle = {
@@ -21,6 +21,9 @@ function DragNDrop(props: ImageProp) {
       "image/*": [".png", ".gif", ".jpeg", ".jpg"],
     },
     onDrop: (acceptedFiles) => {
+      console.log("acceptedFiles", acceptedFiles[0].name); 
+      props.saveRawImage(acceptedFiles[0]);
+      
       const fileUrl = URL.createObjectURL(acceptedFiles[0]);
       props.saveImageUrl(fileUrl);
     },

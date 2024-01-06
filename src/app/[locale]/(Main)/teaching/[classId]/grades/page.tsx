@@ -430,8 +430,8 @@ const GradePage: React.FC = () => {
           console.log("Students Response", response);
           let data = response.data[0].students;
           const convertedData: StudentType[] = data.map((item: any) => ({
-            fullname: item.fullName,
-            studentId: item.student_id
+            fullname: item.fullname,
+            studentId: item.studentId
           }))
           setStudents(convertedData);
         })
