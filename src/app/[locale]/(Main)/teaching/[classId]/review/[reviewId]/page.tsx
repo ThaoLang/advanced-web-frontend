@@ -9,7 +9,6 @@ import DetailedMiniReview from "@/component/classItem/review/DetailedMiniReview"
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { UserType } from "@/model/UserType";
 import { useParams } from "next/navigation";
 import { RubricType } from "@/model/RubricType";
 import { ClassListType } from "@/model/ClassListType";
@@ -25,11 +24,6 @@ export default function DetailedReviewPage() {
     setShowModal(!showModal);
   };
 
-  // const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  // }
   const { classId } = useParams();
   const { reviewId } = useParams();
   const auth = useAuth();

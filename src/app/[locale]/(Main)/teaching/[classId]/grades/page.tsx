@@ -1,14 +1,6 @@
 "use client";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import {
-  arrayMove,
-  SortableContainer,
-  SortableElement,
-} from "react-sortable-hoc";
-import { RxDragHandleDots2 } from "react-icons/rx";
-import { RiDeleteBinLine } from "react-icons/ri";
-import { MdOutlineModeEditOutline } from "react-icons/md";
+import { arrayMove } from "react-sortable-hoc";
 import { IoAdd } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import AddGradeForm from "@/component/AddGradeForm";
@@ -21,7 +13,6 @@ import { RubricType } from "@/model/RubricType";
 import { useTranslations } from "next-intl";
 import { ToastContainer, toast } from "react-toastify";
 import { proxy } from "valtio";
-import { UserType } from "@/model/UserType";
 import { GradeType } from "@/model/GradeType";
 import FileDownloadButton from "@/component/excel/FileDownloadButton";
 import ImportModal from "@/component/classItem/grade/ImportModal";
@@ -326,11 +317,7 @@ const GradePage: React.FC = () => {
   const [rubrics, setRubrics] = useState<RubricType[]>([]);
   const [isDisabledUpdatedBtn, setIsDisabledUpdatedBtn] = useState(true);
   const auth = useAuth();
-  // const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  // }
+
   const { classId } = useParams();
   const handleModal = () => {
     console.log("Modal changed");
@@ -405,7 +392,6 @@ const GradePage: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      // console.log("User", currentUser);
       axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
           headers: {
@@ -478,10 +464,7 @@ const GradePage: React.FC = () => {
     }
   }, [rubrics]);
 
-  
-  const handleFileUpload = async (data: any) => {
-
-  }
+  const handleFileUpload = async (data: any) => {};
 
   return (
     <div className="grid grid-cols-6 gap-10 mx-10">

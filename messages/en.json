@@ -210,6 +210,8 @@
     "cancel_change": "Cancel changes",
     "invalid_grade": "Invalid grade! Please use . for decimal points, score between 0 and 10",
     "review": "Review",
+    "add_review_success": "Add review successfully!",
+    "add_review_failure": "Add review failed...",
     "update_rubric_success": "Update rubric successfully!",
     "update_rubric_failure": "Update rubric failed..."
   },

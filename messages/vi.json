@@ -207,6 +207,8 @@
     "cancel_change": "Hủy thay đổi",
     "invalid_grade": "Điểm không hợp lệ! Vui lòng dùng . cho số thập phân, điểm trên thang 10",
     "review": "Phúc khảo",
+    "add_review_success": "Thêm phúc khảo thành công!",
+    "add_review_failure": "Thêm phúc khảo thất bại...",
     "update_rubric_success": "Cập nhật thang điểm thành công!",
     "update_rubric_failure": "Cập nhật thang điểm thất bại..."
   },

@@ -26,10 +26,6 @@ export default function EnrolledPage() {
   const [isCopied, setIsCopied] = useState(false);
   const t = useTranslations("EnrolledPage");
   const t_tab = useTranslations("Tabs");
-  const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
 
   const filterData = useMemo(() => {
     return classes.filter((item, index) => {
