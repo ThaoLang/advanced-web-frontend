@@ -182,8 +182,8 @@ export default function GradePage() {
                           .filter((oneGrade) => {
                             if (item._id === oneGrade.rubricId) return oneGrade;
                           })
-                          .map((oneGrade) => (
-                            <>{oneGrade.grade}</>
+                          .map((oneGrade, index) => (
+                            <div key={index}>{oneGrade.grade}</div>
                           ))}
                       </td>
                     );
@@ -202,7 +202,7 @@ export default function GradePage() {
                 {rubrics.length > 0 &&
                   rubrics.map((item, index) => {
                     return (
-                      <td>
+                      <td key={index}>
                         <button
                           key={index}
                           className="hidden md:block btn btn-info bg-yellow-400 text-white text-xs"

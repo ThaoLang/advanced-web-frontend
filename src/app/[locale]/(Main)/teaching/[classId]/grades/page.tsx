@@ -481,7 +481,7 @@ const GradePage: React.FC = () => {
                 students.length > 0 &&
                 students.map((student, index) => {
                   return (
-                    <tr>
+                    <tr key={index}>
                       <th>
                         <div className="text-sm opacity-50">{index + 1}</div>
                       </th>
