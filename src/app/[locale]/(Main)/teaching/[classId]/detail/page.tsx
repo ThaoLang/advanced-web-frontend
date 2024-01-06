@@ -11,6 +11,7 @@ import axios from "axios";
 import { UserType } from "@/model/UserType";
 import FileDownloadButton from "@/component/excel/FileDownloadButton";
 import { useAuth } from "@/context/AuthContext";
+import { StudentType } from "@/model/StudentType";
 
 export default function DetailTeachingClass() {
   const t = useTranslations("Tabs");
@@ -49,6 +50,36 @@ export default function DetailTeachingClass() {
       });
   }, []);
 
+  const fetchSaveCSV = async (students: any, classId: string) => {
+    await axios
+    .post(
+      `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}/import`,
+      {
+            students: students
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${auth.admin?.access_token}`,
+        },
+      }
+    )
+    .then((response) => {
+        console.log(response);
+    })
+    .catch(console.error);
+}
+
+const handleFileUpload = async (data: any) => {
+    // Handle the parsed CSV data
+    const convertedData: StudentType[] = data.map((item: any) => ({
+        fullName: item.fullname ? item.fullname.toString() : '',
+        student_id: item.student_id ? item.student_id.toString() : '', 
+    }));
+    await fetchSaveCSV(convertedData, classId as string).catch(console.error);
+    setIsAvailable(true);
+    setShowModal(false); 
+}
+
   return (
     <>
       <div className="flex justify-between mx-10 lg:mx-20">
@@ -82,8 +113,8 @@ export default function DetailTeachingClass() {
                   type="checkbox"
                   checked={isAvailableStudentList}
                   onChange={() => setIsAvailable(!isAvailableStudentList)} //replace with real check in the future
-                  className="checkbox checkbox-warning mx-2 cursor-default"
-                />
+                  className="checkbox checkbox-warning mx-2 cursor-default disabled-checkbox"
+                  disabled/>
                 <button
                   className="mb-2 lg:w-80 lg:ml-5 btn btn-info bg-blue-500 text-white"
                   onClick={handleModal}
@@ -122,9 +153,10 @@ export default function DetailTeachingClass() {
           </div>
           <ImportExportModal
             //
-            setIsAvailable={setIsAvailable}
+            title={t("import")}
             closeModal={handleModal}
             data={undefined}
+            onFileUpload={handleFileUpload}
           />
         </div>
         <form method="dialog" className="modal-backdrop">

@@ -217,7 +217,7 @@ const GradePage: React.FC = () => {
             `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/finalizedGrade/${classId}/${student.studentId}`,
             {
               headers: {
-                Authorization: `Bearer ${currentUser?.access_token}`,
+                Authorization: `Bearer ${auth.user?.access_token}`,
               },
             }
           )
@@ -247,7 +247,7 @@ const GradePage: React.FC = () => {
           {},
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )
@@ -423,13 +423,17 @@ const GradePage: React.FC = () => {
       axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}`, {
           headers: {
-            Authorization: `Bearer ${currentUser?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         })
         .then((response) => {
           console.log("Students Response", response);
           let data = response.data[0].students;
-          setStudents(data);
+          const convertedData: StudentType[] = data.map((item: any) => ({
+            fullname: item.fullName,
+            studentId: item.student_id
+          }))
+          setStudents(convertedData);
         })
         .catch((error) => {
           console.error("Error fetching rubrics:", error);
