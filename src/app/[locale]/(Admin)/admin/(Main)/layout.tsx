@@ -4,6 +4,13 @@ import "@/app/[locale]/globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import React from "react";
 import AdminLayout from "@/component/admin/AdminLayout";
+import { NextIntlClientProvider, useMessages } from "next-intl";
+
+
+interface RootLayoutProps {
+  children: React.ReactNode;
+  params: { locale: string };
+}
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,15 +21,16 @@ export const metadata: Metadata = {
 
 export default function Layout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
-
+  params: { locale },
+}: RootLayoutProps) {
+  const messages = useMessages();
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={inter.className}>
         <AuthProvider>
-            <AdminLayout children={children}/>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <AdminLayout children={children} />
+          </NextIntlClientProvider>
         </AuthProvider>
       </body>
     </html>

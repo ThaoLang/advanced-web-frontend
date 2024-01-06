@@ -11,6 +11,10 @@ import LoadingIndicator from "@/component/admin/LoadingIndicator";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import FileDownloadButton from "@/component/excel/FileDownloadButton";
+import ExportModal from "@/component/classItem/grade/ExportModal";
+import ImportModal from "@/component/classItem/grade/ImportModal";
+import { IoMdClose } from "react-icons/io";
+import { TfiExport, TfiImport } from "react-icons/tfi";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -31,6 +35,8 @@ export default function Account({
   );
   const [paginatedResult, setPaginatedResult] = useState<Array<any>>([]);
   const [totalItems, setTotalItems] = useState(0);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
 
   const [nameSelectOptions, setNameSelectOptions] = useState<Array<string>>([]);
   const accountTableHeaders = [
@@ -220,12 +226,45 @@ export default function Account({
     return <LoadingIndicator />;
   }
 
-  function handleImportModal(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    throw new Error("Function not implemented.");
+  const handleImportModal = () => {
+    setShowImportModal(!showImportModal);
   }
 
-  function handleExportModal(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    throw new Error("Function not implemented.");
+  const handleExportModal = () => {
+    setShowExportModal(!showExportModal);
+  }
+
+  const fetchImportCSV = async(data: any) => {
+    return await axios
+    .post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/import`, {
+      studentIds: data,
+      headers: {
+        Authorization: `Bearer ${auth.admin?.access_token}`,
+      },
+    })
+    .then((response) => {
+      setInfoMessage(`${response.status}: Import successfully!`);
+      setTimeout(() => {
+        setInfoMessage(null);
+      }, 2000);
+    })
+    .catch((error) => {
+      console.error("Error fetching mapping user with student_id:", error);
+    });
+  }
+
+  const handleFileUpload = async (data: any) => {
+    type MappingStudentIdType = {
+      email: string, 
+      studentId: string,
+    }
+    const convertedData: MappingStudentIdType[] = data.map((item: any) => ({
+      // class_id: item.class_id,
+      // user_id: item.user_id.toString(), // Convert user_id to string if it's a number
+      email: item.email,
+      studentId: item.student_id ? item.student_id.toString() : '', // Convert student_id to string if it's a number, or use an empty string if undefined
+    }));
+    await fetchImportCSV(convertedData).catch(console.error);
   }
 
   return (
@@ -380,7 +419,7 @@ export default function Account({
           </div>
           <div className="lg:col-start-0 lg:col-span-3 mt-5">
             <div className="flex items-center justify-end gap-4 mb-2">
-              Download
+              Select data template
               <FileDownloadButton
                 templateCategory="Account"
                 filename="Account_Template"
@@ -390,16 +429,17 @@ export default function Account({
                 onClick={handleImportModal}
               >
                 Import
+                <TfiImport/>
               </button>
               <button
                 className={`btn btn-info bg-blue-500 text-white text-xs md:text-md lg:text-md`}
                 onClick={handleExportModal}
               >
                 Export
+                <TfiExport/>
               </button>
             </div>
           </div>
-          
           <div className="lg:col-start-0 lg:col-span-3">
             <Suspense key={query + currentPage}>
               <AccountTable
@@ -413,6 +453,53 @@ export default function Account({
             </Suspense>
           </div>
         </div>
+        {/* Import Modal */}
+        <dialog className={`modal ${showImportModal ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <div className="flex flex-row justify-between">
+              <p className="text-sm text-gray-500">
+                {/* Press X or click outside to close */}
+              </p>
+              <button onClick={handleImportModal}>
+                <IoMdClose />
+              </button>
+            </div>
+            <ImportModal
+              //
+              title="Import Account Student Id Mapping"
+              closeModal={handleImportModal} 
+              onFileUpload={handleFileUpload}/>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={handleImportModal}>close</button>
+          </form>
+        </dialog>
+        {/* Export Modal */}
+        <dialog className={`modal ${showExportModal ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <div className="flex flex-row justify-between">
+              <p className="text-sm text-gray-500">
+                {/* Press X or click outside to close */}
+              </p>
+              <button onClick={handleExportModal}>
+                <IoMdClose />
+              </button>
+            </div>
+            <ExportModal
+              //
+              title="Export Account Table"
+              closeModal={handleExportModal}
+              data={
+                accounts.map((item: any) => ({
+                  email: item.email,
+                  student_id: item.student_id, 
+                }))}
+            />
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={handleExportModal}>close</button>
+          </form>
+        </dialog>
       </div>
     </React.Fragment>
   );

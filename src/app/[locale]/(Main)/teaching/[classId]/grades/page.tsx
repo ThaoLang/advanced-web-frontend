@@ -408,6 +408,11 @@ const GradePage: React.FC = () => {
     }
   }, [rubrics]);
 
+  
+  const handleFileUpload = async (data: any) => {
+
+  }
+
   return (
     <div className="grid grid-cols-6 gap-10 mx-10">
       <div className="col-span-6 lg:col-span-4">
@@ -650,8 +655,9 @@ const GradePage: React.FC = () => {
             </div>
             <ImportModal
               //
+              title={t("import")}
               closeModal={handleImportModal}
-              data={undefined}
+              onFileUpload={handleFileUpload}
             />
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -671,6 +677,7 @@ const GradePage: React.FC = () => {
             </div>
             <ExportModal
               //
+              title={t("export")}
               closeModal={handleExportModal}
               data={undefined}
             />
