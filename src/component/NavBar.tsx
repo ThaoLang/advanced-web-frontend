@@ -20,7 +20,6 @@ import { NotificationType } from "@/model/NotificationType";
 import { actions } from "@/app/[locale]/(Main)/state";
 import axios from "axios";
 import { ClassType } from "@/model/ClassType";
-import { UserType } from "@/model/UserType";
 
 export default function NavBar() {
   const auth = useAuth();
@@ -36,6 +35,7 @@ export default function NavBar() {
   const [notifications, setNotifications] = useState<Array<NotificationType>>(
     []
   );
+  const [trigger, setTrigger] = useState("");
 
   const isNotificationClicked = (notification: NotificationType) => {
     notification.isRead = true;
@@ -52,32 +52,6 @@ export default function NavBar() {
     auth.logout("user");
   };
 
-  // avatar url
-
-  useEffect(() => {
-    const checkCredential = async () => {
-      const savedUser = localStorage.getItem("user");
-      if (savedUser != null) {
-        // Assuming UserType has a structure like { email: string }
-        const user = JSON.parse(savedUser);
-        if (user) {
-          auth.login(user);
-        }
-      }
-    };
-    checkCredential();
-  }, []);
-
-  useEffect(() => {
-    // socket io notification
-    let user = auth.user;
-    let accessToken = user?.access_token;
-    if (accessToken) {
-      actions.setAccessToken(accessToken);
-      actions.initializeSocket(accessToken);
-    }
-  }, []);
-
   useEffect(() => {
     (async () => {
       const checkCredential = async () => {
@@ -87,13 +61,19 @@ export default function NavBar() {
           const user = JSON.parse(savedUser);
           if (user) {
             auth.login(user);
-            console.log("auth", auth);
-            console.log("user", auth.user);
           }
         }
       };
       await checkCredential();
+      console.log("auth in navbar", auth);
+      console.log("user in navbar", auth.user);
 
+      setTrigger("triggered");
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
       // get a list of class id user is in
       // loop the list
       let classes: ClassType[];
@@ -133,8 +113,16 @@ export default function NavBar() {
         .catch((error) => {
           console.error("Error fetching my classes:", error);
         });
+
+      // socket io notification
+      let user = auth.user;
+      let accessToken = user?.access_token;
+      if (accessToken) {
+        actions.setAccessToken(accessToken);
+        actions.initializeSocket(accessToken);
+      }
     })();
-  }, []);
+  }, [trigger]);
 
   return (
     <header className="navbar bg-amber-100">

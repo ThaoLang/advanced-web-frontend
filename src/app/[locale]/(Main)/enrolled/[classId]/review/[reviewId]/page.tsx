@@ -10,7 +10,6 @@ import { ReviewType } from "@/model/ReviewType";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RubricType } from "@/model/RubricType";
-import { UserType } from "@/model/UserType";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import { ClassListType } from "@/model/ClassListType";
@@ -24,20 +23,9 @@ export default function ReviewPage() {
     console.log("Modal changed");
     setShowModal(!showModal);
   };
-  // const auth = useAuth();
-  // const studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
-  let studentId = "";
 
   const [rubrics, setRubrics] = useState<RubricType[]>([]);
 
-  // const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  //   if (currentUser) {
-  //     studentId = currentUser.studentId;
-  //   }
-  // }
   const { classId } = useParams();
   const { reviewId } = useParams();
   const auth = useAuth();
@@ -50,9 +38,11 @@ export default function ReviewPage() {
     studentExplanation: string,
     currentGrade: string
   ) => {
+    if (!auth.user || auth.user == null) return;
+
     let tempReview = {
       _id: "",
-      studentId: studentId,
+      studentId: auth.user.studentId,
       gradeComposition: gradeComposition,
       currentGrade: currentGrade ? currentGrade : "",
       expectationGrade: expectationGrade,
@@ -182,7 +172,7 @@ export default function ReviewPage() {
     // get review list
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/studentReviews/${classId}/${studentId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}review/studentReviews/${classId}/${auth.user?.studentId}`,
         {
           headers: {
             Authorization: `Bearer ${auth.user?.access_token}`,
@@ -219,7 +209,7 @@ export default function ReviewPage() {
         >
           <div className="m-3 mx-10 text-2xl lg:text-3xl text-yellow-500 flex flex-row items-center justify-between">
             {t("my_review")}
-            {rubrics.length > 0 && (
+            {rubrics.length > 0 && auth.user && (
               <button
                 className="btn btn-info max-w-xs bg-yellow-400 text-white"
                 onClick={handleModal}

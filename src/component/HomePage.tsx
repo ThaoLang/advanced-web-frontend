@@ -9,7 +9,6 @@ import NewClass from "@/component/classItem/NewClass";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { UserType } from "@/model/UserType";
 import { ClassType } from "@/model/ClassType";
 
 export default function HomePage() {
@@ -36,11 +35,6 @@ export default function HomePage() {
 
   const [showModal, setShowModal] = useState(false);
   const auth = useAuth();
-  // const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  // }
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 

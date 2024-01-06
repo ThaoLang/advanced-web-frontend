@@ -6,7 +6,6 @@ import DetailedMiniReview from "@/component/classItem/review/DetailedMiniReview"
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { UserType } from "@/model/UserType";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
@@ -15,11 +14,6 @@ export default function ReviewPage() {
   const t = useTranslations("Review");
   const auth = useAuth();
 
-  // const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  // }
   const { classId } = useParams();
 
   const [reviewList, setReviewList] = useState<ReviewType[]>([]);

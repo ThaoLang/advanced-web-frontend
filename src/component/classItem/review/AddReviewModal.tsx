@@ -4,9 +4,9 @@ import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RubricType } from "@/model/RubricType";
-import { UserType } from "@/model/UserType";
 import axios from "axios";
 import { GradeType } from "@/model/GradeType";
+import { useAuth } from "@/context/AuthContext";
 
 interface AddReviewProps {
   rubricName: string;
@@ -27,15 +27,7 @@ export default function AddReviewModal(props: AddReviewProps) {
   const [studentExplanationProxy, setStudentExplanationProxy] = useState("");
   const [grade, setGrade] = useState(""); // view current grade
 
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  let studentId = "20127679";
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-    if (currentUser) {
-      studentId = currentUser.studentId;
-    }
-  }
+  const auth = useAuth();
 
   useEffect(() => {
     if (props.rubricName != "") {
@@ -44,6 +36,8 @@ export default function AddReviewModal(props: AddReviewProps) {
   }, [props.rubricName]);
 
   useEffect(() => {
+    if (!auth.user || auth.user == null) return;
+
     if (!props.currentGrade) {
       // request to get current grade
       if (gradeCompositionProxy != "") {
@@ -57,10 +51,10 @@ export default function AddReviewModal(props: AddReviewProps) {
 
         axios
           .get(
-            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/grade/${rubricId}/${studentId}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/grade/${rubricId}/${auth.user.studentId}`,
             {
               headers: {
-                Authorization: `Bearer ${currentUser?.access_token}`,
+                Authorization: `Bearer ${auth.user.access_token}`,
               },
             }
           )

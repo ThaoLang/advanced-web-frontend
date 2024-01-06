@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useTranslations } from "next-intl";
-import { IoMdClose } from "react-icons/io";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -16,11 +15,7 @@ export default function MemberPage() {
 
   const { classId } = useParams();
   const auth = useAuth();
-  // const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  // }
+
   const [teacherList, setTeacherList] = useState<ClassListType[]>([]);
   const [studentList, setStudentList] = useState<ClassListType[]>([]);
   const [hostUser, setHostUser] = useState<UserType>();

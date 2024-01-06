@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { RubricType } from "@/model/RubricType";
-import { UserType } from "@/model/UserType";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import AddReviewModal from "@/component/classItem/review/AddReviewModal";
@@ -14,12 +13,6 @@ import { GradeType } from "@/model/GradeType";
 import { NumericFormat } from "react-number-format";
 
 export default function GradePage() {
-  //temp
-  const student = {
-    studentId: "20127679",
-    email: "lhkn@gmail.com",
-  };
-
   const t = useTranslations("GradePage");
   const [showModal, setShowModal] = useState(false);
 
@@ -50,18 +43,8 @@ export default function GradePage() {
   const [fullname, setFullname] = useState();
   const [isFinalized, setIsFinalized] = useState(false);
 
-  // const auth = useAuth();
-  // student.studentId = auth.user?.studentId ? auth.user.studentId : "20127679";
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
   const auth = useAuth();
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  //   if (currentUser) {
-  //     student.email = currentUser.email;
-  //     student.studentId = currentUser.studentId;
-  //   }
-  // }
+
   const { classId } = useParams();
 
   const addReview = (
@@ -70,9 +53,11 @@ export default function GradePage() {
     studentExplanation: string,
     currentGrade: string
   ) => {
+    if (!auth.user || auth.user == null) return;
+
     let tempReview = {
       _id: "",
-      studentId: student.studentId,
+      studentId: auth.user.studentId,
       gradeComposition: gradeComposition,
       currentGrade: currentGrade,
       expectationGrade: expectationGrade,
@@ -95,7 +80,7 @@ export default function GradePage() {
         },
         {
           headers: {
-            Authorization: `Bearer ${auth.user?.access_token}`,
+            Authorization: `Bearer ${auth.user.access_token}`,
           },
         }
       )
@@ -113,10 +98,12 @@ export default function GradePage() {
 
   useEffect(() => {
     (async () => {
+      if (!auth.user || auth.user == null) return;
+
       axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
           headers: {
-            Authorization: `Bearer ${auth.user?.access_token}`,
+            Authorization: `Bearer ${auth.user.access_token}`,
           },
         })
         .then((response) => {
@@ -136,10 +123,10 @@ export default function GradePage() {
 
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/studentGrades/${student.studentId}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/studentGrades/${auth.user.studentId}`,
           {
             headers: {
-              Authorization: `Bearer ${auth.user?.access_token}`,
+              Authorization: `Bearer ${auth.user.access_token}`,
             },
           }
         )
@@ -152,10 +139,10 @@ export default function GradePage() {
 
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}/${student.studentId}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}/${auth.user.studentId}`,
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user.access_token}`,
             },
           }
         )
@@ -169,10 +156,10 @@ export default function GradePage() {
 
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/finalizedGrade/${classId}/${student.studentId}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/finalizedGrade/${classId}/${auth.user.studentId}`,
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )
@@ -211,13 +198,13 @@ export default function GradePage() {
             </thead>
             <tbody>
               <tr>
-                <th>{student.studentId}</th>
+                <th>{auth.user?.studentId}</th>
                 <td>{fullname}</td>
                 <td>
                   <input
                     type="text"
                     className="text-md font-light h-8 p-2"
-                    value={student.email}
+                    value={auth.user?.email}
                     placeholder={t("email")}
                     disabled={true}
                   />
@@ -273,31 +260,33 @@ export default function GradePage() {
                     })}
                     <th></th>
                   </tr>
-                  <tr>
-                    <th className="text-lg text-gray-500">{t("review")}</th>
-                    <td></td>
-                    <td></td>
-                    {rubrics.map((item, index) => {
-                      return (
-                        <>
-                          {item.status === "graded" && (
-                            <td key={index}>
-                              <button
-                                key={index}
-                                className="hidden md:block btn btn-info bg-yellow-400 text-white text-xs"
-                                onClick={() => {
-                                  openModal(item.gradeName, item._id);
-                                }}
-                              >
-                                {t("review")}
-                              </button>
-                            </td>
-                          )}
-                        </>
-                      );
-                    })}
-                    <th></th>
-                  </tr>
+                  {auth.user && (
+                    <tr>
+                      <th className="text-lg text-gray-500">{t("review")}</th>
+                      <td></td>
+                      <td></td>
+                      {rubrics.map((item, index) => {
+                        return (
+                          <>
+                            {item.status === "graded" && (
+                              <td key={index}>
+                                <button
+                                  key={index}
+                                  className="hidden md:block btn btn-info bg-yellow-400 text-white text-xs"
+                                  onClick={() => {
+                                    openModal(item.gradeName, item._id);
+                                  }}
+                                >
+                                  {t("review")}
+                                </button>
+                              </td>
+                            )}
+                          </>
+                        );
+                      })}
+                      <th></th>
+                    </tr>
+                  )}
                 </>
               )}
             </tbody>

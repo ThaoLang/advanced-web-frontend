@@ -3,14 +3,12 @@ import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdClose, IoMdPersonAdd } from "react-icons/io";
 import { useTranslations } from "next-intl";
-import AddGradeForm from "@/component/AddGradeForm";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { UserType } from "@/model/UserType";
 import { ClassListType } from "@/model/ClassListType";
 import AddMemberForm from "@/component/AddMemberForm";
 import { useAuth } from "@/context/AuthContext";
-import { ok } from "assert";
 import { ToastContainer } from "react-toastify";
 
 export default function MembersPage() {
@@ -20,11 +18,7 @@ export default function MembersPage() {
   const [isAddingStudent, setIsAddingStudent] = useState(true);
   const { classId } = useParams();
   const auth = useAuth();
-  const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  // }
+
   const [teacherList, setTeacherList] = useState<ClassListType[]>([]);
   const [studentList, setStudentList] = useState<ClassListType[]>([]);
   const [hostUser, setHostUser] = useState<UserType>();

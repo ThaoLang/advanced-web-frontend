@@ -8,7 +8,6 @@ import ImportExportModal from "@/component/classItem/detail/ImportExportModal";
 import { useParams } from "next/navigation";
 import { ClassType } from "@/model/ClassType";
 import axios from "axios";
-import { UserType } from "@/model/UserType";
 import FileDownloadButton from "@/component/excel/FileDownloadButton";
 import { useAuth } from "@/context/AuthContext";
 import { StudentType } from "@/model/StudentType";
@@ -20,12 +19,6 @@ export default function DetailTeachingClass() {
   const { classId } = useParams();
   const [classInfo, setClassInfo] = useState<ClassType>();
   const auth = useAuth();
-
-  // const savedUser = localStorage.getItem("user");
-  // let currentUser: UserType;
-  // if (savedUser) {
-  //   currentUser = JSON.parse(savedUser);
-  // }
 
   const handleModal = () => {
     console.log("Modal changed");
@@ -52,33 +45,33 @@ export default function DetailTeachingClass() {
 
   const fetchSaveCSV = async (students: any, classId: string) => {
     await axios
-    .post(
-      `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}/import`,
-      {
-            students: students
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${auth.admin?.access_token}`,
+      .post(
+        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}/import`,
+        {
+          students: students,
         },
-      }
-    )
-    .then((response) => {
+        {
+          headers: {
+            Authorization: `Bearer ${auth.admin?.access_token}`,
+          },
+        }
+      )
+      .then((response) => {
         console.log(response);
-    })
-    .catch(console.error);
-}
+      })
+      .catch(console.error);
+  };
 
-const handleFileUpload = async (data: any) => {
+  const handleFileUpload = async (data: any) => {
     // Handle the parsed CSV data
     const convertedData: StudentType[] = data.map((item: any) => ({
-        fullName: item.fullname ? item.fullname.toString() : '',
-        student_id: item.student_id ? item.student_id.toString() : '', 
+      fullName: item.fullname ? item.fullname.toString() : "",
+      student_id: item.student_id ? item.student_id.toString() : "",
     }));
     await fetchSaveCSV(convertedData, classId as string).catch(console.error);
     setIsAvailable(true);
-    setShowModal(false); 
-}
+    setShowModal(false);
+  };
 
   return (
     <>
@@ -114,7 +107,8 @@ const handleFileUpload = async (data: any) => {
                   checked={isAvailableStudentList}
                   onChange={() => setIsAvailable(!isAvailableStudentList)} //replace with real check in the future
                   className="checkbox checkbox-warning mx-2 cursor-default disabled-checkbox"
-                  disabled/>
+                  disabled
+                />
                 <button
                   className="mb-2 lg:w-80 lg:ml-5 btn btn-info bg-blue-500 text-white"
                   onClick={handleModal}

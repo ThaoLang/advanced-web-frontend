@@ -3,8 +3,8 @@ import Link from "next/link";
 import { NotificationType } from "@/model/NotificationType";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { UserType } from "@/model/UserType";
 import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
 
 interface NotificationListProps {
   notifications: NotificationType[] | undefined;
@@ -29,11 +29,7 @@ export function Notification(props: NotificationProps) {
   const [className, setClassName] = useState("");
   const [senderName, setSenderName] = useState("");
 
-  const savedUser = localStorage.getItem("user");
-  let currentUser: UserType;
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-  }
+  const auth = useAuth();
 
   useEffect(() => {
     (async () => {
@@ -43,7 +39,7 @@ export function Notification(props: NotificationProps) {
           `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${props.classId}`,
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )
@@ -60,7 +56,7 @@ export function Notification(props: NotificationProps) {
           `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/${props.senderId}`,
           {
             headers: {
-              Authorization: `Bearer ${currentUser?.access_token}`,
+              Authorization: `Bearer ${auth.user?.access_token}`,
             },
           }
         )
@@ -77,7 +73,7 @@ export function Notification(props: NotificationProps) {
       //       `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${props.classId}/${student's studentId}`,
       //       {
       //         headers: {
-      //           Authorization: `Bearer ${currentUser?.access_token}`,
+      //           Authorization: `Bearer ${auth.user?.access_token}`,
       //         },
       //       }
       //     )
