@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import "../globals.css";
 import { FaHouseChimney, FaGear } from "react-icons/fa6";
 import { FaChalkboardTeacher } from "react-icons/fa";
@@ -21,7 +21,7 @@ interface RootLayoutProps {
   params: { locale: string };
 }
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "LightHub",
@@ -35,10 +35,11 @@ export default function RootLayout({
   const messages = useMessages();
   return (
     <html lang={locale}>
-      <body className={inter.className}>
+      {/* <body className={inter.className}> */}
+      <body className="">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AuthProvider>
-            <UserLayout children={children} locale={locale}/>
+            <UserLayout children={children} locale={locale} />
           </AuthProvider>
         </NextIntlClientProvider>
       </body>
