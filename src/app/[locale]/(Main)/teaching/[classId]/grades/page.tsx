@@ -549,7 +549,90 @@ const GradePage: React.FC = () => {
     }
   }, [rubrics]);
 
-  const handleFileUpload = async (data: any) => {};
+  const handleFileUpload = async (data: any) => {
+    console.log(data);
+    console.log('Headers: ', Object.keys(data[0]));
+    const headers = Object.keys(data[0]);
+
+    //Create rubric objects
+    const fetchCreateRubrics = async () => {
+      for (let i = 1; i < headers.length; i++) {
+        axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/create`,
+          {
+            class_id: classId.toString(),
+            gradeName: `${headers[i]}`,
+            gradeScale: 10,
+            order: i - 1,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${auth.user?.access_token}`
+            }
+          }).then(response => {
+            console.log('Rubric', response.data);
+          }).catch(console.error);
+      }
+    }
+
+    const fetchGetAllRubrics = async () => {
+      //then get all the updated rubrics
+      const response = await axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
+          headers: {
+            Authorization: `Bearer ${auth.user?.access_token}`,
+          },
+        })
+        .catch((error) => {
+          console.error("Error fetching rubrics:", error);
+        });
+      setRubrics(response?.data);
+    }
+
+    const fetchUpdateGradeAllStudents = async () => {
+      //update grade for all students
+      await data.forEach(async (studentGrades: any) => {
+        // update new grade to database
+        for (let i = 1; i < headers.length; i++) {
+          await axios
+            .post(
+              `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/create`,
+              {
+                studentId: studentGrades[headers[0]].toString(), // studentId
+                rubricId: rubrics[i - 1]._id, // rubricId
+                grade: studentGrades[headers[i]], // grade
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${auth.user?.access_token}`,
+                },
+              }
+            ).catch(console.error)
+        }
+      })
+    }
+
+    await fetchCreateRubrics().then(async () => {
+      await fetchGetAllRubrics().then(async () => {
+        await fetchUpdateGradeAllStudents().catch(console.error);
+      });
+    }).finally(() => {setShowImportModal(false);})
+  };
+
+  const exportCSVData = () => {
+    // const exportData = students?.map((student: StudentType) => {
+    //   const studentGrades = rubrics.map((rubric) => {
+    //     const grade = // your logic to find the grade for this rubric and student
+    //     return {
+    //       [rubric.gradeName]: grade,
+    //     };
+    //   });
+    
+    //   return {
+    //     studentId: student.studentId,
+    //     grades: Object.assign({}, ...studentGrades),
+    //   };
+    // });
+  }
 
   return (
     <div className="grid grid-cols-6 gap-10 mx-10">
@@ -834,7 +917,7 @@ const GradePage: React.FC = () => {
                   //
                   title={t("export")}
                   closeModal={handleExportModal}
-                  data={undefined}
+                  data={exportCSVData()}
                 />
               </div>
               <form method="dialog" className="modal-backdrop">
