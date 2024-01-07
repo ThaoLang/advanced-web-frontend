@@ -69,11 +69,12 @@ const actions = {
     state.wsErrors = [];
   },
   notify: (message: string, room: string): void => {
+    if (!state.socket) return;
     //test
-    state.socket?.emit("sendMessage", { message });
+    state.socket.emit("sendMessage", { message });
 
     let body = { message, room };
-    state.socket?.emit("notify", { body });
+    state.socket.emit("notify", { body });
   },
   //notificationList
   sendNotification: async (
