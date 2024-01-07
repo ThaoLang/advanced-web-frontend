@@ -108,4 +108,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v3
         with:
-          path: out
+          path: docs/user/out
