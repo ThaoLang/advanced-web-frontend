@@ -99,7 +99,20 @@ jobs:
           path: "${{ github.workspace }}/.next"
 
   # Deployment job
-  deploy:
+  # deploy:
+  #   environment:
+  #     name: github-pages
+  #     url: ${{ steps.deployment.outputs.page_url }}
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Deploy to GitHub Pages
+        # id: deployment
+        # uses: actions/deploy-pages@v3
+        # with:
+        #   path: "${{ github.workspace }}/.next"
+
+deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -108,6 +121,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v3
-        with:
-          path: "${{ github.workspace }}/.next"
+        uses: actions/deploy-pages@v1
