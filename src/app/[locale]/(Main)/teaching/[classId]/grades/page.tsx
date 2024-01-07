@@ -619,19 +619,26 @@ const GradePage: React.FC = () => {
   };
 
   const exportCSVData = () => {
-    // const exportData = students?.map((student: StudentType) => {
-    //   const studentGrades = rubrics.map((rubric) => {
-    //     const grade = // your logic to find the grade for this rubric and student
-    //     return {
-    //       [rubric.gradeName]: grade,
-    //     };
-    //   });
-    
-    //   return {
-    //     studentId: student.studentId,
-    //     grades: Object.assign({}, ...studentGrades),
-    //   };
-    // });
+    const exportData = students?.map((student: StudentType) => {
+      const studentGrades = rubrics.map((rubric) => {
+        const _grade = grade.find(
+          (grade) => (grade.rubricId === rubric._id) && 
+          (grade.studentId === student.studentId))?.grade;
+        return {
+          [rubric.gradeName]: _grade,
+        };
+      });
+      // Using reduce to merge the individual rubric grades into a single object
+      const gradesObject = studentGrades.reduce(
+        (acc, curr) => Object.assign(acc, curr), {});
+      return {
+        studentId: student.studentId,
+        ...gradesObject,
+        finalizeGrade: finalizeGrades.get(student.studentId) 
+      };
+    });
+    console.log("DATA: ", exportData);
+    return exportData;
   }
 
   return (
