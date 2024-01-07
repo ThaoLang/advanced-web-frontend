@@ -28,6 +28,9 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    # defaults:
+    #   run:
+    #     working-directory: ./docs/user
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -90,6 +93,10 @@ jobs:
       # path: mywebapp/**ssssssss
       # if-no-files-found:error
       # retention-days:90
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: "${{ github.workspace }}/.next"
 
   # Deployment job
   deploy:
@@ -102,3 +109,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          path: "${{ github.workspace }}/.next"
