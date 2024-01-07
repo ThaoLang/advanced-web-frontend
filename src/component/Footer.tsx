@@ -4,7 +4,7 @@ export default function Footer() {
   const t = useTranslations("Footer");
   return (
     <div>
-      <footer className="bg-amber-100 mt-10">
+      <footer className="bg-amber-100">
         <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
           <div className="md:flex md:justify-between">
             <div className="mb-6 md:mb-0">

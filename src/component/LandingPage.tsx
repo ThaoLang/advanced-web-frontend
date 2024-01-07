@@ -2,7 +2,7 @@ import React from "react";
 import Hero from "./Hero";
 import { useTranslations } from "next-intl";
 
-import Image from "next/image";
+import Link from "next/link";
 
 export default function LandingPage() {
   const t = useTranslations("LandingPage");
@@ -98,17 +98,6 @@ export default function LandingPage() {
               className="rounded-xl w-screen"
               src="https://www.westend61.de/images/0001481557pw/boys-looking-at-laptop-while-e-learning-in-living-room-VABF04028.jpg"
             ></img>
-            <div
-              style={{ width: "100%", height: "100%", position: "relative" }}
-            >
-              {/* <Image
-                alt="info image"
-                className="rounded-xl w-screen"
-                src="https://www.westend61.de/images/0001481557pw/boys-looking-at-laptop-while-e-learning-in-living-room-VABF04028.jpg"
-                layout="fill"
-                objectFit="contain"
-              /> */}
-            </div>
           </div>
         </div>
       </div>
@@ -119,13 +108,17 @@ export default function LandingPage() {
             {t("header_5")} <span className="text-yellow-400"> LightHub</span>
           </b>
         </div>
-        <div className="mt-10 flex lg:flex-row flex-col lg:justify-center">
-          <button className="mb-5 lg:w-80 btn btn-info text-uppercase">
-            {t("get_started_btn")}
-          </button>
-          <button className="mb-5 lg:w-80 lg:ml-5 btn btn-info text-uppercase ">
-            {t("learn_more_btn")}
-          </button>
+        <div className="mt-10 mb-5 gap-5 flex lg:flex-row flex-col lg:justify-center">
+          <Link href="/auth">
+            <button className="lg:w-80 btn btn-info">
+              {t("get_started_btn")}
+            </button>
+          </Link>
+          <Link href="/auth">
+            <button className="lg:w-80 btn btn-info">
+              {t("learn_more_btn")}
+            </button>
+          </Link>
         </div>
         <div className="h-10"></div> {/* Why i can't use mt-10??? */}
       </div>

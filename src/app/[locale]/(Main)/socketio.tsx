@@ -1,3 +1,4 @@
+"use client";
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import "react-toastify/dist/ReactToastify.css";
@@ -36,11 +37,15 @@ export const MySocketIO = (props: MySocketIOProps) => {
 
       // toast received messages from server
       socket.on("onMessage", (message: string) => {
-        toast("New notification!" + message);
+        toast("New notification! " + message);
+
+        // toast(<>{t(message)}</>);
       });
 
       socket.on("returnNotification", (message: string) => {
-        toast("New notification!" + message);
+        toast("New notification! " + message);
+
+        // toast(<>{t(message)}</>);
       });
     });
 
