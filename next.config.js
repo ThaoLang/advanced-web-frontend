@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
   env: {
     customKey: "my-value",
   },
@@ -15,7 +16,6 @@ const nextConfig = {
       },
     ],
   },
-  // output: "export",
 };
 
 const withNextIntl = require("next-intl/plugin")();

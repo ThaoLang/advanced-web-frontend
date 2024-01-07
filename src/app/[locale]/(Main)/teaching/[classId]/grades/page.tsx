@@ -790,7 +790,7 @@ const GradePage: React.FC = () => {
                           <td key={index}>
                             <button
                               key={index}
-                              className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
+                              className="btn btn-info bg-blue-500 text-white text-xs"
                               disabled={isNotVisible(item.status)}
                               onClick={() => finalizeRubric(item)}
                             >
