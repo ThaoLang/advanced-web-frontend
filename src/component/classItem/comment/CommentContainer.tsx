@@ -289,7 +289,7 @@ const CommentContainer = (props: CommentContainerInterface) => {
       user: {
         id: auth.user._id,
         name: auth.user.username,
-        avatar: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
+        avatar: auth.user.avatarUrl,
       },
       desc: value,
       parent: parent,

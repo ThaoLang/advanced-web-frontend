@@ -37,7 +37,10 @@
     "follow_us": "Follow us",
     "legal": "Legal",
     "privacy": "Privacy Policy",
-    "term": "Terms & Conditions"
+    "term": "Terms & Conditions",
+    "contact_info": "Contact us:",
+    "contact_email": "lighthub.contact@gmail.com",
+    "contact_phone": "+84 (83) 999 4855"
   },
   "Authentication": {
     "email": "Email",

@@ -20,7 +20,7 @@ const CommentForm = (props: CommentFormProps) => {
 
   const logginedUser = {
     userId: auth.user?._id,
-    avatar: "https://cdn-icons-png.flaticon.com/128/1077/1077114.png",
+    avatar: auth.user?.avatarUrl,
   };
 
   const [value, setValue] = useState(props.initialText);

@@ -37,7 +37,10 @@
     "follow_us": "Theo dõi chúng tôi",
     "legal": "Pháp lý",
     "privacy": "Chính sách bảo mật",
-    "term": "Điều khoản & Điều kiện"
+    "term": "Điều khoản & Điều kiện",
+    "contact_info": "Liên hệ:",
+    "contact_email": "lighthub.contact@gmail.com",
+    "contact_phone": "0839 994 855"
   },
   "Authentication": {
     "email": "Email",

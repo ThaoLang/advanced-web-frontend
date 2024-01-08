@@ -89,7 +89,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   const handleCancel = () => {
     setUsername(user?.username as string);
-    setStudentId(user?.studentId ?? "");
+    setStudentId(user?.studentId as string);
     setRole(user?.role as string);
     setIsEditable(false);
   };

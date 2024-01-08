@@ -1,5 +1,8 @@
 import { useTranslations } from "next-intl";
 import React from "react";
+import { IoMail } from "react-icons/io5";
+import { FaPhone } from "react-icons/fa6";
+
 export default function Footer() {
   const t = useTranslations("Footer");
   return (
@@ -18,6 +21,18 @@ export default function Footer() {
                   LightHub
                 </span>
               </a>
+              <div className="mt-10 font-bold text-gray-900 uppercase dark:text-white">
+                  {t("contact_info")}
+              </div>
+              <div className="mt-4 mb-3 italic flex flex-row gap-4 items-center font-medium text-gray-500 dark:text-white">
+                  <span><IoMail/></span>
+                  {t("contact_email")}
+              </div>
+              <div className="mt-3 italic flex flex-row gap-4 items-center font-medium text-gray-500 dark:text-white">
+                  <span><FaPhone/></span>
+                  {t("contact_phone")}
+              </div>
+
             </div>
             <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
               <div>
