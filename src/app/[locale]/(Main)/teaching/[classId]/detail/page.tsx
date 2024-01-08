@@ -29,38 +29,38 @@ export default function DetailTeachingClass() {
   useEffect(() => {
     console.log("CURRENT", auth.user?.access_token);
 
-    const fetchClassInfo = async(classId: string) => {
+    const fetchClassInfo = async (classId: string) => {
       return await axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}`, {
-        headers: {
-          Authorization: `Bearer ${auth.user?.access_token}`,
-        },
-      })
-      .then((response) => {
-        console.log("Response", response.data);
-        setClassInfo(response.data);
-        console.log("Response class", classInfo);
-      })
-      .catch((error) => {
-        console.error("Error fetching classes:", error);
-      });
-    } 
-    
-    const fetchStudentList = async(classId: string) => {
-    await axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}`, {
-        headers: {
-          Authorization: `Bearer ${auth.user?.access_token}`,
-        },
-      })
-      .then((response) => {
-        console.log("Response", response.data[0].students);
-        setStudentList(response.data[0].students as Array<StudentType>);
-      })
-      .catch((error) => {
-        console.error("Error fetching classes:", error);
-      });
-    }
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}`, {
+          headers: {
+            Authorization: `Bearer ${auth.user?.access_token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Response", response.data);
+          setClassInfo(response.data);
+          console.log("Response class", classInfo);
+        })
+        .catch((error) => {
+          console.error("Error fetching classes:", error);
+        });
+    };
+
+    const fetchStudentList = async (classId: string) => {
+      await axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}`, {
+          headers: {
+            Authorization: `Bearer ${auth.user?.access_token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Response", response.data[0].students);
+          setStudentList(response.data[0].students as Array<StudentType>);
+        })
+        .catch((error) => {
+          console.error("Error fetching classes:", error);
+        });
+    };
     fetchClassInfo(classId as string);
     fetchStudentList(classId as string);
   }, []);
@@ -87,8 +87,8 @@ export default function DetailTeachingClass() {
   const handleFileUpload = async (data: any) => {
     // Handle the parsed CSV data
     const convertedData: StudentType[] = data.map((item: any) => ({
-        fullname: item.fullname ? item.fullname.toString() : '',
-        studentId: item.studentId ? item.studentId.toString() : '', 
+      fullname: item.fullname ? item.fullname.toString() : "",
+      studentId: item.studentId ? item.studentId.toString() : "",
     }));
     await fetchSaveCSV(convertedData, classId as string).catch(console.error);
     setIsAvailable(true);
@@ -97,18 +97,18 @@ export default function DetailTeachingClass() {
 
   return (
     <>
-      <div className="flex justify-between mx-10 lg:mx-20">
-        {classInfo && (
-          <Banner
-            id={classInfo._id}
-            imageUrl="https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f"
-            name={classInfo.name}
-            description={classInfo.description}
-            inviteUrl={classInfo.invite_url}
-            classCode={classInfo.class_code}
-          />
-        )}
-        <div className="hidden md:block bg-white rounded-xl shadow-md max-w-1/2 h-fit end-0 p-4">
+      <div className="flex lg:flex-row flex-col justify-between mx-10 lg:mx-20">
+          {classInfo && (
+            <Banner
+              id={classInfo._id}
+              imageUrl="https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f"
+              name={classInfo.name}
+              description={classInfo.description}
+              inviteUrl={classInfo.invite_url}
+              classCode={classInfo.class_code}
+            />
+          )}
+        <div className="md:block bg-white rounded-xl shadow-md max-w-1/2 h-fit end-0 p-4 my-10 lg:justify-">
           <div className="text-2xl lg:text-3xl text-blue-600">
             <b>{t("get_started")}:</b>
             <div className="form-control">
@@ -171,11 +171,10 @@ export default function DetailTeachingClass() {
             //
             title={t("import")}
             closeModal={handleModal}
-            data={
-              studentList?.map((item: StudentType) => ({
-                fullname: item.fullname,
-                studentId: item.studentId, 
-              }))}
+            data={studentList?.map((item: StudentType) => ({
+              fullname: item.fullname,
+              studentId: item.studentId,
+            }))}
             onFileUpload={handleFileUpload}
           />
         </div>

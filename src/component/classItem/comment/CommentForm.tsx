@@ -51,11 +51,13 @@ const CommentForm = (props: CommentFormProps) => {
             <textarea
               id="freeform"
               name="freeform"
-              rows={2}
+              rows={3}
               cols={50}
               wrap="soft"
               placeholder={t("leave_a_comment")}
-              className="w-full focus:outline-none mx-auto pl-[8px] pt-[2px] rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full focus:outline-none mx-auto pl-[8px] pt-[2px] 
+              rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500
+              resize-none"
               value={value}
               onChange={(e) => setValue(e.target.value)}
             />

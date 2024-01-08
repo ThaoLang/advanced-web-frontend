@@ -21,7 +21,7 @@ export default function Setting() {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">
+    <div className="mx-auto h-[38.1rem] max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">
       <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
         <ul>
           <li>

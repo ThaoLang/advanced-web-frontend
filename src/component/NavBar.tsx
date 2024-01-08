@@ -50,6 +50,7 @@ export default function NavBar() {
   const handleLogout = () => {
     localStorage.setItem("user", null as any);
     auth.logout("user");
+    router.push("/")
   };
 
   useEffect(() => {

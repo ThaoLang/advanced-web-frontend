@@ -276,7 +276,7 @@ export default function Classes({
             <li>
               <div className="flex flex-row items-center gap-2 font-bold">
                 <FaChalkboard />
-                <Link href="/admin/classes">Classes</Link>
+                <Link href="/admin/class">Classes</Link>
               </div>
             </li>
         </ul>

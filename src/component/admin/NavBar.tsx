@@ -135,7 +135,7 @@ export default function NavBar() {
               </div>
             </a>
             <div className="absolute right-0 mt-4 menu dropdown-content w-62.5 flex-col rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark block">
-              <ul className="flex flex-col border-stroke dark:border-strokedark">
+              {/* <ul className="flex flex-col border-stroke dark:border-strokedark">
                 <li>
                   <a
                     className="flex items-center text-sm font-medium duration-300 ease-in-out hover:text-cyan-500 lg:text-base"
@@ -158,8 +158,8 @@ export default function NavBar() {
                     Settings
                   </a>
                 </li>
-              </ul>
-              <div className="divider -my-0.5"></div>
+              </ul> */}
+              {/* <div className="divider -my-0.5"></div> */}
               <button className="mt-0.5 btn flex mx-auto items-center justify-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-red-500 lg:text-base"
                 onClick={() => handleLogout()}>
                 <div>

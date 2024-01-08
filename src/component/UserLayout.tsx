@@ -67,7 +67,7 @@ export default function UserLayout(props: UserLayoutProps) {
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col h-fit justify-between">
         <NavBar />
-        <main>
+        <main className="min-h-screen">
           {/* <StyledComponentsRegistry> */}
           <Providers>{props.children}</Providers>
           {/* </StyledComponentsRegistry> */}
