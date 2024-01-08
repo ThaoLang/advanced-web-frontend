@@ -19,7 +19,7 @@ export default function Page({ params, searchParams }:
             page?: string;
         };
     }) {
-    const ITEMS_PER_PAGE = 10;
+    const [itemsPerPage, setItemsPerPage] = useState<number>(5);
     const auth = useAuth();
     const [classList, setClassList] = useState<any>(null);
     const [query, setQuery] = useState(searchParams?.query || '');
@@ -104,6 +104,9 @@ export default function Page({ params, searchParams }:
     }
 
     useEffect(() => {
+        const _storage = localStorage.getItem("ITEMS_PER_PAGE");
+        setItemsPerPage(JSON.parse(_storage!) as number);
+
         const fetchData = async () => {
           const classId = params.slug;
           const data = await fetchClassListData(classId);
@@ -147,8 +150,8 @@ export default function Page({ params, searchParams }:
                     student_id: studentIdFilter
                 })
             const totalItems = result.length;
-            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
             const paginatedResult = result.slice(startIndex, endIndex);
 
             return { paginatedResult, totalItems };
@@ -423,6 +426,7 @@ export default function Page({ params, searchParams }:
                             totalItems={totalItems}
                             currentPage={currentPage}
                             setCurrentPage={setCurrentPage}
+                            itemsPerPage={itemsPerPage}
                             deleteClassListItem={deleteClassListHandler}
                             editClassListItem={editClassListHandler}
                         />

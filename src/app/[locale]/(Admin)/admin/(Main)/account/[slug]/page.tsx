@@ -6,7 +6,9 @@ import { UserType } from "@/model/UserType";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { FaHome } from "react-icons/fa";
 import { FaUser, FaAngleDown } from "react-icons/fa6";
+import { MdSupervisorAccount } from "react-icons/md";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const auth = useAuth();
@@ -139,10 +141,16 @@ export default function Page({ params }: { params: { slug: string } }) {
         <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
           <ul>
             <li>
-              <Link href="/admin/">Home</Link>
+              <div className="flex flex-row items-center gap-2">
+                <FaHome />
+                <Link href="/admin/">Home</Link>
+              </div>
             </li>
             <li>
-              <Link href="/admin/account">Account</Link>
+              <div className="flex flex-row items-center gap-2">
+                <MdSupervisorAccount />
+                <Link href="/admin/account">Account</Link>
+              </div>
             </li>
             <li>
               <Link href={`/admin/account/${params.slug}`}>

@@ -7,11 +7,14 @@ import {
   FaPersonChalkboard,
 } from "react-icons/fa6";
 
+import { FaHome } from "react-icons/fa";
+
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { UserType } from '@/model/UserType'
 import { ClassType } from '@/model/ClassType'
 import axios from "axios";
+import Link from "next/link";
 
 export default function Dashboard() {
   const auth = useAuth();
@@ -20,11 +23,6 @@ export default function Dashboard() {
   const [totalClasses, setTotalClasses] = useState<number>(0);
   const [totalTeachers, setTotalTeachers] = useState<number>(0);
   const [totalStudents, setTotalStudents] = useState<number>(0);
-
-  
-
-
-
 
   useEffect(() => {
 
@@ -78,7 +76,18 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col mx-auto h-[38.1rem] max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">
-      <div className="stats-vertical stats lg:stats-horizontal shadow">
+      <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
+        <ul>
+          <li>
+            <div className="flex flex-row items-center gap-2 font-bold">
+              <FaHome/>
+              <Link href="/admin/">Home</Link>
+
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div className="mt-10 stats-vertical stats lg:stats-horizontal shadow">
         <div className="stat">
           <div className="stat-figure text-primary text-3xl">
             <FaUsers className="bg-slate-200 bg-transparent" />
