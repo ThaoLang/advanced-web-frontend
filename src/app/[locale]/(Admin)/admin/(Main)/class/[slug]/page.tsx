@@ -102,7 +102,7 @@ export default function Page({
           class_id: classId,
           user_id: host_user._id,
           fullName: host_user.username,
-          role: "teacher",
+          role: "Teacher",
           email: host_user.email,
         } as ClassListType;
 

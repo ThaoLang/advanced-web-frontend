@@ -12,7 +12,7 @@ export default function EditFieldModal(props: EditFieldModalProps) {
     const [currentFullName, setCurrentFullName] = useState(props.affectedClassList.fullname);
     const [currentRole, setCurrentRole] = useState(props.affectedClassList.role);
     const [currentStudentId, setCurrentStudentId] = useState(props.affectedClassList.student_id);
-    const [isStudentIdDisabled, setIsStudentIdDisabled] = useState(currentStudentId === 'Teacher');
+    const [isStudentIdDisabled, setIsStudentIdDisabled] = useState(currentRole === 'Teacher');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -34,7 +34,7 @@ export default function EditFieldModal(props: EditFieldModalProps) {
     }
 
     const handleSaveInfo = () => {
-        if (currentRole === 'student' && !isOnlyNumbers(currentStudentId)) {
+        if (currentRole === 'Student' && !isOnlyNumbers(currentStudentId)) {
             setErrorMessage("Student ID must be a chain of numbers");
             setTimeout(() => {
                 setErrorMessage(null);
@@ -112,8 +112,8 @@ export default function EditFieldModal(props: EditFieldModalProps) {
                                     value={currentRole}
                                     onChange={(e) => handleSwitchRole(e.target.value)}
                                 >
-                                    <option value="student">Student</option>
-                                    <option value="teacher">Teacher</option>
+                                    <option value="Student">Student</option>
+                                    <option value="Teacher">Teacher</option>
                                 </select>
                             </label>
                             <label className="form-control w-full max-w-xs">
