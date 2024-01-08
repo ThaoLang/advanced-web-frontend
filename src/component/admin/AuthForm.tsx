@@ -17,7 +17,7 @@ export default function AuthForm(props: AuthFormProps) {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [isSigninOpeneded, setIsSigninOpeneded] = useState(true);
-  const [isSignupOpeneded, setIsSignupOpeneded] = useState(false);
+  // const [isSignupOpeneded, setIsSignupOpeneded] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [validAuthMsg, setValidAuthMsg] = useState<string | null>(null);
   const router = useRouter();
@@ -76,48 +76,48 @@ export default function AuthForm(props: AuthFormProps) {
     }
   };
 
-  const handleSignup = async () => {
-    if (!isValidAuth(email, password)) return;
+  // const handleSignup = async () => {
+  //   if (!isValidAuth(email, password)) return;
 
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/admin/register`,
-        {
-          email: email,
-          password: password,
-          username: username,
-          role: "admin",
-          // avatarUrl: `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`,
-        }
-      );
+  //   try {
+  //     const response = await axios.post(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/admin/register`,
+  //       {
+  //         email: email,
+  //         password: password,
+  //         username: username,
+  //         role: "admin",
+  //         // avatarUrl: `https://api.lorem.space/image/face?w=120&h=120&hash=bart89fe`,
+  //       }
+  //     );
 
-      if (response.status === 201) {
-        props.showSuccessMsg(true);
-        setTimeout(() => {
-          props.showSuccessMsg(false);
-        }, 2000);
-      }
-    } catch (error: any) {
-      const errorMessage =
-        error.response && error.response.data
-          ? error.response.data.message
-          : "Failed to register";
-      setValidAuthMsg(errorMessage);
+  //     if (response.status === 201) {
+  //       props.showSuccessMsg(true);
+  //       setTimeout(() => {
+  //         props.showSuccessMsg(false);
+  //       }, 2000);
+  //     }
+  //   } catch (error: any) {
+  //     const errorMessage =
+  //       error.response && error.response.data
+  //         ? error.response.data.message
+  //         : "Failed to register";
+  //     setValidAuthMsg(errorMessage);
 
-      console.error("Failed to login:", error);
-    }
-  };
+  //     console.error("Failed to login:", error);
+  //   }
+  // };
 
   const goToLogin = async () => {
     setValidAuthMsg(null);
-    setIsSignupOpeneded(false);
+    // setIsSignupOpeneded(false);
     setIsSigninOpeneded(true);
     setIsPasswordVisible(false);
   };
   const goToSignup = async () => {
     setValidAuthMsg(null);
     setIsSigninOpeneded(false);
-    setIsSignupOpeneded(true);
+    // setIsSignupOpeneded(true);
     setIsPasswordVisible(false);
   };
 
@@ -126,7 +126,7 @@ export default function AuthForm(props: AuthFormProps) {
   }
 
   return (
-    <div className="w-full border rounded-xl p-4 m-8 mx-auto my-auto bg-white xl:w-1/2">
+    <div className="w-full max-w-xl border rounded-xl p-4 m-8 mx-auto my-auto bg-white xl:w-1/2">
       <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
         {/* <span className="mb-1.5 block font-medium">Start for free</span> */}
         <h2 className="mb-9 text-4xl text-center font-semibold text-black dark:text-white sm:text-title-xl2">
@@ -134,7 +134,7 @@ export default function AuthForm(props: AuthFormProps) {
         </h2>
 
         <div>
-          {isSignupOpeneded && (
+          {/* {isSignupOpeneded && (
             <div className="mb-4">
               <label className="mb-2.5 block font-medium text-black dark:text-white">
                 {t("username")}
@@ -171,7 +171,7 @@ export default function AuthForm(props: AuthFormProps) {
                 </span>
               </div>
             </div>
-          )}
+          )} */}
 
           <div className="mb-4">
             <label className="mb-2.5 block font-medium text-black dark:text-white">
@@ -234,7 +234,7 @@ export default function AuthForm(props: AuthFormProps) {
             </label>
           )}
 
-          {isSignupOpeneded && (
+          {/* {isSignupOpeneded && (
             <>
               <div className="mb-5">
                 <button
@@ -244,7 +244,7 @@ export default function AuthForm(props: AuthFormProps) {
                 >
                   {t("signup_btn")}
                 </button>
-              </div>
+              </div> */}
 
               {/* <button className="flex w-full items-center justify-center gap-3.5 font-medium rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-80 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-80">
                                 <span>
@@ -264,8 +264,8 @@ export default function AuthForm(props: AuthFormProps) {
                                 </span>
                                 Sign up with Google
                             </button> */}
-            </>
-          )}
+            {/* </>
+          )} */}
 
           {isSigninOpeneded && (
             <>
@@ -301,7 +301,7 @@ export default function AuthForm(props: AuthFormProps) {
           )}
 
           {/* <div className="divider">{t("or")}</div> */}
-          <div className="mt-5"></div>
+          {/* <div className="mt-5"></div>
           {isSigninOpeneded && (
             <label
               onClick={() => goToSignup()}
@@ -310,8 +310,8 @@ export default function AuthForm(props: AuthFormProps) {
               {t("go_to_signup_mg")}
               <span className="text-blue-500 ml-2">{t("signup_btn")}</span>
             </label>
-          )}
-          {isSignupOpeneded && (
+          )} */}
+          {/* {isSignupOpeneded && (
             <label
               onClick={() => goToLogin()}
               className="flex text-center items-center justify-center"
@@ -319,7 +319,7 @@ export default function AuthForm(props: AuthFormProps) {
               {t("go_to_signin_mg")}
               <span className="text-blue-500 ml-2">{t("signin_btn")}</span>
             </label>
-          )}
+          )} */}
           {/* 
                                 <div className="mt-6 text-center">
                                     <p className="font-medium">
