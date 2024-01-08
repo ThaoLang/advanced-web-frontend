@@ -79,7 +79,9 @@
     "drop_area": "Drop an image here, or click to upload image",
     "update_success": "Update profile successfully!",
     "update_error": "Fail to update profile!",
-    "empty_student_id_error": "Student ID must not be empty before joining the class!"
+    "empty-studentId": "Student ID must not be empty before joining the class!",
+    "empty-student-list": "The teacher hasn't setup student list!",
+    "studentId-not-found": "Student ID doesn't match any students in the class"
   },
   "Setting": {
     "language": "Language"

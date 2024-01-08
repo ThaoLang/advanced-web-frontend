@@ -79,7 +79,9 @@
     "drop_area": "Kéo thả hình ảnh ở đây, hoặc tải ảnh lên",
     "update_success": "Cập nhật hồ sơ thành công!",
     "update_error": "Cập nhật hồ sơ thất bại!",
-    "empty_student_id_error": "Mã số sinh viên không được để trống trước khi tham gia lớp học!"
+    "empty-studentId": "Mã số sinh viên không được để trống trước khi tham gia lớp học!",
+    "empty-student-list": "Giáo viên chưa tạo danh sách sinh viên",
+    "studentId-not-found": "Mã số sinh viên không khớp với bất kì sinh viên nào trong lớp"
   },
   "EnrolledPage": {
     "title": "Lớp đăng ký"

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useTranslations } from "next-intl";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { UserType } from "@/model/UserType";
 import { ClassListType } from "@/model/ClassListType";
@@ -15,6 +15,7 @@ export default function MemberPage() {
 
   const { classId } = useParams();
   const auth = useAuth();
+  const router = useRouter();
 
   const [teacherList, setTeacherList] = useState<ClassListType[]>([]);
   const [studentList, setStudentList] = useState<ClassListType[]>([]);
@@ -73,6 +74,8 @@ export default function MemberPage() {
             teacherList.filter((teacher) => teacher.user_id != member_id)
           );
         }
+
+        router.push("../");
       }
     } catch (error: any) {
       console.error("Failed to delete:", error);
