@@ -116,7 +116,7 @@ export default async function ClassListTable(props: ClassListTableProps) {
                                     }
                                     <td>{items.student_id}</td>
                                     <th>
-                                        <div className="flex flex-row justify-start space-x-2">
+                                        <div className={`${index !== 0 ? 'flex flex-row justify-start space-x-2': 'hidden'} `}> 
                                             <button className="cursor-pointer hover:text-primary"
                                                 onClick={() => openDeleteModal(items)}>
                                                 <FaRegTrashCan />

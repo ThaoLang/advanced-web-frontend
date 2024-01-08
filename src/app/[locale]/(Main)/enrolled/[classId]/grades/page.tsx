@@ -213,19 +213,17 @@ export default function GradePage() {
                 {rubrics.length > 0 &&
                   rubrics.map((item, index) => {
                     return (
-                      <div key={index}>
-                        <td key={index}>
-                          {item.status === "graded" &&
-                            grade
-                              .filter((oneGrade) => {
-                                if (item._id === oneGrade.rubricId)
-                                  return oneGrade;
-                              })
-                              .map((oneGrade, _index) => (
-                                <div key={_index}>{oneGrade.grade}</div>
-                              ))}
-                        </td>
-                      </div>
+                      <td key={index}>
+                        {item.status === "graded" &&
+                          grade
+                            .filter((oneGrade) => {
+                              if (item._id === oneGrade.rubricId)
+                                return oneGrade;
+                            })
+                            .map((oneGrade, _index) => (
+                              <span key={_index}>{oneGrade.grade}</span>
+                            ))}
+                      </td>
                     );
                   })}
                 <th>

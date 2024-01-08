@@ -280,6 +280,8 @@ export default function Page({
       role: _role,
       student_id: _studentId,
     };
+    
+    
     await fetchUpdateClassList(
       currentItem.class_id,
       currentItem.user_id,
