@@ -123,18 +123,44 @@
 #       id: deployment
 #       uses: actions/deploy-pages@v1
 
+# name: Deploy to Vercel
+# on:
+#   push:
+#     branches:
+#       - master
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+#       - name: Deploy to Vercel
+#         uses: amondnet/vercel-action@v20
+#         with:
+#           vercel-token: ${{ secrets.VERCEL_TOKEN }}
+
 name: Deploy to Vercel
+
 on:
   push:
     branches:
       - master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: npm install --force
+
+      - name: Deploy to Vercel
+        run: npx vercel --token=${{ secrets.VERCEL_TOKEN }}
