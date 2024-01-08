@@ -4,7 +4,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdClose, IoMdPersonAdd } from "react-icons/io";
 import { useTranslations } from "next-intl";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { UserType } from "@/model/UserType";
 import { ClassListType } from "@/model/ClassListType";
 import AddMemberForm from "@/component/AddMemberForm";
@@ -18,6 +18,7 @@ export default function MembersPage() {
   const [isAddingStudent, setIsAddingStudent] = useState(true);
   const { classId } = useParams();
   const auth = useAuth();
+  const router = useRouter();
 
   const [teacherList, setTeacherList] = useState<ClassListType[]>([]);
   const [studentList, setStudentList] = useState<ClassListType[]>([]);
@@ -118,6 +119,7 @@ export default function MembersPage() {
           );
         }
         toast.success("Remove member successfully!");
+        router.push("../");
       }
     } catch (error: any) {
       console.error("Failed to delete:", error);
