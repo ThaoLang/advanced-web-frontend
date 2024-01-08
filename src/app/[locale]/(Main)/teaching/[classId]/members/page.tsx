@@ -9,7 +9,7 @@ import { UserType } from "@/model/UserType";
 import { ClassListType } from "@/model/ClassListType";
 import AddMemberForm from "@/component/AddMemberForm";
 import { useAuth } from "@/context/AuthContext";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function MembersPage() {
   const [isCopied, setIsCopied] = useState(false);
@@ -109,17 +109,19 @@ export default function MembersPage() {
       if (response.status === 200) {
         console.log("Check response", response);
         if (role === "Student") {
-          setStudentList(
-            studentList.filter((student) => student.user_id != member_id)
+          setStudentList((prevStudentList) =>
+            prevStudentList.filter((student) => student.user_id !== member_id)
           );
         } else {
-          setTeacherList(
-            teacherList.filter((teacher) => teacher.user_id != member_id)
+          setTeacherList((prevTeacherList) =>
+            prevTeacherList.filter((teacher) => teacher.user_id !== member_id)
           );
         }
+        toast.success("Remove member successfully!");
       }
     } catch (error: any) {
       console.error("Failed to delete:", error);
+      toast.error("Failed to delete");
     }
   };
 
@@ -188,7 +190,12 @@ export default function MembersPage() {
           <a>
             <div tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img alt="avatar" src={hostUser?.avatarUrl} />
+                <img
+                  alt="avatar"
+                  src={
+                    hostUser?.avatarUrl ? hostUser?.avatarUrl : defaultAvatarUrl
+                  }
+                />
               </div>
             </div>
             {hostUser?.username}
