@@ -12,7 +12,7 @@ export default function EditFieldModal(props: EditFieldModalProps) {
     const [currentFullName, setCurrentFullName] = useState(props.affectedClassList.fullname);
     const [currentRole, setCurrentRole] = useState(props.affectedClassList.role);
     const [currentStudentId, setCurrentStudentId] = useState(props.affectedClassList.student_id);
-    const [isStudentIdDisabled, setIsStudentIdDisabled] = useState(currentStudentId === 'teacher');
+    const [isStudentIdDisabled, setIsStudentIdDisabled] = useState(currentStudentId === 'Teacher');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -23,7 +23,7 @@ export default function EditFieldModal(props: EditFieldModalProps) {
     }
 
     const handleSwitchRole = (role: string) => {
-        if (role === 'teacher') {
+        if (role === 'Teacher') {
             setCurrentStudentId('');
             setIsStudentIdDisabled(true);
         }
