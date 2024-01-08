@@ -187,6 +187,7 @@ export default function HomePage() {
           {filterData.map((items, index) => (
             <SmallClass
               id={items._id}
+              status={items.status}
               imageUrl={
                 items.type === "enrolled"
                   ? "https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg"
@@ -194,7 +195,7 @@ export default function HomePage() {
               }
               name={items.name}
               description={items.description}
-              inviteUrl={items.invite_url}
+              classCode={items.class_code}
               page={items.type}
               isCopied={isCopied}
               CopyInviteLink={CopyInviteLink}

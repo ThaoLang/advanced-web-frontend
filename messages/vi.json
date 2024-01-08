@@ -37,7 +37,10 @@
     "follow_us": "Theo dõi chúng tôi",
     "legal": "Pháp lý",
     "privacy": "Chính sách bảo mật",
-    "term": "Điều khoản & Điều kiện"
+    "term": "Điều khoản & Điều kiện",
+    "contact_info": "Liên hệ:",
+    "contact_email": "lighthub.contact@gmail.com",
+    "contact_phone": "0839 994 855"
   },
   "Authentication": {
     "email": "Email",
@@ -102,7 +105,7 @@
     "help_join_class": "Hỏi giáo viên của bạn về mã lớp",
     "class_code": "Mã lớp",
     "invite_url": "Link mời",
-    "copy_invite_url": "Sao chép link mời",
+    "copy_class_code": "Sao chép mã lớp",
     "copied": "Sao chép thành công",
     "view_details": "Xem chi tiết",
     "hide": "Ẩn bớt",

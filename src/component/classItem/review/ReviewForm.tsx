@@ -8,7 +8,7 @@ const ReviewForm = (review: ReviewType) => {
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden relative">
-      <div className="m-2 mb-3 grid grid-cols-3">
+      <div className="m-2 mb-3 grid grid-cols-3 gap-4">
         <div className="col-span-1 flex flex-col">
           <div>
             <b>{t("grade_composition")}:</b> {review.gradeComposition}

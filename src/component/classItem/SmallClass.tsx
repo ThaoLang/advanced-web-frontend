@@ -7,10 +7,11 @@ import { useTranslations } from "next-intl";
 
 interface SmallClassProp {
   id: string;
+  status: string;
   imageUrl: string;
   name: string;
   description: string;
-  inviteUrl: string;
+  classCode: string;
   page: string | undefined;
   isCopied: boolean;
   CopyInviteLink: (text: string) => void;
@@ -22,9 +23,12 @@ const SmallClass = (classInfo: SmallClassProp) => {
   const t = useTranslations("Tabs");
 
   return (
-    <div className="max-w-[240px] bg-white rounded-xl overflow-hidden shadow-md md:max-w-2xl relative">
+    <div
+      className={`max-w-[240px] bg-white rounded-xl overflow-hidden shadow-md md:max-w-2xl relative ${
+        classInfo.status == "inactive" && "pointer-events-none brightness-50"
+      }`}
+    >
       <div className="md:flex flex-col">
-        {/* <Link href={`/${classInfo.page}/detail/${classInfo.id}`}> */}
         <Link href={`/${classInfo.page}/${classInfo.id}/detail`}>
           <div className="md:shrink-0 ">
             <img
@@ -35,14 +39,12 @@ const SmallClass = (classInfo: SmallClassProp) => {
           </div>
         </Link>
         <div className="p-3">
-          {/* <Link href={`/${classInfo.page}/detail/${classInfo.id}`}> */}
           <Link href={`/${classInfo.page}/${classInfo.id}/detail`}>
             <div className="flex flex-row justify-between">
               {/* <div
                 className=" md:text-lg text-slate-400 italic "
                 style={{ fontSize: "12px" }}
               >
-                {" "}
                 {classInfo.description}
               </div> */}
               {/* <div
@@ -90,17 +92,14 @@ const SmallClass = (classInfo: SmallClassProp) => {
                   <li>
                     <div
                       onClick={() =>
-                        classInfo.CopyInviteLink(classInfo.inviteUrl)
+                        classInfo.CopyInviteLink(classInfo.classCode)
                       }
                     >
-                      {t("copy_invite_url")}
+                      {t("copy_class_code")}
                     </div>
                   </li>
-                  {classInfo.page === "teaching" && (
+                  {/* {classInfo.page === "teaching" && (
                     <>
-                      <li>
-                        <div>{t("edit")}</div>
-                      </li>
                       <li>
                         <div>{t("delete_class")}</div>
                       </li>
@@ -110,7 +109,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
                     <li>
                       <div>{t("leave_class")}</div>
                     </li>
-                  )}
+                  )} */}
                 </ul>
               </div>
             </a>

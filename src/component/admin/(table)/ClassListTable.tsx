@@ -7,25 +7,24 @@ import DeletePopupModal from '@/component/admin/(modal)/DeletePopupModal';
 import EditFieldModal from '@/component/admin/(modal)/EditFieldModal';
 import { useAuth } from '@/context/AuthContext';
 
-const ITEMS_PER_PAGE = 10;
-
 interface ClassListTableProps {
     paginatedResult: any;
     totalItems: number;
     currentPage: number;
     setCurrentPage: (value: number) => void
+    itemsPerPage: number;
     deleteClassListItem: (ClassList: any) => void;
     editClassListItem: (_fullname: any, _role: any, _studentId: any, currentItem: any) => void;
 }
 
 export default async function ClassListTable(props: ClassListTableProps) {
     const totalPages =
-        props.totalItems % ITEMS_PER_PAGE === 0
-            ? props.totalItems / ITEMS_PER_PAGE
-            : (props.totalItems - (props.totalItems % ITEMS_PER_PAGE)) / ITEMS_PER_PAGE + 1;
+        props.totalItems % props.itemsPerPage === 0
+            ? props.totalItems / props.itemsPerPage
+            : (props.totalItems - (props.totalItems % props.itemsPerPage)) / props.itemsPerPage + 1;
 
-    const startIndex = (props.currentPage - 1) * ITEMS_PER_PAGE + 1;
-    const endIndex = Math.min(startIndex + ITEMS_PER_PAGE - 1, props.totalItems);
+    const startIndex = (props.currentPage - 1) * props.itemsPerPage + 1;
+    const endIndex = Math.min(startIndex + props.itemsPerPage - 1, props.totalItems);
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isEditFieldModalOpen, setIsEditFieldModalOpen] = useState(false);
@@ -98,7 +97,7 @@ export default async function ClassListTable(props: ClassListTableProps) {
                                 <tr key={index}
                                     className="hover:bg-gray-100 cursor-pointer hover:border-1 hover:border-gray-200"
                                 >
-                                    <td>{(props.currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
+                                    <td>{(props.currentPage - 1) * props.itemsPerPage + index + 1}</td>
                                     <td>{items.user_id}</td>
                                     <td>{items.fullName}</td>
                                     {
@@ -138,7 +137,7 @@ export default async function ClassListTable(props: ClassListTableProps) {
                     <div className="mx-10 my-5">
                         <Pagination
                             total={totalPages}
-                            limit={ITEMS_PER_PAGE}
+                            limit={5}
                             current={props.currentPage}
                             onChange={(page) => props.setCurrentPage(page)}
                         />

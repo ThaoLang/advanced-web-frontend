@@ -201,7 +201,7 @@ export default function ReviewPage() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 mx-20">
+      <div className="grid grid-cols-2 gap-5 mx-20">
         <div
           className={`${
             selectedReview ? "hidden lg:block" : "col-span-2"

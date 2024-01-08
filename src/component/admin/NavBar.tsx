@@ -32,7 +32,7 @@ export default function NavBar() {
   }
 
   return (
-    <header className="top-0 left-0 w-full z-40 flex bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
+    <header className="sticky top-0 left-0 w-full z-40 flex bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
       <div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           <label
@@ -68,7 +68,7 @@ export default function NavBar() {
                 <span className="absolute -top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1 hidden">
                   <span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75"></span>
                 </span>
-                <div className="fill-current duration-300 ease-in-out dropdown">
+                {/* <div className="fill-current duration-300 ease-in-out dropdown">
                   <div
                     tabIndex={0}
                     className="hover:text-primary focus:text-primary"
@@ -109,13 +109,13 @@ export default function NavBar() {
                       </li>
                     </ul>
                   </ul>
-                </div>
+                </div> */}
               </a>
             </li>
           </ul>
           <div className="relative dropdown dropdown-end dropdown-hover">
             <a className="flex items-center gap-4" href="#">
-              <span className="hidden text-right lg:block">
+              <span className="text-right lg:block">
                 <span className="block text-sm font-medium text-black dark:text-white">
                   {auth.admin?.username}
                 </span>
@@ -135,7 +135,7 @@ export default function NavBar() {
               </div>
             </a>
             <div className="absolute right-0 mt-4 menu dropdown-content w-62.5 flex-col rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark block">
-              <ul className="flex flex-col border-stroke dark:border-strokedark">
+              {/* <ul className="flex flex-col border-stroke dark:border-strokedark">
                 <li>
                   <a
                     className="flex items-center text-sm font-medium duration-300 ease-in-out hover:text-cyan-500 lg:text-base"
@@ -158,8 +158,8 @@ export default function NavBar() {
                     Settings
                   </a>
                 </li>
-              </ul>
-              <div className="divider -my-0.5"></div>
+              </ul> */}
+              {/* <div className="divider -my-0.5"></div> */}
               <button className="mt-0.5 btn flex mx-auto items-center justify-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-red-500 lg:text-base"
                 onClick={() => handleLogout()}>
                 <div>

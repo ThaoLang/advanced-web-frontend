@@ -62,7 +62,7 @@ export default function AddReviewModal(props: AddReviewProps) {
             console.log("Response", response);
             let data: GradeType;
             data = response.data;
-            setGrade(data.grade);
+            setGrade(data.grade.toString());
           })
           .catch((error) => {
             console.error("Error fetching current grade:", error);
@@ -158,13 +158,12 @@ export default function AddReviewModal(props: AddReviewProps) {
           onChange={(e) => setExpectationGradeProxy(e.target.value)}
           maxLength={15}
         />
-        <input
-          type="text"
+        <textarea
           placeholder={t("student_explanation")}
-          className="input input-bordered w-full max-w-xs"
+          className="input input-bordered w-full max-w-xs resize-none h-24"
           value={studentExplanationProxy}
           onChange={(e) => setStudentExplanationProxy(e.target.value)}
-          maxLength={50}
+          maxLength={100}
         />
         <button
           className="btn btn-info max-w-xs bg-yellow-400 text-white"

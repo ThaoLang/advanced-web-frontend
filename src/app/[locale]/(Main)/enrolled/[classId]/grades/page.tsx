@@ -22,7 +22,7 @@ export default function GradePage() {
 
     grade.forEach((oneGrade) => {
       if (id === oneGrade.rubricId) {
-        setSelectedGrade(oneGrade.grade);
+        setSelectedGrade(oneGrade.grade.toString());
         return;
       }
     });

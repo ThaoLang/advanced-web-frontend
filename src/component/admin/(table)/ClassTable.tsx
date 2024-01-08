@@ -8,12 +8,11 @@ import BanPopupModal from '../(modal)/BanPopupModal';
 import { UserType } from '@/model/UserType';
 import { useRouter } from 'next/navigation';
 
-const ITEMS_PER_PAGE = 5;
-
 interface ClassTableProps {
     paginatedResult: any;
     totalItems: any;
     currentPage: number;
+    itemsPerPage: number;
     setCurrentPage: (value: number) => void
     deleteClass: (Class: any) => void;
     banClass: (Class: any) => void;
@@ -22,12 +21,12 @@ interface ClassTableProps {
 export default async function ClassTable(props: ClassTableProps) {
     const router = useRouter();
     const totalPages =
-        props.totalItems % ITEMS_PER_PAGE === 0
-            ? props.totalItems / ITEMS_PER_PAGE
-            : (props.totalItems - (props.totalItems % ITEMS_PER_PAGE)) / ITEMS_PER_PAGE + 1;
+        props.totalItems % props.itemsPerPage === 0
+            ? props.totalItems / props.itemsPerPage
+            : (props.totalItems - (props.totalItems % props.itemsPerPage)) / props.itemsPerPage + 1;
 
-    const startIndex = (props.currentPage - 1) * ITEMS_PER_PAGE + 1;
-    const endIndex = Math.min(startIndex + ITEMS_PER_PAGE - 1, props.totalItems);
+    const startIndex = (props.currentPage - 1) * props.itemsPerPage + 1;
+    const endIndex = Math.min(startIndex + props.itemsPerPage - 1, props.totalItems);
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isBanModalOpen, setIsBanModalOpen] = useState(false);
@@ -123,7 +122,7 @@ export default async function ClassTable(props: ClassTableProps) {
                                 <tr key={index} 
                                 className="hover:bg-gray-100 cursor-pointer hover:border-1 hover:border-gray-200"
                                 onDoubleClick={() => handleRowDoubleClick(items)}>
-                                    <td>{(props.currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
+                                    <td>{(props.currentPage - 1) * props.itemsPerPage + index + 1}</td>
                                     <td>{items.name}</td>
                                     <td>
                                         <div className="flex items-center gap-3">

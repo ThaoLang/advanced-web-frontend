@@ -15,8 +15,8 @@ import ExportModal from "@/component/classItem/grade/ExportModal";
 import ImportModal from "@/component/classItem/grade/ImportModal";
 import { IoMdClose } from "react-icons/io";
 import { TfiExport, TfiImport } from "react-icons/tfi";
-
-const ITEMS_PER_PAGE = 5;
+import { FaHome } from "react-icons/fa";
+import { MdSupervisorAccount } from "react-icons/md";
 
 export default function Account({
   searchParams,
@@ -27,6 +27,7 @@ export default function Account({
   };
 }) {
   const auth = useAuth();
+  const [itemsPerPage, setItemsPerPage] = useState<number>(5);
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [accounts, setAccounts] = useState<any>(null);
   const [query, setQuery] = useState(searchParams?.query || "");
@@ -77,6 +78,10 @@ export default function Account({
   };
 
   useEffect(() => {
+
+    const _storage = localStorage.getItem("ITEMS_PER_PAGE");
+    setItemsPerPage(JSON.parse(_storage!) as number);
+
     const fetchData = async () => {
       const userData = await fetchAccountsData();
       setAccounts(userData);
@@ -104,8 +109,8 @@ export default function Account({
         status: statusFilter,
       });
       const totalItems = result.length;
-      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-      const endIndex = startIndex + ITEMS_PER_PAGE;
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
       const paginatedResult = result.slice(startIndex, endIndex);
 
       return { paginatedResult, totalItems };
@@ -282,12 +287,16 @@ export default function Account({
         <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
           <ul>
             <li>
-              <Link href="/admin/">Home</Link>
+              <div className="flex flex-row items-center gap-2">
+                <FaHome />
+                <Link href="/admin/">Home</Link>
+              </div>
             </li>
             <li>
-              <Link href="/admin/account">
-                <b>Account</b>
-              </Link>
+              <div className="flex flex-row items-center gap-2 font-bold">
+                <MdSupervisorAccount />
+                <Link href="/admin/account">Account</Link>
+              </div>
             </li>
           </ul>
         </div>
@@ -447,6 +456,7 @@ export default function Account({
                 totalItems={totalItems}
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
+                itemsPerPage={itemsPerPage}
                 deleteAccount={deleteAccountHandler}
                 banAccount={banAccountHandler}
               />

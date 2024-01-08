@@ -10,8 +10,8 @@ import filterAndSortArray from "@/utils/ArrayFilterUtils";
 import LoadingIndicator from "@/component/admin/LoadingIndicator";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
-
-const ITEMS_PER_PAGE = 5;
+import { FaChalkboard } from "react-icons/fa6";
+import { FaHome } from "react-icons/fa";
 
 export default function Classes({
   searchParams,
@@ -22,6 +22,7 @@ export default function Classes({
   };
 }) {
   const auth = useAuth();
+  const [itemsPerPage, setItemsPerPage] = useState<number>(5);
   const [classes, setClasses] = useState<any>(null);
   const [query, setQuery] = useState(searchParams?.query || "");
   const [currentPage, setCurrentPage] = useState(
@@ -72,6 +73,9 @@ export default function Classes({
   };
 
   useEffect(() => {
+    const _storage = localStorage.getItem("ITEMS_PER_PAGE");
+    setItemsPerPage(JSON.parse(_storage!) as number);
+
     const fetchData = async () => {
       const classData = await fetchClassesData();
       setClasses(classData);
@@ -104,8 +108,8 @@ export default function Classes({
         status: statusFilter,
       });
       const totalItems = result.length;
-      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-      const endIndex = startIndex + ITEMS_PER_PAGE;
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
       const paginatedResult = result.slice(startIndex, endIndex);
 
       return { paginatedResult, totalItems };
@@ -263,14 +267,18 @@ export default function Classes({
     <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">
       <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
         <ul>
-          <li>
-            <Link href="/admin/">Home</Link>
-          </li>
-          <li>
-            <Link href="/admin/classes">
-              <b>Classes</b>
-            </Link>
-          </li>
+           <li>
+              <div className="flex flex-row items-center gap-2">
+                <FaHome />
+                <Link href="/admin/">Home</Link>
+              </div>
+            </li>
+            <li>
+              <div className="flex flex-row items-center gap-2 font-bold">
+                <FaChalkboard />
+                <Link href="/admin/class">Classes</Link>
+              </div>
+            </li>
         </ul>
       </div>
       <div className="flex flex-col lg:grid lg:grid-cols-3 mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
@@ -407,6 +415,7 @@ export default function Classes({
               totalItems={totalItems}
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
+              itemsPerPage={itemsPerPage}
               deleteClass={deleteClassHandler}
               banClass={banClassHandler}
             />
