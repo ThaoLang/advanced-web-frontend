@@ -170,6 +170,7 @@ export default function EnrolledPage() {
           {filterData.map((items, index) => (
             <SmallClass
               id={items._id}
+              status={items.status}
               imageUrl="https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg"
               name={items.name}
               description={items.description}
