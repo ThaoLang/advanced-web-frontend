@@ -240,11 +240,14 @@ export default function Account({
   }
 
   const fetchImportCSV = async(data: any) => {
+    const token=auth.admin?.access_token;
+    console.log("token", token);
     return await axios
     .post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/import`, {
       studentIds: data,
+    },{
       headers: {
-        Authorization: `Bearer ${auth.admin?.access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     })
     .then((response) => {
@@ -254,7 +257,12 @@ export default function Account({
       }, 2000);
     })
     .catch((error) => {
-      console.error("Error fetching mapping user with student_id:", error);
+      console.log(auth.admin?.access_token);
+      console.log("DATA:", data);
+      setInfoMessage(`${error.message}: Import failed!`);
+      setTimeout(() => {
+        setInfoMessage(null);
+      }, 2000);
     });
   }
 
