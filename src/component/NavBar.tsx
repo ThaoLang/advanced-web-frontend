@@ -50,7 +50,7 @@ export default function NavBar() {
   const handleLogout = () => {
     localStorage.setItem("user", null as any);
     auth.logout("user");
-    router.push("/")
+    router.push("/");
   };
 
   useEffect(() => {
@@ -75,6 +75,7 @@ export default function NavBar() {
 
   useEffect(() => {
     (async () => {
+      if (!auth.user || auth.user == null) return;
       // get a list of class id user is in
       // loop the list
       let classes: ClassType[];
@@ -82,7 +83,7 @@ export default function NavBar() {
       await axios
         .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
           headers: {
-            Authorization: `Bearer ${auth.user?.access_token}`,
+            Authorization: `Bearer ${auth.user.access_token}`,
           },
         })
         .then((response) => {
