@@ -67,23 +67,6 @@ export default function TeachingPage() {
     }
   };
 
-  // function addNewClass() {
-  //   setShowModal(true);
-  // }
-
-  // function createClass() {
-  //   //
-  //   setShowModal(false);
-  // }
-
-  // function joinClass() {
-  //   //
-  //   setShowModal(false);
-  // }
-
-  // TODO: make this functional
-  // copy invite link
-
   const WriteToClipboard = async (text: string) => {
     const param = "clipboard-write" as PermissionName;
     const result = await navigator.permissions.query({ name: param });
@@ -117,7 +100,7 @@ export default function TeachingPage() {
   useEffect(() => {
     const fetchClasses = async () => {
       await axios
-        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/teaching`, {
           headers: {
             Authorization: `Bearer ${auth.user?.access_token}`,
           },
