@@ -158,8 +158,8 @@ export default function DetailedReviewPage() {
               }
               (async () => {
                 await axios
-                  .put(
-                    `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/update`,
+                  .post(
+                    `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/create`,
                     {
                       studentId: selectedReview.studentId,
                       rubricId: currentRubricId,

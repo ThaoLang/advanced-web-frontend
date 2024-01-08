@@ -173,8 +173,8 @@ const GradePage: React.FC = () => {
       // update new grade to database
       await newGrade.forEach((grade) => {
         axios
-          .put(
-            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/update`,
+          .post(
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/create`,
             {
               studentId: grade.studentId,
               rubricId: grade.rubricId,
@@ -551,28 +551,33 @@ const GradePage: React.FC = () => {
 
   const handleFileUpload = async (data: any) => {
     console.log(data);
-    console.log('Headers: ', Object.keys(data[0]));
+    console.log("Headers: ", Object.keys(data[0]));
     const headers = Object.keys(data[0]);
 
     //Create rubric objects
     const fetchCreateRubrics = async () => {
       for (let i = 1; i < headers.length; i++) {
-        axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/create`,
-          {
-            class_id: classId.toString(),
-            gradeName: `${headers[i]}`,
-            gradeScale: 10,
-            order: i - 1,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${auth.user?.access_token}`
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/create`,
+            {
+              class_id: classId.toString(),
+              gradeName: `${headers[i]}`,
+              gradeScale: 10,
+              order: i - 1,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${auth.user?.access_token}`,
+              },
             }
-          }).then(response => {
-            console.log('Rubric', response.data);
-          }).catch(console.error);
+          )
+          .then((response) => {
+            console.log("Rubric", response.data);
+          })
+          .catch(console.error);
       }
-    }
+    };
 
     const fetchGetAllRubrics = async () => {
       //then get all the updated rubrics
@@ -586,7 +591,7 @@ const GradePage: React.FC = () => {
           console.error("Error fetching rubrics:", error);
         });
       setRubrics(response?.data);
-    }
+    };
 
     const fetchUpdateGradeAllStudents = async () => {
       //update grade for all students
@@ -606,40 +611,49 @@ const GradePage: React.FC = () => {
                   Authorization: `Bearer ${auth.user?.access_token}`,
                 },
               }
-            ).catch(console.error)
+            )
+            .catch(console.error);
         }
-      })
-    }
-
-    await fetchCreateRubrics().then(async () => {
-      await fetchGetAllRubrics().then(async () => {
-        await fetchUpdateGradeAllStudents().catch(console.error);
       });
-    }).finally(() => {setShowImportModal(false);})
+    };
+
+    await fetchCreateRubrics()
+      .then(async () => {
+        await fetchGetAllRubrics().then(async () => {
+          await fetchUpdateGradeAllStudents().catch(console.error);
+        });
+      })
+      .finally(() => {
+        setShowImportModal(false);
+      });
   };
 
   const exportCSVData = () => {
     const exportData = students?.map((student: StudentType) => {
       const studentGrades = rubrics.map((rubric) => {
         const _grade = grade.find(
-          (grade) => (grade.rubricId === rubric._id) && 
-          (grade.studentId === student.studentId))?.grade;
+          (grade) =>
+            grade.rubricId === rubric._id &&
+            grade.studentId === student.studentId
+        )?.grade;
         return {
           [rubric.gradeName]: _grade,
         };
       });
       // Using reduce to merge the individual rubric grades into a single object
       const gradesObject = studentGrades.reduce(
-        (acc, curr) => Object.assign(acc, curr), {});
+        (acc, curr) => Object.assign(acc, curr),
+        {}
+      );
       return {
         studentId: student.studentId,
         ...gradesObject,
-        finalizeGrade: finalizeGrades.get(student.studentId) 
+        finalizeGrade: finalizeGrades.get(student.studentId),
       };
     });
     console.log("DATA: ", exportData);
     return exportData;
-  }
+  };
 
   return (
     <div className="grid grid-cols-6 gap-10 mx-10">
