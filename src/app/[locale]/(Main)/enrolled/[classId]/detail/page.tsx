@@ -12,6 +12,24 @@ export default function DetailEnrolledClass() {
   const auth = useAuth();
 
   useEffect(() => {
+    (async () => {
+      const checkCredential = async () => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser != null) {
+          // Assuming UserType has a structure like { email: string }
+          const user = JSON.parse(savedUser);
+          if (user) {
+            auth.login(user);
+          }
+        }
+      };
+      await checkCredential();
+      console.log("auth in navbar", auth);
+      console.log("user in navbar", auth.user);
+    })();
+  }, []);
+
+  useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}`, {
         headers: {

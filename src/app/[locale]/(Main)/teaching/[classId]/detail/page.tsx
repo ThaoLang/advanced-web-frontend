@@ -27,6 +27,24 @@ export default function DetailTeachingClass() {
   };
 
   useEffect(() => {
+    (async () => {
+      const checkCredential = async () => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser != null) {
+          // Assuming UserType has a structure like { email: string }
+          const user = JSON.parse(savedUser);
+          if (user) {
+            auth.login(user);
+          }
+        }
+      };
+      await checkCredential();
+      console.log("auth in navbar", auth);
+      console.log("user in navbar", auth.user);
+    })();
+  }, []);
+
+  useEffect(() => {
     console.log("CURRENT", auth.user?.access_token);
 
     const fetchClassInfo = async (classId: string) => {
@@ -98,16 +116,16 @@ export default function DetailTeachingClass() {
   return (
     <>
       <div className="flex lg:flex-row flex-col justify-between mx-10 lg:mx-20">
-          {classInfo && (
-            <Banner
-              id={classInfo._id}
-              imageUrl="https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f"
-              name={classInfo.name}
-              description={classInfo.description}
-              inviteUrl={classInfo.invite_url}
-              classCode={classInfo.class_code}
-            />
-          )}
+        {classInfo && (
+          <Banner
+            id={classInfo._id}
+            imageUrl="https://img.freepik.com/free-vector/gradient-international-day-education-illustration_23-2150011975.jpg?w=1060&t=st=1700731744~exp=1700732344~hmac=24b786f258aaa8285646cf1044c2e8ccc3e829ef7d3bee36e80df89a345c792f"
+            name={classInfo.name}
+            description={classInfo.description}
+            inviteUrl={classInfo.invite_url}
+            classCode={classInfo.class_code}
+          />
+        )}
         <div className="md:block bg-white rounded-xl shadow-md max-w-1/2 h-fit end-0 p-4 my-10 lg:justify-">
           <div className="text-2xl lg:text-3xl text-blue-600">
             <b>{t("get_started")}:</b>
