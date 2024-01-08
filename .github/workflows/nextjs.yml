@@ -163,4 +163,4 @@ jobs:
         run: npm install --force
 
       - name: Deploy to Vercel
-        run: npx vercel --token=$VERCEL_TOKEN
+        run: npx vercel --token=$VERCEL_TOKEN --force
