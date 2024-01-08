@@ -195,7 +195,7 @@ export default function HomePage() {
               }
               name={items.name}
               description={items.description}
-              inviteUrl={items.invite_url}
+              classCode={items.class_code}
               page={items.type}
               isCopied={isCopied}
               CopyInviteLink={CopyInviteLink}

@@ -174,7 +174,7 @@ export default function EnrolledPage() {
               imageUrl="https://static.vecteezy.com/system/resources/previews/011/005/174/original/creative-education-background-with-school-supplies-vector.jpg"
               name={items.name}
               description={items.description}
-              inviteUrl={items.invite_url}
+              classCode={items.class_code}
               page="enrolled"
               isCopied={isCopied}
               CopyInviteLink={CopyInviteLink}

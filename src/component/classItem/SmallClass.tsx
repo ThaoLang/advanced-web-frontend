@@ -11,7 +11,7 @@ interface SmallClassProp {
   imageUrl: string;
   name: string;
   description: string;
-  inviteUrl: string;
+  classCode: string;
   page: string | undefined;
   isCopied: boolean;
   CopyInviteLink: (text: string) => void;
@@ -92,17 +92,14 @@ const SmallClass = (classInfo: SmallClassProp) => {
                   <li>
                     <div
                       onClick={() =>
-                        classInfo.CopyInviteLink(classInfo.inviteUrl)
+                        classInfo.CopyInviteLink(classInfo.classCode)
                       }
                     >
-                      {t("copy_invite_url")}
+                      {t("copy_class_code")}
                     </div>
                   </li>
-                  {classInfo.page === "teaching" && (
+                  {/* {classInfo.page === "teaching" && (
                     <>
-                      <li>
-                        <div>{t("edit")}</div>
-                      </li>
                       <li>
                         <div>{t("delete_class")}</div>
                       </li>
@@ -112,7 +109,7 @@ const SmallClass = (classInfo: SmallClassProp) => {
                     <li>
                       <div>{t("leave_class")}</div>
                     </li>
-                  )}
+                  )} */}
                 </ul>
               </div>
             </a>
