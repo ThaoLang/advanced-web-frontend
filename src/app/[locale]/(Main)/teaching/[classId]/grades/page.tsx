@@ -549,7 +549,97 @@ const GradePage: React.FC = () => {
     }
   }, [rubrics]);
 
-  const handleFileUpload = async (data: any) => {};
+  const handleFileUpload = async (data: any) => {
+    console.log(data);
+    console.log('Headers: ', Object.keys(data[0]));
+    const headers = Object.keys(data[0]);
+
+    //Create rubric objects
+    const fetchCreateRubrics = async () => {
+      for (let i = 1; i < headers.length; i++) {
+        axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/create`,
+          {
+            class_id: classId.toString(),
+            gradeName: `${headers[i]}`,
+            gradeScale: 10,
+            order: i - 1,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${auth.user?.access_token}`
+            }
+          }).then(response => {
+            console.log('Rubric', response.data);
+          }).catch(console.error);
+      }
+    }
+
+    const fetchGetAllRubrics = async () => {
+      //then get all the updated rubrics
+      const response = await axios
+        .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}rubric/${classId}`, {
+          headers: {
+            Authorization: `Bearer ${auth.user?.access_token}`,
+          },
+        })
+        .catch((error) => {
+          console.error("Error fetching rubrics:", error);
+        });
+      setRubrics(response?.data);
+    }
+
+    const fetchUpdateGradeAllStudents = async () => {
+      //update grade for all students
+      await data.forEach(async (studentGrades: any) => {
+        // update new grade to database
+        for (let i = 1; i < headers.length; i++) {
+          await axios
+            .post(
+              `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/create`,
+              {
+                studentId: studentGrades[headers[0]].toString(), // studentId
+                rubricId: rubrics[i - 1]._id, // rubricId
+                grade: studentGrades[headers[i]], // grade
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${auth.user?.access_token}`,
+                },
+              }
+            ).catch(console.error)
+        }
+      })
+    }
+
+    await fetchCreateRubrics().then(async () => {
+      await fetchGetAllRubrics().then(async () => {
+        await fetchUpdateGradeAllStudents().catch(console.error);
+      });
+    }).finally(() => {setShowImportModal(false);})
+  };
+
+  const exportCSVData = () => {
+    const exportData = students?.map((student: StudentType) => {
+      const studentGrades = rubrics.map((rubric) => {
+        const _grade = grade.find(
+          (grade) => (grade.rubricId === rubric._id) && 
+          (grade.studentId === student.studentId))?.grade;
+        return {
+          [rubric.gradeName]: _grade,
+        };
+      });
+      // Using reduce to merge the individual rubric grades into a single object
+      const gradesObject = studentGrades.reduce(
+        (acc, curr) => Object.assign(acc, curr), {});
+      return {
+        studentId: student.studentId,
+        ...gradesObject,
+        finalizeGrade: finalizeGrades.get(student.studentId) 
+      };
+    });
+    console.log("DATA: ", exportData);
+    return exportData;
+  }
 
   return (
     <div className="grid grid-cols-6 gap-10 mx-10">
@@ -707,7 +797,7 @@ const GradePage: React.FC = () => {
                           <td key={index}>
                             <button
                               key={index}
-                              className="hidden md:block btn btn-info bg-blue-500 text-white text-xs"
+                              className="btn btn-info bg-blue-500 text-white text-xs"
                               disabled={isNotVisible(item.status)}
                               onClick={() => finalizeRubric(item)}
                             >
@@ -834,7 +924,7 @@ const GradePage: React.FC = () => {
                   //
                   title={t("export")}
                   closeModal={handleExportModal}
-                  data={undefined}
+                  data={exportCSVData()}
                 />
               </div>
               <form method="dialog" className="modal-backdrop">

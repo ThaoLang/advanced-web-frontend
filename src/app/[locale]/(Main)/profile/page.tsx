@@ -53,19 +53,28 @@ export default function Profile() {
     // });
 
     // setProfilePicture(_profilePicture);
+    
+    //with avatar upload
 
     try {
       console.log("USE", _username);
-      const avatarFileName = `/avatar/${extractUsernameFromEmail(auth.user?.email!)}.${getFileExtension(rawImage.name)}`;
-      console.log("AVATAR FILE NAME: ", avatarFileName);
-      const responseUploadAvatar = await fetchUploadAvatar(rawImage, avatarFileName);
-      console.log('RESPONSE:', responseUploadAvatar);
+      console.log("AVATAR: ", _profilePicture);
+      console.log("RAW IMAGE: ", rawImage);
+
+      let _avatar = _profilePicture;
+      if (rawImage) {
+        const avatarFileName = `/avatar/${extractUsernameFromEmail(auth.user?.email!)}.${getFileExtension(rawImage.name)}`;
+        console.log("AVATAR FILE NAME: ", avatarFileName);
+        const responseUploadAvatar = await fetchUploadAvatar(rawImage, avatarFileName);
+        console.log('RESPONSE:', responseUploadAvatar);
+        _avatar = responseUploadAvatar.location;
+      };
+
       await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}profile/update`,
         {
-          // email: _email,
           username: _username,
-          avatarUrl: responseUploadAvatar.location,
+          avatarUrl: _avatar,
           studentId: _studentId,
         },
         {
@@ -80,8 +89,10 @@ export default function Profile() {
             setShowSuccessMsg(false);
           }, 2000);
         }
-      })
+      }).catch(console.error);
+    
     } catch (error: any) {
+      console.log(error);
       setShowFailedMsg(true);
       setTimeout(() => {
         setShowFailedMsg(false);
@@ -105,6 +116,7 @@ export default function Profile() {
 
   const fetchUploadAvatar = async (file: any, fileName: string) => {
     try {
+      if (!file) return;
       console.log("FILE", file);
       console.log("FIlENAME", fileName);
       let formData = new FormData();
@@ -139,19 +151,18 @@ export default function Profile() {
     _profilePicture: any
   ) => {
 
-    auth.updateUser(_username, _profilePicture, _studentId);
     if (auth.user)
+      console.log("BEFORE CALLED UPDATE PROFILE", _username, _profilePicture, _studentId);
       await updateProfile(
         _username ? _username : "",
         // _email ? _email : "",
         _studentId ? _studentId : "",
         _profilePicture
-      );
+      ).then(() => auth.updateUser(_username, _profilePicture, _studentId));
   };
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
-
     if (savedUser != null) {
       const curUser: UserType = JSON.parse(savedUser);
       auth.login(curUser);

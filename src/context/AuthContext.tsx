@@ -65,15 +65,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
     avatarUrl: string | undefined,
     studentId: string | undefined
   ) => {
+    console.log("IN CALLED UPDATE PROFILE", username, avatarUrl, studentId);
+
     if (user) {
-      setUser({
-        ...user,
-        username: username ?? user.username,
-        avatarUrl: avatarUrl ?? user.avatarUrl,
-        studentId: studentId ?? user.studentId,
+      setUser((prevUser) => {
+        if (prevUser)
+          return {
+            ...prevUser,
+            username: username || prevUser.username,
+            avatarUrl: avatarUrl || prevUser.avatarUrl,
+            studentId: studentId || prevUser.studentId,
+          }
+        else return null;
       });
-    }
-  };
+      
+      const savedUser = localStorage.getItem("user");
+      if (savedUser !== null) {
+        // Assuming UserType has a structure like { email: string }
+        let storageUserAsJSON = JSON.parse(savedUser);
+        console.log('storageUserAsJSON', storageUserAsJSON);
+        let storageUserChanges = JSON.stringify(
+          {
+            ...storageUserAsJSON, username: username,
+            avatarUrl: avatarUrl,
+            studentId: studentId,
+          })
+          console.log('currentUserChanges', user);
+          console.log('storageUserChanges', storageUserChanges);
+          localStorage.setItem('user', storageUserChanges);
+      }
+    };
+  }
 
   return (
     <AuthContext.Provider

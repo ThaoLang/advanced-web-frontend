@@ -123,7 +123,7 @@ export default function NotificationList(props: NotificationListProps) {
   return (
     <div>
       {props.notifications &&
-        props.notifications.map((notification, index) => (
+        props.notifications.toReversed().map((notification, index) => (
           <div
             key={index}
             onClick={() => props.isClickedNotification(notification)}
