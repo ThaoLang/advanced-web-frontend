@@ -297,7 +297,7 @@ export default function Page({
         },
         {
           headers: {
-            Authorization: `Bearer ${auth.admin?.access_token}`,
+            Authorization: `Bearer ${auth.user?.access_token}`,
           },
         }
       )
