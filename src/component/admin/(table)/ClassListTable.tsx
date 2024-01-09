@@ -84,7 +84,7 @@ export default async function ClassListTable(props: ClassListTableProps) {
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>UserID</th>
+                            <th>Email</th>
                             <th>FullName</th>
                             <th>Role</th>
                             <th>StudentID</th>
@@ -98,7 +98,7 @@ export default async function ClassListTable(props: ClassListTableProps) {
                                     className="hover:bg-gray-100 cursor-pointer hover:border-1 hover:border-gray-200"
                                 >
                                     <td>{(props.currentPage - 1) * props.itemsPerPage + index + 1}</td>
-                                    <td>{items.user_id}</td>
+                                    <td>{items.email}</td>
                                     <td>{items.fullName}</td>
                                     {
                                         items.role === 'Teacher' ?
@@ -116,7 +116,10 @@ export default async function ClassListTable(props: ClassListTableProps) {
                                     }
                                     <td>{items.student_id}</td>
                                     <th>
-                                        <div className={`${index !== 0 ? 'flex flex-row justify-start space-x-2': 'hidden'} `}> 
+                                        <div className={`${
+                                            ((props.currentPage - 1) * props.itemsPerPage + index) !== 0 &&
+                                            items.email !== "" 
+                                            ? 'flex flex-row justify-start space-x-2': 'hidden'} `}> 
                                             <button className="cursor-pointer hover:text-primary"
                                                 onClick={() => openDeleteModal(items)}>
                                                 <FaRegTrashCan />
