@@ -119,28 +119,38 @@ export function Notification(props: NotificationProps) {
   );
 }
 
+const compareDate = (date1: string, date2: string) => {
+  const _date1 = new Date(date1);
+  const _date2 = new Date(date2);
+  return _date1 < _date2 ? 1 : -1;
+};
+
 export default function NotificationList(props: NotificationListProps) {
   return (
     <div>
       {props.notifications &&
-        props.notifications.toReversed().map((notification, index) => (
-          <div
-            key={index}
-            onClick={() => props.isClickedNotification(notification)}
-          >
-            {notification.redirectUrl && (
-              <Notification
-                classId={notification.classId}
-                senderId={notification.senderId}
-                senderRole={notification.senderRole}
-                message={notification.message}
-                createdAt={notification.createdAt}
-                redirectUrl={notification.redirectUrl}
-                isRead={notification.isRead}
-              />
-            )}
-          </div>
-        ))}
+        props.notifications
+          .sort((noti1, noti2) => {
+            return compareDate(noti1.createdAt, noti2.createdAt);
+          })
+          .map((notification, index) => (
+            <div
+              key={index}
+              onClick={() => props.isClickedNotification(notification)}
+            >
+              {notification.redirectUrl && (
+                <Notification
+                  classId={notification.classId}
+                  senderId={notification.senderId}
+                  senderRole={notification.senderRole}
+                  message={notification.message}
+                  createdAt={notification.createdAt}
+                  redirectUrl={notification.redirectUrl}
+                  isRead={notification.isRead}
+                />
+              )}
+            </div>
+          ))}
     </div>
   );
 }

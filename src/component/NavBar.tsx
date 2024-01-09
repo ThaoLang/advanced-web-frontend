@@ -90,8 +90,10 @@ export default function NavBar() {
           console.log("All classes response", response);
           classes = response.data;
 
-          classes.forEach((element) => {
-            axios
+          let notificationList: NotificationType[] = [];
+
+          classes.forEach(async (element) => {
+            await axios
               .get(
                 `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification/list/${element._id}`,
                 {
@@ -103,8 +105,9 @@ export default function NavBar() {
 
               .then((response) => {
                 if (response.data.length > 0) {
+                  notificationList = [...notificationList, ...response.data];
                   console.log("Notifications response", response);
-                  setNotifications([...notifications, ...response.data]);
+                  setNotifications(notificationList);
                 }
               })
               .catch((error) => {
