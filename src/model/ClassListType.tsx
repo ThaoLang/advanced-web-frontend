@@ -4,6 +4,6 @@ export type ClassListType = {
   fullName: string; // of user_id
   role: string;
   student_id: string;
-  email?: string;
+  email: string;
   avatar_url?: string;
 };

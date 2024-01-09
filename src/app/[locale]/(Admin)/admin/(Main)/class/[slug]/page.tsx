@@ -25,7 +25,7 @@ export default function Page({
 }) {
   const [itemsPerPage, setItemsPerPage] = useState<number>(5);
   const auth = useAuth();
-  const [classList, setClassList] = useState<any>(null);
+  const [classList, setClassList] = useState<Array<ClassListType> | null>(null);
   const [query, setQuery] = useState(searchParams?.query || "");
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams?.page) || 1
@@ -34,8 +34,8 @@ export default function Page({
   const [totalItems, setTotalItems] = useState(0);
 
   const classListTableHeaders = [
-    { header_name: "UserId", key: "user_id" },
-    { header_name: "FullName", key: "fullname" },
+    { header_name: "Email", key: "email" },
+    { header_name: "FullName", key: "fullName" },
     { header_name: "Role", key: "role" },
     { header_name: "StudentId", key: "student_id" },
   ];
@@ -43,18 +43,16 @@ export default function Page({
 
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [orderBy, setOrderBy] = useState<string>("asc");
-  const [userIdFilter, setUserIdFilter] = useState<string | null>(null);
+  const [emailFilter, setEmailFilter] = useState<string | null>(null);
   const [nameFilter, setNameFilter] = useState<string | null>(null);
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
   const [studentIdFilter, setStudentIdFilter] = useState<string | null>(null);
 
-  const [userIdSelectOptions, setUserIdSelectOptions] = useState<Array<string>>(
+  const [emailSelectOptions, setEmailSelectOptions] = useState<Array<string>>(
     []
   );
   const [nameSelectOptions, setNameSelectOptions] = useState<Array<string>>([]);
-  const [studentIdSelectOptions, setStudentIdSelectOptions] = useState<
-    Array<string>
-  >([]);
+  const [studentIdSelectOptions, setStudentIdSelectOptions] = useState<Array<string>>([]);
 
   // Create a ref to store the scroll position
   const scrollRef = useRef<number>(0);
@@ -74,10 +72,40 @@ export default function Page({
   };
 
   const handleClearFilters = () => {
-    setUserIdFilter(null);
+    setEmailFilter(null);
     setNameFilter(null);
     setRoleFilter(null);
     setStudentIdFilter(null);
+  };
+
+  const studentDataToClassListData = (studentData: Array<StudentType>, classId: string) => {
+    return studentData ? studentData.map((item: StudentType) => ({
+      class_id: classId,
+      email: "",
+      role: "Student",
+      user_id: "",
+      fullName: item.fullname ? item.fullname.toString() : "",
+      student_id: item.studentId ? item.studentId.toString() : "",
+    })) as Array<ClassListType> : [];
+  }
+
+
+  const fetchStudentListData = async (classId: string) => {
+    return await axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}student/${classId}`, {
+        headers: {
+          Authorization: `Bearer ${auth.admin?.access_token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Response", response.data[0].students);
+        let ResponseData = response.data[0].students ? response.data[0].students : []
+        return ResponseData;
+      })
+      .catch((error) => {
+        console.error("Error fetching student list:", error);
+        return null;
+      });
   };
 
   const fetchClassListData = async (
@@ -100,7 +128,6 @@ export default function Page({
         let { host_user, members } = response.data;
         const hostAsClassList = {
           class_id: classId,
-          user_id: host_user._id,
           fullName: host_user.username,
           role: "Teacher",
           email: host_user.email,
@@ -123,8 +150,10 @@ export default function Page({
 
     const fetchData = async () => {
       const classId = params.slug;
-      const data = await fetchClassListData(classId);
-      setClassList(data);
+      const classListData = await fetchClassListData(classId);
+      const studentListData = await fetchStudentListData(classId);
+      const convertedToClassList = studentDataToClassListData(studentListData, classId);
+      setClassList([...classListData!, ...convertedToClassList]);
     };
     fetchData().catch(console.error);
   }, []);
@@ -132,10 +161,10 @@ export default function Page({
   useEffect(() => {
     if (classList) {
       // Dynamically generate nameSelectOptions based on unique names
-      const uniqueUserIds: string[] = Array.from(
-        new Set(classList.map((items: ClassListType) => items.user_id))
+      const uniqueEmails: string[] = Array.from(
+        new Set(classList.map((items: ClassListType) => items.email))
       );
-      setUserIdSelectOptions(uniqueUserIds);
+      setEmailSelectOptions(uniqueEmails);
       const uniqueNames: string[] = Array.from(
         new Set(classList.map((items: ClassListType) => items.fullName))
       );
@@ -158,8 +187,8 @@ export default function Page({
       }
 
       const result = filterAndSortArray(classList, query, sortBy, orderBy, {
-        user_id: userIdFilter,
-        fullname: nameFilter,
+        email: emailFilter,
+        fullName: nameFilter,
         role: roleFilter,
         student_id: studentIdFilter,
       });
@@ -186,7 +215,7 @@ export default function Page({
     query,
     sortBy,
     orderBy,
-    userIdFilter,
+    emailFilter,
     nameFilter,
     roleFilter,
     studentIdFilter,
@@ -247,7 +276,7 @@ export default function Page({
     const updatedList = classList.filter((listItem: any) => {
       return JSON.stringify(listItem) !== JSON.stringify(currentItem);
     });
-    await fetchDeleteClassList(currentItem.class_id, currentItem.user_id).catch(
+    await fetchDeleteClassList(currentItem.class_id, currentItem.email).catch(
       console.error
     );
     setClassList(updatedList);
@@ -265,7 +294,7 @@ export default function Page({
     }
 
     const updatedList = classList.map((listItem: any) => {
-      if (currentItem.user_id === listItem.user_id) {
+      if (currentItem.email === listItem.email) {
         return {
           ...listItem,
           fullname: _fullname,
@@ -280,11 +309,10 @@ export default function Page({
       role: _role,
       student_id: _studentId,
     };
-    
-    
+
     await fetchUpdateClassList(
       currentItem.class_id,
-      currentItem.user_id,
+      currentItem.email,
       updatedInfos
     ).catch(console.error);
     setClassList(updatedList);
@@ -299,7 +327,7 @@ export default function Page({
         },
         {
           headers: {
-            Authorization: `Bearer ${auth.user?.access_token}`,
+            Authorization: `Bearer ${auth.admin?.access_token}`,
           },
         }
       )
@@ -319,7 +347,8 @@ export default function Page({
     await fetchSaveCSV(convertedData, classId).catch(console.error);
     //Currently replacing
 
-    setClassList(convertedData);
+    const dataToClassList = studentDataToClassListData(convertedData, classId);
+    setClassList([...classList!, ...dataToClassList]);
   };
 
   return (
@@ -445,15 +474,15 @@ export default function Page({
                                 </select> */}
               <select
                 className="select select-bordered w-full max-w-sm"
-                value={userIdFilter || ""}
+                value={emailFilter || ""}
                 onChange={(e) =>
-                  handleSelectChange(e.target.value, setUserIdFilter)
+                  handleSelectChange(e.target.value, setEmailFilter)
                 }
               >
                 <option disabled selected value={""}>
-                  UserId
+                  Email
                 </option>
-                {userIdSelectOptions.map((items, index) => {
+                {emailSelectOptions.map((items, index) => {
                   return (
                     <option key={index} value={items}>
                       {items}
@@ -491,7 +520,7 @@ export default function Page({
                 </option>
                 {roleSelectOptions.map((items, index) => {
                   return (
-                    <option key={index} value={items.toLowerCase()}>
+                    <option key={index} value={items}>
                       {items}
                     </option>
                   );
