@@ -223,7 +223,11 @@ export default function DetailedReviewPage() {
   return (
     <div>
       <div className="grid grid-cols-2 mx-20">
-        <div className="hidden lg:block lg:col-span-1 mt-2">
+        <div
+          className={`${
+            selectedReview ? "hidden lg:block" : "col-span-2"
+          } lg:col-span-1 mt-2`}
+        >
           <div className="m-3 mx-10 text-2xl lg:text-3xl text-blue-600">
             {t("all_reviews")}
           </div>
