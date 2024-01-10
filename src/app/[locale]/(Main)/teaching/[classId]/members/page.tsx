@@ -97,7 +97,11 @@ export default function MembersPage() {
       });
   };
 
-  const handleDelete = async (member_id: string, role: string = "Student") => {
+  const handleDelete = async (
+    member_id: string,
+    email: string,
+    role: string = "Student"
+  ) => {
     try {
       const response = await axios.delete(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members/${member_id}`,
@@ -119,7 +123,11 @@ export default function MembersPage() {
           );
         }
         toast.success("Remove member successfully!");
-        router.push("../");
+
+        //leave class
+        if (email === auth.user?.email) {
+          router.push("../");
+        }
       }
     } catch (error: any) {
       console.error("Failed to delete:", error);
@@ -237,7 +245,11 @@ export default function MembersPage() {
                     <div onClick={() => CopyText(teacher.email)}>Email</div>
                   </li>
                   <li>
-                    <div onClick={() => handleDelete(teacher.user_id)}>
+                    <div
+                      onClick={() =>
+                        handleDelete(teacher.user_id, teacher.email, "Teacher")
+                      }
+                    >
                       {t("remove")}
                     </div>
                   </li>
@@ -293,7 +305,11 @@ export default function MembersPage() {
                       <div onClick={() => CopyText(student.email)}>Email</div>
                     </li>
                     <li>
-                      <div onClick={() => handleDelete(student.user_id)}>
+                      <div
+                        onClick={() =>
+                          handleDelete(student.user_id, student.email)
+                        }
+                      >
                         {t("remove")}
                       </div>
                     </li>
