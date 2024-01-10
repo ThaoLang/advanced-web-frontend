@@ -96,6 +96,10 @@ export default function GradePage() {
       });
   };
 
+  const checkStatus = (status: string) => {
+    return status === "not_graded";
+  };
+
   useEffect(() => {
     (async () => {
       if (!auth.user || auth.user == null) return;
@@ -267,21 +271,18 @@ export default function GradePage() {
                       <td></td>
                       {rubrics.map((item, index) => {
                         return (
-                          <>
-                            {item.status === "graded" && (
-                              <td key={index}>
-                                <button
-                                  key={index}
-                                  className="hidden md:block btn btn-info bg-yellow-400 text-white text-xs"
-                                  onClick={() => {
-                                    openModal(item.gradeName, item._id);
-                                  }}
-                                >
-                                  {t("review")}
-                                </button>
-                              </td>
-                            )}
-                          </>
+                          <td key={index}>
+                            <button
+                              key={index}
+                              className="btn btn-info bg-yellow-400 text-white text-xs"
+                              disabled={checkStatus(item.status)}
+                              onClick={() => {
+                                openModal(item.gradeName, item._id);
+                              }}
+                            >
+                              {t("review")}
+                            </button>
+                          </td>
                         );
                       })}
                       <th></th>
