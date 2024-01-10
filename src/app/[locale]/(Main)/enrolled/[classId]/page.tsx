@@ -1,10 +1,11 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
+import { ClassType } from "@/model/ClassType";
 import { UserType } from "@/model/UserType";
 import axios from "axios";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import React, { ClassType, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function EncrollByLink() {
   const router = useRouter();
@@ -27,7 +28,8 @@ export default function EncrollByLink() {
           }
         );
         if (response.status === 201) {
-          router.push("/detail");
+          const newClass: ClassType = response.data;
+          router.push(`/enrolled/${newClass._id}/detail`);
         }
       } catch (error: any) {
         const errorMessage =
