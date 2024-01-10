@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import "react-toastify/dist/ReactToastify.css";
 import { AppState, AppActions } from "./state";
+import { useAuth } from "@/context/AuthContext";
 
 export const socketIOUrl = `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}notification`;
 
@@ -13,6 +14,7 @@ interface MySocketIOProps {
 }
 
 export const MySocketIO = (props: MySocketIOProps) => {
+  const auth = useAuth();
   // socket io notification
   try {
     // var connectionOptions = {
@@ -33,7 +35,10 @@ export const MySocketIO = (props: MySocketIOProps) => {
 
     socket.once("connect", () => {
       console.log("[Inside] Is connected: " + socket.connected.toString());
-      toast("Socket is connected!!");
+      // toast("Socket is connected!!");
+      if (auth.user?.status == "ban") {
+        toast.error("The account is banned!");
+      }
 
       // toast received messages from server
       socket.on("onMessage", (message: string) => {
