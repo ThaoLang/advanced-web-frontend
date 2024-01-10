@@ -48,9 +48,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = (role: string) => {
-    if (role === "admin") setAdmin(null);
-    else setUser(null);
+    if (role === "admin") {
+      setAdmin(null);
+      localStorage.setItem('admin', null as any);
+    }
+    else {
+      setUser(null);
+      localStorage.setItem('user', null as any);
+    }
   };
+  
   // const login = async (userData: User) => {
   //   console.log("Login", userData)
   //   setUser(userData);
