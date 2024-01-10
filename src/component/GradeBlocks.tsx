@@ -56,6 +56,21 @@ const SortableItem: React.ComponentClass<
         const newRubrics = response.data;
 
         props.setRubrics(newRubrics);
+        axios
+          .delete(
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/${rubric_id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${auth.user?.access_token}`,
+              },
+            }
+          )
+          .then((response) => {
+            console.log("Delete grade success", response.data);
+          })
+          .catch((error) => {
+            console.error("Error deleting grade:", error);
+          });
       }
     } catch (error: any) {
       console.error("Failed to delete rubric:", error);
