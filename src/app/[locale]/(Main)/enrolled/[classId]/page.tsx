@@ -64,7 +64,7 @@ export default function EncrollByLink() {
         <dialog id="my_modal_1" className="modal modal-open">
           <div className="modal-box">
             <p className="py-4 text-lg bold items-center justify-between text-center">
-              {t(`${errorMsg}`)}
+              {errorMsg}
             </p>
             <div className="modal-action">
               <form method="dialog">
