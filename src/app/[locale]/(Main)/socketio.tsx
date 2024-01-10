@@ -25,6 +25,10 @@ export const MySocketIO = (props: MySocketIOProps) => {
     // };
 
     console.log("Trying to connect to server");
+    console.log("Authentication", auth);
+    if (auth.user?.status == "ban") {
+      toast.error("The account is banned!");
+    }
 
     const socket = io(socketIOUrl, {
       auth: { token: props.accessToken },
@@ -36,9 +40,6 @@ export const MySocketIO = (props: MySocketIOProps) => {
     socket.once("connect", () => {
       console.log("[Inside] Is connected: " + socket.connected.toString());
       // toast("Socket is connected!!");
-      if (auth.user?.status == "ban") {
-        toast.error("The account is banned!");
-      }
 
       // toast received messages from server
       socket.on("onMessage", (message: string) => {
