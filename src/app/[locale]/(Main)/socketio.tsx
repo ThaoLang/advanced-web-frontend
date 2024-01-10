@@ -31,8 +31,8 @@ export const MySocketIO = (props: MySocketIOProps) => {
       reconnection: true,
       reconnectionDelay: 10000,
       reconnectionDelayMax: 60000,
-      reconnectionAttempts: 10,
-      // timeout: 10000,
+      reconnectionAttempts: Infinity,
+      timeout: 10000,
     });
 
     socket.on("connect", () => {
