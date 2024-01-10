@@ -10,6 +10,7 @@ import { FaHouseChimney, FaGear } from "react-icons/fa6";
 import { GiGraduateCap } from "react-icons/gi";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
+import RestrictedPage from "./RestrictedPage";
 
 interface UserLayoutProps {
   children: React.ReactNode;
@@ -35,19 +36,10 @@ export default function UserLayout(props: UserLayoutProps) {
     checkCredential();
   }, []);
   const t = useTranslations("Navbar");
+
   useEffect(() => {
-    const checkCredential = async () => {
-      const savedUser = localStorage.getItem("admin");
-      if (savedUser != null) {
-        // Assuming UserType has a structure like { email: string }
-        const user = JSON.parse(savedUser);
-        if (user) {
-          auth.login(user);
-        }
-      }
-    };
-    checkCredential();
-  }, []);
+    
+  },[auth.user])
 
   if (!locales.includes(props.locale as any)) notFound();
 
@@ -62,52 +54,52 @@ export default function UserLayout(props: UserLayoutProps) {
     { name: `${t("settings")}`, href: "/profile", icon: <FaGear /> },
   ];
 
-  return (
-    <div className="drawer bg-no-repeat bg-cover bg-[url('https://dbhi.edu.vn/wp-content/uploads/2019/09/white-background-with-blue-tech-hexagon_1017-19366.jpg')]">
-      <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col h-fit justify-between">
-        <NavBar />
-        <main className="min-h-screen">
-          {/* <StyledComponentsRegistry> */}
-          <Providers>{props.children}</Providers>
-          {/* </StyledComponentsRegistry> */}
-        </main>
-        <Footer />
-      </div>
-      <div className="drawer-side">
-        <label
-          htmlFor="my-drawer"
-          aria-label="close sidebar"
-          className="drawer-overlay"
-        ></label>
+  return auth.user?.status === 'normal' ? (
+      <div className="drawer bg-no-repeat bg-cover bg-[url('https://dbhi.edu.vn/wp-content/uploads/2019/09/white-background-with-blue-tech-hexagon_1017-19366.jpg')]">
+        <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content flex flex-col h-fit justify-between">
+          <NavBar />
+          <main className="min-h-screen">
+            {/* <StyledComponentsRegistry> */}
+            <Providers>{props.children}</Providers>
+            {/* </StyledComponentsRegistry> */}
+          </main>
+          <Footer />
+        </div>
+        <div className="drawer-side">
+          <label
+            htmlFor="my-drawer"
+            aria-label="close sidebar"
+            className="drawer-overlay"
+          ></label>
 
-        <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content text-lg">
-          {/* Sidebar content here */}
-          <a className="btn btn-ghost normal-case text-xl mb-5">
-            <img
-              className="h-8 w-auto"
-              src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png"
-              alt=""
-            ></img>
-            LightHub
-          </a>
-          {navigation.map((item, index) => (
-            <li className="cursor-pointer" key={index}>
-              <Link href={item.href}>
-                <div className="flex w-full">
-                  <div className="grid flex-grow place-items-center">
-                    {item.icon}
+          <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content text-lg">
+            {/* Sidebar content here */}
+            <a className="btn btn-ghost normal-case text-xl mb-5">
+              <img
+                className="h-8 w-auto"
+                src="https://bootstraplogos.com/wp-content/uploads/edd/2018/07/logo.png"
+                alt=""
+              ></img>
+              LightHub
+            </a>
+            {navigation.map((item, index) => (
+              <li className="cursor-pointer" key={index}>
+                <Link href={item.href}>
+                  <div className="flex w-full">
+                    <div className="grid flex-grow place-items-center">
+                      {item.icon}
+                    </div>
+                    <div className="divider divider-horizontal"></div>
+                    <div className="grid flex-grow place-items-center">
+                      {item.name}
+                    </div>
                   </div>
-                  <div className="divider divider-horizontal"></div>
-                  <div className="grid flex-grow place-items-center">
-                    {item.name}
-                  </div>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
-  );
+    ) : <RestrictedPage />
 }
