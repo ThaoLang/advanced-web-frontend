@@ -297,7 +297,7 @@ export default function Page({
       if (currentItem.email === listItem.email) {
         return {
           ...listItem,
-          fullname: _fullname,
+          fullName: _fullname,
           role: _role,
           student_id: _studentId,
         };
