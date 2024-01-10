@@ -31,7 +31,7 @@ export const MySocketIO = (props: MySocketIOProps) => {
       // timeout: 10000,
     });
 
-    socket.once("connect", () => {
+    socket.on("connect", () => {
       console.log("[Inside] Is connected: " + socket.connected.toString());
       toast("Socket is connected!!");
 
