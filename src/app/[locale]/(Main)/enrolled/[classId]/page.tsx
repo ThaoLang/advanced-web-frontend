@@ -53,17 +53,7 @@ export default function EncrollByLink() {
         : "./"
     );
   };
-
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-
-    if (savedUser != null) {
-      const curUser: UserType = JSON.parse(savedUser);
-      auth.login(curUser);
-    }
-    console.log("User: ", auth.user);
-  }, []);
-
+  
   useEffect(() => {
     if (auth.user) handleEnrollClass(class_code);
   }, [auth.user]);

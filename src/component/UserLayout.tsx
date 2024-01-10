@@ -9,9 +9,11 @@ import { FaChalkboardTeacher } from "react-icons/fa";
 import { FaHouseChimney, FaGear } from "react-icons/fa6";
 import { GiGraduateCap } from "react-icons/gi";
 import { useAuth } from "@/context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import RestrictedPage from "./RestrictedPage";
 import axios from "axios";
+import React from 'react';
+import WithAuth, { WithAuthProps } from '@/utils/WithAuth';
 
 interface UserLayoutProps {
   children: React.ReactNode;
@@ -23,20 +25,22 @@ const locales = ["en", "vi"];
 export default function UserLayout(props: UserLayoutProps) {
   const auth = useAuth();
 
-  const fetchGetUser = async() => {
-      return await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}/auth/user`, {
-        headers: {
-          Authorization: `Bearer ${auth.user?.access_token}`,
-        },
-      })
+
+  const fetchGetUser = async () => {
+    return await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/user`, {
+      headers: {
+        Authorization: `Bearer ${auth.user?.access_token}`,
+      },
+    })
   }
 
   useEffect(() => {
+    //first get from local storage  
     const checkCredential = async () => {
-      const savedUser = await fetchGetUser();
+      const savedUser = localStorage.getItem('user');
       if (savedUser) {
         // Assuming UserType has a structure like { email: string }
-        const user = JSON.parse(savedUser.data);
+        const user = JSON.parse(savedUser);
         if (user) {
           auth.login(user);
         }
@@ -44,7 +48,33 @@ export default function UserLayout(props: UserLayoutProps) {
     };
     checkCredential();
   }, []);
-  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (auth.user) {
+        console.log('Fetching...');
+        const newData = await fetchGetUser();
+        if (newData) {
+          const _newUserData = JSON.parse(JSON.stringify(newData.data));
+          // Check if user status has changed
+          if (_newUserData.status !== auth.user?.status) {
+            auth.login(_newUserData);
+            localStorage.setItem('user', JSON.stringify(_newUserData));
+            window.location.reload();
+          }
+        }
+      }
+    };
+
+    // Fetch data initially
+    fetchData();
+
+    const intervalId = setInterval(fetchData, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [auth.user]);
+
+
   const t = useTranslations("Navbar");
 
   if (!locales.includes(props.locale as any)) notFound();
@@ -60,17 +90,25 @@ export default function UserLayout(props: UserLayoutProps) {
     { name: `${t("settings")}`, href: "/profile", icon: <FaGear /> },
   ];
 
+  const MainContent: React.FC<WithAuthProps> = (props: UserLayoutProps) => {
+    const { children } = props;
+    return (
+      <main className="min-h-screen">
+        {/* <StyledComponentsRegistry> */}
+        <Providers>{children}</Providers>
+        {/* </StyledComponentsRegistry> */}
+      </main>);
+  };
+
+  const AuthenticatedMainContent = WithAuth<WithAuthProps>(MainContent);
+
   if (!auth.user || auth.user.status === 'normal') {
     return (
       <div className="drawer bg-no-repeat bg-cover bg-[url('https://dbhi.edu.vn/wp-content/uploads/2019/09/white-background-with-blue-tech-hexagon_1017-19366.jpg')]">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col h-fit justify-between">
           <NavBar />
-          <main className="min-h-screen">
-            {/* <StyledComponentsRegistry> */}
-            <Providers>{props.children}</Providers>
-            {/* </StyledComponentsRegistry> */}
-          </main>
+          <AuthenticatedMainContent {...props}/>
           <Footer />
         </div>
         <div className="drawer-side">

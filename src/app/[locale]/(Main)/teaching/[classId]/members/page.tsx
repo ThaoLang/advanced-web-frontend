@@ -136,14 +136,6 @@ export default function MembersPage() {
   };
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      // Assuming UserType has a structure like { email: string }
-      auth.login(JSON.parse(savedUser));
-    }
-  }, []);
-
-  useEffect(() => {
     axios
       .get(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members`,
@@ -178,7 +170,7 @@ export default function MembersPage() {
       .catch((error) => {
         console.error("Error fetching classes:", error);
       });
-  }, []);
+  }, [auth.user]);
 
   return (
     <div className="w-3/4 lg:w-1/2 mx-auto">

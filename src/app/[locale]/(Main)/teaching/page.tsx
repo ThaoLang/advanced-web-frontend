@@ -115,7 +115,7 @@ export default function TeachingPage() {
         });
     };
     fetchClasses();
-  }, []);
+  }, [auth.user]);
 
   console.log("Teaching classes", auth.user);
 

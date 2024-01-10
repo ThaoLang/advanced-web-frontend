@@ -183,7 +183,7 @@ export default function ReviewPage() {
       .catch((error) => {
         console.error("Error fetching review list:", error);
       });
-  }, []);
+  }, [auth.user]);
 
   return (
     <div>

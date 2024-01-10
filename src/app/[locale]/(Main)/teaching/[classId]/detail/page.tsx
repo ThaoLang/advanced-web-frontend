@@ -27,24 +27,6 @@ export default function DetailTeachingClass() {
   };
 
   useEffect(() => {
-    (async () => {
-      const checkCredential = async () => {
-        const savedUser = localStorage.getItem("user");
-        if (savedUser != null) {
-          // Assuming UserType has a structure like { email: string }
-          const user = JSON.parse(savedUser);
-          if (user) {
-            auth.login(user);
-          }
-        }
-      };
-      await checkCredential();
-      console.log("auth in navbar", auth);
-      console.log("user in navbar", auth.user);
-    })();
-  }, []);
-
-  useEffect(() => {
     console.log("CURRENT", auth.user?.access_token);
 
     const fetchClassInfo = async (classId: string) => {
@@ -81,7 +63,7 @@ export default function DetailTeachingClass() {
     };
     fetchClassInfo(classId as string);
     fetchStudentList(classId as string);
-  }, []);
+  }, [auth.user]);
 
   const fetchSaveCSV = async (students: any, classId: string) => {
     await axios

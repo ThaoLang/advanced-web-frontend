@@ -175,7 +175,7 @@ export default function GradePage() {
           console.error("Error fetching member:", error);
         });
     })();
-  }, []);
+  }, [auth.user]);
 
   return (
     <div>

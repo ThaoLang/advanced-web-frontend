@@ -38,7 +38,7 @@ export default function ReviewPage() {
           console.error("Error fetching review list:", error);
         });
     })();
-  }, []);
+  }, [auth.user]);
 
   return (
     <div>

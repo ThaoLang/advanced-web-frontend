@@ -211,8 +211,8 @@ export default function NavBar() {
                   {notifications.filter(
                     (notification) => notification.isRead === false
                   ).length !== 0 && (
-                    <span className="badge badge-xs badge-primary indicator-item" />
-                  )}
+                      <span className="badge badge-xs badge-primary indicator-item" />
+                    )}
                 </div>
               </button>
 
@@ -227,13 +227,13 @@ export default function NavBar() {
                         {t("no_notification")}
                       </div>
                     )) || (
-                      <div onClick={() => setIsNotificationVisible(false)}>
-                        <NotificationList
-                          notifications={notifications}
-                          isClickedNotification={isNotificationClicked}
-                        />
-                      </div>
-                    )}
+                        <div onClick={() => setIsNotificationVisible(false)}>
+                          <NotificationList
+                            notifications={notifications}
+                            isClickedNotification={isNotificationClicked}
+                          />
+                        </div>
+                      )}
                   </>
                 )}
               </ul>
@@ -264,9 +264,12 @@ export default function NavBar() {
                   {t("hi")}, {auth.user.username}!
                 </li>
                 <li className="items-center gap-3">
-                  <button className="bg-sky-500 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-full">
-                    <Link href="/profile">{t("manage_account")}</Link>
-                  </button>
+                  <Link href="/profile" passHref
+                    legacyBehavior>
+                    <button className="text-white bg-gradient-to-r from-sky-400 via-sky-500 to-sky-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-sky-300 dark:focus:ring-sky-800 text-sm px-5 py-2.5 text-center me-2 mb-2 font-semibold rounded-full">
+                      {t("manage_account")}
+                    </button>
+                  </Link>
                   <Link
                     href="/"
                     className="justify-between"
@@ -274,7 +277,7 @@ export default function NavBar() {
                     legacyBehavior
                   >
                     <button
-                      className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full"
+                      className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 text-sm px-5 py-2.5 text-center me-2 mb-2 font-semibold rounded-full"
                       onClick={handleLogout}
                     >
                       <FaArrowRightFromBracket />

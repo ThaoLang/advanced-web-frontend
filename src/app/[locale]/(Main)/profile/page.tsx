@@ -3,7 +3,7 @@ import ProfileForm from "@/component/ProfileForm";
 import { UserType } from "@/model/UserType";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslations } from "next-intl";
 
@@ -160,14 +160,6 @@ export default function Profile() {
         _profilePicture
       ).then(() => auth.updateUser(_username, _profilePicture, _studentId));
   };
-
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser != null) {
-      const curUser: UserType = JSON.parse(savedUser);
-      auth.login(curUser);
-    }
-  }, []);
 
   return (
     <div className="flex flex-col justify-center space-x-2 h-fit">

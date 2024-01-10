@@ -128,8 +128,8 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    console.log("Homepage user", auth);
-    axios
+    const fetchClasses = async() => {
+      return await axios
       .get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes`, {
         headers: {
           Authorization: `Bearer ${auth.user?.access_token}`,
@@ -137,14 +137,16 @@ export default function HomePage() {
       })
       .then((response) => {
         console.log("Response", response.data);
-        setClasses(response.data);
+        setClasses(response.data as Array<ClassType>);
       })
       .catch((error) => {
         console.error("Error fetching classes:", error);
       });
-  }, []);
+    }
+    fetchClasses();
+  }, [auth.user]);
 
-  return auth.user && auth.user.status === "normal" ? (
+  return auth.user && (
     <div className="mx-20 my-10">
       <p className="mb-5 text-2xl flex justify-center items-center mx-auto">
         <b>{t_homepage("class")}</b>
@@ -227,7 +229,5 @@ export default function HomePage() {
         theme="light"
       />
     </div>
-  ) : (
-    <div></div>
   );
 }

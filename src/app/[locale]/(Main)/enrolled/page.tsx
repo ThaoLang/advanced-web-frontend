@@ -10,6 +10,7 @@ import JoinClassForm from "@/component/classItem/JoinClassForm";
 import { ClassType } from "@/model/ClassType";
 import { UserType } from "@/model/UserType";
 import axios from "axios";
+import LoadingIndicator from "@/component/admin/LoadingIndicator";
 
 export default function EnrolledPage() {
   const [classes, setClasses] = useState<ClassType[]>([]);
@@ -96,16 +97,6 @@ export default function EnrolledPage() {
   };
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-
-    if (savedUser != null) {
-      const curUser: UserType = JSON.parse(savedUser);
-      auth.login(curUser);
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log("ACCESS_TOKEN", auth.user?.access_token);
     axios
       .post(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/get-enrolled`,
@@ -118,17 +109,17 @@ export default function EnrolledPage() {
       )
       .then(async (response) => {
         console.log("Response", response.data);
-        await setClasses(response.data);
+        setClasses(response.data);
         console.log("Response class", classes);
       })
       .catch((error) => {
         console.error("Error fetching classes:", error);
       });
-  }, []);
+  }, [auth.user]);
 
   console.log("Class", classes);
 
-  return auth.user && auth.user.status === "normal" ? (
+  return auth.user ? (
     <div className="mx-20 my-10">
       <p className="mb-5 text-2xl text-yellow-500 flex justify-center items-center mx-auto">
         <b>{t("title")}</b>
@@ -194,7 +185,5 @@ export default function EnrolledPage() {
         />
       </div>
     </div>
-  ) : (
-    <div></div>
-  );
+  ) : <LoadingIndicator/>;
 }

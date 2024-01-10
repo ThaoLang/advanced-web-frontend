@@ -506,7 +506,7 @@ const GradePage: React.FC = () => {
           console.error("Error fetching rubrics:", error);
         });
     })();
-  }, []);
+  }, [auth.user]);
 
   useEffect(() => {
     let newData: GradeType[];
@@ -536,18 +536,18 @@ const GradePage: React.FC = () => {
           });
       })();
     });
-  }, [rubrics]);
+  }, [rubrics, auth.user]);
 
   useEffect(() => {
     console.log("finalizeGrades 2", finalizeGrades);
-  }, [isFinalized]);
+  }, [isFinalized, auth.user]);
 
   useEffect(() => {
     console.log("List Rubrics:", rubrics);
     if (isDisabledUpdatedBtn) {
       setIsDisabledUpdatedBtn(!isDisabledUpdatedBtn);
     }
-  }, [rubrics]);
+  }, [rubrics, auth.user]);
 
   const handleFileUpload = async (data: any) => {
     console.log(data);
