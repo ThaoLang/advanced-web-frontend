@@ -12,7 +12,12 @@ export default function Home() {
   const auth = useAuth();
   const t = useTranslations("HomePage");
   const isBanned = () => {
-    toast.error(t("ban_error"));
+    if (auth.user && auth.user.status === "ban") {
+      toast.error(t("ban_error"));
+      return true;
+    }
+
+    return false;
   };
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -24,7 +29,7 @@ export default function Home() {
 
   return (
     <div>
-      {auth.user && auth.user.status === "normal" ? (
+      {auth.user && auth.user.status === "normal" && !isBanned() ? (
         <HomePage />
       ) : (
         <LandingPage />
