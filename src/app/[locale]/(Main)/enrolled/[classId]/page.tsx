@@ -14,7 +14,7 @@ export default function EncrollByLink() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const t = useTranslations("Tabs");
 
-  const handleEnrollClass = async (code: string) => {
+  const handleEnrollClass = async (code: string | null) => {
     if (class_code) {
       try {
         const response = await axios.post(
@@ -56,22 +56,26 @@ export default function EncrollByLink() {
     }
   }, []);
 
+  handleEnrollClass(class_code);
+
   return (
     <div className="">
-      <dialog id="my_modal_1" className="modal modal-open">
-        <div className="modal-box">
-          <p className="py-4 text-lg bold items-center justify-between text-center">
-            {t(`${errorMsg}`)}
-          </p>
-          <div className="modal-action">
-            <form method="dialog">
-              <button className="btn" onClick={handleClick}>
-                Close
-              </button>
-            </form>
+      {errorMsg && (
+        <dialog id="my_modal_1" className="modal modal-open">
+          <div className="modal-box">
+            <p className="py-4 text-lg bold items-center justify-between text-center">
+              {t(`${errorMsg}`)}
+            </p>
+            <div className="modal-action">
+              <form method="dialog">
+                <button className="btn" onClick={handleClick}>
+                  Close
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
-      </dialog>
+        </dialog>
+      )}
     </div>
   );
 }
