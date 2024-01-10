@@ -26,13 +26,13 @@ export const MySocketIO = (props: MySocketIOProps) => {
 
     const socket = io(socketIOUrl, {
       auth: { token: props.accessToken },
-      // transports: ["websocket", "polling", "flashsocket"],
-      transports: ["websocket"],
+      transports: ["websocket", "polling", "flashsocket"],
+      // transports: ["websocket"],
       reconnection: true,
       reconnectionDelay: 10000,
       reconnectionDelayMax: 60000,
       reconnectionAttempts: 10,
-      timeout: 10000,
+      // timeout: 10000,
     });
 
     socket.on("connect", () => {
