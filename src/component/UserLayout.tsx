@@ -38,8 +38,8 @@ export default function UserLayout(props: UserLayoutProps) {
   const t = useTranslations("Navbar");
 
   useEffect(() => {
-    
-  },[auth.user])
+
+  }, [auth.user])
 
   if (!locales.includes(props.locale as any)) notFound();
 
@@ -54,7 +54,8 @@ export default function UserLayout(props: UserLayoutProps) {
     { name: `${t("settings")}`, href: "/profile", icon: <FaGear /> },
   ];
 
-  return auth.user?.status === 'normal' ? (
+  if (!auth.user || auth.user.status === 'normal') {
+    return (
       <div className="drawer bg-no-repeat bg-cover bg-[url('https://dbhi.edu.vn/wp-content/uploads/2019/09/white-background-with-blue-tech-hexagon_1017-19366.jpg')]">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col h-fit justify-between">
@@ -101,5 +102,9 @@ export default function UserLayout(props: UserLayoutProps) {
           </ul>
         </div>
       </div>
-    ) : <RestrictedPage />
+    )
+  }
+  else if (auth.user.status === 'ban') {
+    return <RestrictedPage />
+  }
 }
