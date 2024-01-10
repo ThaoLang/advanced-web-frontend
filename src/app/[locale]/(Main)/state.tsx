@@ -71,6 +71,8 @@ const actions = {
   notify: (message: string, room: string): void => {
     if (!state.socket) return;
 
+    state.socket.emit("sendMessage", room);
+
     let body = { message, room };
     state.socket.emit("notify", { body });
   },

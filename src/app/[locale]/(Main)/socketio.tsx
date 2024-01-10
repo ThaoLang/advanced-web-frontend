@@ -26,14 +26,28 @@ export const MySocketIO = (props: MySocketIOProps) => {
 
     const socket = io(socketIOUrl, {
       auth: { token: props.accessToken },
-      transports: ["websocket", "polling", "flashsocket"],
-      // reconnectionAttempts: 10,
-      // timeout: 10000,
+      // transports: ["websocket", "polling", "flashsocket"],
+      transports: ["websocket"],
+      reconnection: true,
+      reconnectionDelay: 10000,
+      reconnectionDelayMax: 60000,
+      reconnectionAttempts: 10,
+      timeout: 10000,
     });
 
     socket.on("connect", () => {
       console.log("[Inside] Is connected: " + socket.connected.toString());
       toast("Socket is connected!!");
+
+      //test
+      socket.on("sendMessage", (message: string) => {
+        toast(
+          <div>
+            New notification! <br />
+            <b>{message}</b>
+          </div>
+        );
+      });
 
       socket.on("returnNotification", (message: string) => {
         toast(
