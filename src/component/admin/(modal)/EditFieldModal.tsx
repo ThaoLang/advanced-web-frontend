@@ -9,7 +9,7 @@ interface EditFieldModalProps {
 
 
 export default function EditFieldModal(props: EditFieldModalProps) {
-    const [currentFullName, setCurrentFullName] = useState(props.affectedClassList.fullname);
+    const [currentFullName, setCurrentFullName] = useState(props.affectedClassList.fullName);
     const [currentRole, setCurrentRole] = useState(props.affectedClassList.role);
     const [currentStudentId, setCurrentStudentId] = useState(props.affectedClassList.student_id);
     const [isStudentIdDisabled, setIsStudentIdDisabled] = useState(currentRole === 'Teacher');
