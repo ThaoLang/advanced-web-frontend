@@ -5,7 +5,6 @@ import AccountTable from "@/component/admin/(table)/AccountTable";
 import SearchBar from "@/component/admin/SearchBar";
 import { Suspense } from "react";
 import { UserType } from "@/model/UserType";
-import { ClassListType } from "@/model/ClassListType";
 import filterAndSortArray from "@/utils/ArrayFilterUtils";
 import LoadingIndicator from "@/component/admin/LoadingIndicator";
 import axios from "axios";
@@ -17,6 +16,8 @@ import { IoMdClose } from "react-icons/io";
 import { TfiExport, TfiImport } from "react-icons/tfi";
 import { FaHome } from "react-icons/fa";
 import { MdSupervisorAccount } from "react-icons/md";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Account({
   searchParams,
@@ -28,7 +29,6 @@ export default function Account({
 }) {
   const auth = useAuth();
   const [itemsPerPage, setItemsPerPage] = useState<number>(5);
-  const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [accounts, setAccounts] = useState<any>(null);
   const [query, setQuery] = useState(searchParams?.query || "");
   const [currentPage, setCurrentPage] = useState(
@@ -167,13 +167,10 @@ export default function Account({
         status: status
       })
       .then((response) => {
-        setInfoMessage(`${response.status}: User successfully banned!`);
-        setTimeout(() => {
-          setInfoMessage(null);
-        }, 2000);
+        toast.success(`${response.status}: Change user status to ${status}`);
       })
       .catch((error) => {
-        console.error("Error fetching ban user:", error);
+        toast.error("Error fetching ban user:", error.message);
       });
   }
 
@@ -185,13 +182,10 @@ export default function Account({
         },
       })
       .then((response) => {
-        setInfoMessage(`${response.status}: User ${user.email} has been deleted!`);
-        setTimeout(() => {
-          setInfoMessage(null);
-        }, 2000);
+        toast.success(`${response.status}: User ${user.email} has been deleted!`);
       })
       .catch((error) => {
-        console.error("Error fetching delete user:", error);
+        toast.error("Error fetching delete user:", error.message);
       });
   }
 
@@ -240,29 +234,19 @@ export default function Account({
   }
 
   const fetchImportCSV = async(data: any) => {
-    const token=auth.admin?.access_token;
-    console.log("token", token);
     return await axios
     .post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}auth/import`, {
       studentIds: data,
     },{
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${auth.admin?.access_token}`,
       },
     })
     .then((response) => {
-      setInfoMessage(`${response.status}: Import successfully!`);
-      setTimeout(() => {
-        setInfoMessage(null);
-      }, 2000);
+      toast.success(`${response.status}: Import successfully!`);
     })
     .catch((error) => {
-      console.log(auth.admin?.access_token);
-      console.log("DATA:", data);
-      setInfoMessage(`${error.message}: Import failed!`);
-      setTimeout(() => {
-        setInfoMessage(null);
-      }, 2000);
+      toast.error(`Import failed: ${error.message}`);
     });
   }
 
@@ -283,15 +267,17 @@ export default function Account({
 
   return (
     <React.Fragment>
-      {infoMessage ? (
-        <div className="toast toast-end z-[100]">
-
-          <div role="alert" className="z-[100] mx-auto mt-4 alert">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span>{infoMessage}</span>
-          </div>
-        </div>
-      ) : null}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
       <div className="mx-auto max-w-screen-2xl min-h-screen p-4 md:p-6 2xl:p-10 bg-slate-100">
         <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
           <ul>

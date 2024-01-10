@@ -11,6 +11,7 @@ import { GiGraduateCap } from "react-icons/gi";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
 import RestrictedPage from "./RestrictedPage";
+import axios from "axios";
 
 interface UserLayoutProps {
   children: React.ReactNode;
@@ -22,12 +23,20 @@ const locales = ["en", "vi"];
 export default function UserLayout(props: UserLayoutProps) {
   const auth = useAuth();
 
+  const fetchGetUser = async() => {
+      return await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}/auth/user`, {
+        headers: {
+          Authorization: `Bearer ${auth.user?.access_token}`,
+        },
+      })
+  }
+
   useEffect(() => {
     const checkCredential = async () => {
-      const savedUser = localStorage.getItem("user");
-      if (savedUser != null) {
+      const savedUser = await fetchGetUser();
+      if (savedUser) {
         // Assuming UserType has a structure like { email: string }
-        const user = JSON.parse(savedUser);
+        const user = JSON.parse(savedUser.data);
         if (user) {
           auth.login(user);
         }
@@ -35,11 +44,8 @@ export default function UserLayout(props: UserLayoutProps) {
     };
     checkCredential();
   }, []);
+  
   const t = useTranslations("Navbar");
-
-  useEffect(() => {
-
-  }, [auth.user])
 
   if (!locales.includes(props.locale as any)) notFound();
 

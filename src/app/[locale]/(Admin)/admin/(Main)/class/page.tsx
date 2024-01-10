@@ -12,6 +12,8 @@ import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { FaChalkboard } from "react-icons/fa6";
 import { FaHome } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Classes({
   searchParams,
@@ -170,7 +172,7 @@ export default function Classes({
         return [];
       }
     }
-    
+
     const addHostInfo = (
       classes: Array<ClassType>,
       accounts: Array<UserType>
@@ -196,32 +198,32 @@ export default function Classes({
     return classesWithHostInfo;
   };
 
-  const fetchSetClassStatus = async(action: string, classId: string) => {
+  const fetchSetClassStatus = async (action: string, classId: string) => {
     await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${action}/${classId}`, null, {
       headers: {
         Authorization: `Bearer ${auth.admin?.access_token}`,
       },
     })
-    .then((response) => {
-      console.log(`${response.status}: Update status successfully!`);
-    })
-    .catch((error) => {
-      console.error("Error setting class status: ", error);
-    }); 
+      .then((response) => {
+        toast.success(`${response.status}: Update status to ${action}!`);
+      })
+      .catch((error) => {
+        toast.error("Error setting class status: ", error.message);
+      });
   }
 
-  const fetchDeleteClass = async(classId: string) => {
+  const fetchDeleteClass = async (classId: string) => {
     await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}`, {
       headers: {
         Authorization: `Bearer ${auth.admin?.access_token}`,
       },
     })
-    .then((response) => {
-      console.log(`${response.status}: Remove successfully!`);
-    })
-    .catch((error) => {
-      console.error("Error while remove class: ", error);
-    }); 
+      .then((response) => {
+        toast.success(`${response.status}: Remove successfully!`);
+      })
+      .catch((error) => {
+        toast.error("Error while remove class: ", error.message);
+      });
   }
 
 
@@ -249,11 +251,11 @@ export default function Classes({
 
     const updatedClasses = classes.map((classItem: any) => {
       if (classItem._id === currentClass._id) {
-          return {...classItem, status: updatedStatus}
+        return { ...classItem, status: updatedStatus }
       }
       return classItem;
     });
-    
+
     await fetchSetClassStatus(updatedStatus, currentClass._id).catch(console.error);
     setClasses(updatedClasses);
   };
@@ -264,10 +266,22 @@ export default function Classes({
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">
-      <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
-        <ul>
-           <li>
+    <React.Fragment>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
+      <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-slate-100">
+        <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
+          <ul>
+            <li>
               <div className="flex flex-row items-center gap-2">
                 <FaHome />
                 <Link href="/admin/">Home</Link>
@@ -279,149 +293,150 @@ export default function Classes({
                 <Link href="/admin/class">Classes</Link>
               </div>
             </li>
-        </ul>
-      </div>
-      <div className="flex flex-col lg:grid lg:grid-cols-3 mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-        <div className="lg:col-start-0 lg:col-end-2">
-          <label className="form-control w-full max-w-xs">
-            <div className="label">
-              <span className="label-text">Sort by</span>
-            </div>
-            <select
-              className="select select-bordered"
-              onChange={(e) => handleSelectChange(e.target.value, setSortBy)}
-            >
-              {/* <option disabled selected>--Option--</option> */}
-              {classroomTableHeaders.map((items, index) => {
-                return (
-                  <option key={index} value={items.key}>
-                    {items.header_name}
-                  </option>
-                );
-              })}
-            </select>
-          </label>
+          </ul>
         </div>
+        <div className="flex flex-col lg:grid lg:grid-cols-3 mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+          <div className="lg:col-start-0 lg:col-end-2">
+            <label className="form-control w-full max-w-xs">
+              <div className="label">
+                <span className="label-text">Sort by</span>
+              </div>
+              <select
+                className="select select-bordered"
+                onChange={(e) => handleSelectChange(e.target.value, setSortBy)}
+              >
+                {/* <option disabled selected>--Option--</option> */}
+                {classroomTableHeaders.map((items, index) => {
+                  return (
+                    <option key={index} value={items.key}>
+                      {items.header_name}
+                    </option>
+                  );
+                })}
+              </select>
+            </label>
+          </div>
 
-        <div className="lg:mx-10 lg:col-start-2 lg:col-end-3">
-          <div className="form-control">
-            <div className="label">
-              <span className="label-text">Order by</span>
-            </div>
-            <div className="flex lg:flex-col flex-row space-x-5 lg:space-y-3 lg:space-x-0">
-              <label className="flex flex-row gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="order-by"
-                  className="radio radio-sm checked:bg-red-500"
-                  checked={orderBy === "asc"}
-                  onChange={() => handleRadioChange("asc", setOrderBy)}
-                />
-                <span className="label-text">Ascending</span>
-              </label>
-              <label className="flex flex-row gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="order-by"
-                  className="radio radio-sm checked:bg-blue-500"
-                  checked={orderBy === "desc"}
-                  onChange={() => handleRadioChange("desc", setOrderBy)}
-                />
-                <span className="label-text">Descending</span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <div className="lg:col-start-3 lg:col-end-4 max-w-md">
-          <SearchBar
-            placeholder="Search anything...."
-            setQuery={setQuery}
-            currentPage={currentPage}
-          />
-        </div>
-        <div className="lg:col-start-0 lg:col-span-3">
-          <div className="form-control">
-            <div className="label">
-              <span className="label-text">Filters</span>
-            </div>
-            <div className="flex flex-row space-x-10">
-              <select
-                className="select select-bordered w-full max-w-sm"
-                value={nameFilter || ""}
-                onChange={(e) =>
-                  handleSelectChange(e.target.value, setNameFilter)
-                }
-              >
-                <option disabled selected value={""}>
-                  Name
-                </option>
-                {nameSelectOptions.map((items, index) => {
-                  return (
-                    <option key={index} value={items}>
-                      {items}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                className="select select-bordered w-full max-w-sm"
-                value={hostNameFilter || ""}
-                onChange={(e) =>
-                  handleSelectChange(e.target.value, setHostNameFilter)
-                }
-              >
-                <option disabled selected value={""}>
-                  Host Name
-                </option>
-                {hostNameSelectOptions.map((items, index) => {
-                  return (
-                    <option key={index} value={items}>
-                      {items}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                className="select select-bordered w-full max-w-sm"
-                value={statusFilter || ""}
-                onChange={(e) =>
-                  handleSelectChange(e.target.value, setStatusFilter)
-                }
-              >
-                <option disabled selected value={""}>
-                  Status
-                </option>
-                {statusSelectOptions.map((items, index) => {
-                  return (
-                    <option key={index} value={items.toLowerCase()}>
-                      {items}
-                    </option>
-                  );
-                })}
-              </select>
-              <button
-                className="btn btn-error text-white"
-                onClick={() => handleClearFilters()}
-              >
-                Clear all filters
-              </button>
+          <div className="lg:mx-10 lg:col-start-2 lg:col-end-3">
+            <div className="form-control">
+              <div className="label">
+                <span className="label-text">Order by</span>
+              </div>
+              <div className="flex lg:flex-col flex-row space-x-5 lg:space-y-3 lg:space-x-0">
+                <label className="flex flex-row gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="order-by"
+                    className="radio radio-sm checked:bg-red-500"
+                    checked={orderBy === "asc"}
+                    onChange={() => handleRadioChange("asc", setOrderBy)}
+                  />
+                  <span className="label-text">Ascending</span>
+                </label>
+                <label className="flex flex-row gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="order-by"
+                    className="radio radio-sm checked:bg-blue-500"
+                    checked={orderBy === "desc"}
+                    onChange={() => handleRadioChange("desc", setOrderBy)}
+                  />
+                  <span className="label-text">Descending</span>
+                </label>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-start-0 col-span-3">
-          <Suspense key={query + currentPage}>
-            <ClassTable
-              paginatedResult={paginatedResult}
-              totalItems={totalItems}
+          <div className="lg:col-start-3 lg:col-end-4 max-w-md">
+            <SearchBar
+              placeholder="Search anything...."
+              setQuery={setQuery}
               currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              itemsPerPage={itemsPerPage}
-              deleteClass={deleteClassHandler}
-              banClass={banClassHandler}
             />
-          </Suspense>
+          </div>
+          <div className="lg:col-start-0 lg:col-span-3">
+            <div className="form-control">
+              <div className="label">
+                <span className="label-text">Filters</span>
+              </div>
+              <div className="flex flex-row space-x-10">
+                <select
+                  className="select select-bordered w-full max-w-sm"
+                  value={nameFilter || ""}
+                  onChange={(e) =>
+                    handleSelectChange(e.target.value, setNameFilter)
+                  }
+                >
+                  <option disabled selected value={""}>
+                    Name
+                  </option>
+                  {nameSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items}>
+                        {items}
+                      </option>
+                    );
+                  })}
+                </select>
+                <select
+                  className="select select-bordered w-full max-w-sm"
+                  value={hostNameFilter || ""}
+                  onChange={(e) =>
+                    handleSelectChange(e.target.value, setHostNameFilter)
+                  }
+                >
+                  <option disabled selected value={""}>
+                    Host Name
+                  </option>
+                  {hostNameSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items}>
+                        {items}
+                      </option>
+                    );
+                  })}
+                </select>
+                <select
+                  className="select select-bordered w-full max-w-sm"
+                  value={statusFilter || ""}
+                  onChange={(e) =>
+                    handleSelectChange(e.target.value, setStatusFilter)
+                  }
+                >
+                  <option disabled selected value={""}>
+                    Status
+                  </option>
+                  {statusSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items.toLowerCase()}>
+                        {items}
+                      </option>
+                    );
+                  })}
+                </select>
+                <button
+                  className="btn btn-error text-white"
+                  onClick={() => handleClearFilters()}
+                >
+                  Clear all filters
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="col-start-0 col-span-3">
+            <Suspense key={query + currentPage}>
+              <ClassTable
+                paginatedResult={paginatedResult}
+                totalItems={totalItems}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                itemsPerPage={itemsPerPage}
+                deleteClass={deleteClassHandler}
+                banClass={banClassHandler}
+              />
+            </Suspense>
+          </div>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }

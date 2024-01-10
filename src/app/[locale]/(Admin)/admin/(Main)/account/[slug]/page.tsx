@@ -9,6 +9,8 @@ import React, { useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { FaUser, FaAngleDown } from "react-icons/fa6";
 import { MdSupervisorAccount } from "react-icons/md";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const auth = useAuth();
@@ -116,27 +118,33 @@ export default function Page({ params }: { params: { slug: string } }) {
         }
       )
       .then((response) => {
-        // setInfoMessage(`${response.status}: User ${user.email} has been deleted!`);
-        //     setTimeout(() => {
-        //         setInfoMessage(null);
-        // }, 2000);
-
+        toast.success(`${response.status}: Save user information successfully!`);
         setUser({
           ...user,
           username: username,
           studentId: studentId,
           role: role,
         } as UserType);
-
         setIsEditable(false);
       })
       .catch((error) => {
-        console.error("Error while change user infos:", error);
+        toast.error("Error while change user information: ", error.message);
       });
   };
 
   return (
     <React.Fragment>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
       <div className="mx-auto max-w-screen-2xl min-h-screen p-4 md:p-6 2xl:p-10 bg-slate-100">
         <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
           <ul>

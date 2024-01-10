@@ -12,6 +12,8 @@ import { useAuth } from "@/context/AuthContext";
 import { StudentType } from "@/model/StudentType";
 import { FaHome } from "react-icons/fa";
 import { FaChalkboard } from "react-icons/fa6";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Page({
   params,
@@ -109,7 +111,7 @@ export default function Page({
         return ResponseData;
       })
       .catch((error) => {
-        console.error("Error fetching student list:", error);
+        // toast.error("Error fetching student list");
         return null;
       });
   };
@@ -127,10 +129,6 @@ export default function Page({
         }
       )
       .then((response) => {
-        // setInfoMessage(`${response.status}: User ${user.email} has been deleted!`);
-        // setTimeout(() => {
-        //     setInfoMessage(null);
-        // }, 2000);
         let { host_user, members } = response.data;
         const hostAsClassList = {
           class_id: classId,
@@ -141,7 +139,6 @@ export default function Page({
 
         members.unshift(hostAsClassList);
         let ResponseData = members as Array<ClassListType>;
-        console.log("Fetching ClassList: ", ResponseData);
         return ResponseData;
       })
       .catch((error) => {
@@ -156,13 +153,15 @@ export default function Page({
 
     const fetchData = async () => {
       const classId = params.slug;
-      const classListData = await fetchClassListData(classId);
-      const studentListData = await fetchStudentListData(classId);
+      const [classListData, studentListData] = await Promise.all([
+        fetchClassListData(classId),
+        fetchStudentListData(classId)
+      ]);
       const convertedToClassList = studentDataToClassListData(studentListData, classId);
       // Remove items from convertedToClassList where studentId is present in classListData
-      const filteredClassList = convertedToClassList.filter(item => 
-        classListData?.some(classItem => classItem.student_id === item.student_id));
-
+      const filteredClassList = convertedToClassList.filter(item =>
+        !classListData!.some(classItem => classItem.student_id === item.student_id));
+      console.log(filteredClassList)
       setClassList([...classListData!, ...filteredClassList]);
     };
     fetchData().catch(console.error);
@@ -234,7 +233,7 @@ export default function Page({
   ]); // Run this effect when currentPage or classList changes
 
   const fetchDeleteClassList = async (classId: string, memberId: string) => {
-    await axios
+    return await axios
       .delete(
         `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}classes/${classId}/members/${memberId}`,
         {
@@ -244,10 +243,12 @@ export default function Page({
         }
       )
       .then((response) => {
-        console.log(`${response.status}: Remove successfully!`);
+        toast.success(`${response.status}: Remove successfully!`);
+        return true;
       })
       .catch((error) => {
-        console.error("Error while remove member: ", error);
+        toast.error("Error while remove member: " + error.message);
+        return false;
       });
   };
 
@@ -271,25 +272,23 @@ export default function Page({
         }
       )
       .then((response) => {
-        console.log(`${response.status}: Update successfully!`);
+        toast.success(`${response.status}: Update successfully!`);
       })
       .catch((error) => {
-        console.error("Error while update member: ", error);
+        toast.error("Error while update member");
       });
   };
 
-  const deleteClassListHandler = async (currentItem: any) => {
-    if (!classList) {
+  const deleteClassListHandler = async (currentItem: ClassListType) => {
+    if (!classList) { 
       // Handle the case where classList is still loading or null
       return;
     }
     const updatedList = classList.filter((listItem: any) => {
       return JSON.stringify(listItem) !== JSON.stringify(currentItem);
     });
-    await fetchDeleteClassList(currentItem.class_id, currentItem.email).catch(
-      console.error
-    );
-    setClassList(updatedList);
+    const isDeleted = await fetchDeleteClassList(currentItem.class_id, currentItem.user_id);
+    if (isDeleted) setClassList(updatedList);
   };
 
   const editClassListHandler = async (
@@ -303,7 +302,7 @@ export default function Page({
       return;
     }
 
-    const updatedList = classList.map((listItem: any) => {
+    const updatedList = classList.map((listItem: ClassListType) => {
       if (currentItem.email === listItem.email) {
         return {
           ...listItem,
@@ -322,7 +321,7 @@ export default function Page({
 
     await fetchUpdateClassList(
       currentItem.class_id,
-      currentItem.email,
+      currentItem.user_id,
       updatedInfos
     ).catch(console.error);
     setClassList(updatedList);
@@ -342,9 +341,11 @@ export default function Page({
         }
       )
       .then((response) => {
-        console.log(response);
+        toast.success(`${response.status}: Save CSV data successfully!`);
       })
-      .catch(console.error);
+      .catch((error) => {
+        toast.error("Error saving CSV data: " + error.message);
+      });
   };
 
   const handleFileUpload = async (data: any) => {
@@ -357,122 +358,123 @@ export default function Page({
     await fetchSaveCSV(convertedData, classId).catch(console.error);
     //Currently replacing
     const dataToClassList = studentDataToClassListData(convertedData, classId);
-    const filteredClassList = dataToClassList.filter(item => 
-      classList?.some(classItem => classItem.student_id === item.student_id));
+    const filteredClassList = dataToClassList.filter(item =>
+      !classList!.some(classItem => classItem.student_id === item.student_id));
     setClassList([...classList!, ...filteredClassList]);
   };
 
   return (
-    <div className="mx-auto max-w-screen-2xl min-h-screen p-4 md:p-6 2xl:p-10 bg-slate-100">
-      <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
-        <ul>
-          <li>
-            <div className="flex flex-row items-center gap-2">
-              <FaHome />
-              <Link href="/admin/">Home</Link>
-            </div>
-          </li>
-          <li>
-            <div className="flex flex-row items-center gap-2 font-bold">
-              <FaChalkboard />
-              <Link href="/admin/class">Classes</Link>
-            </div>
-          </li>
-          <li>
-            <Link href={`/admin/class/${params.slug}`}>
-              <b>{params.slug}</b>
-            </Link>
-          </li>
-        </ul>
-      </div>
+    <div>
+      <div className="mx-auto max-w-screen-2xl min-h-screen p-4 md:p-6 2xl:p-10 bg-slate-100">
+        <div className="text-xl breadcrumbs mx-auto max-w-screen-2xl mx-4 md:mx-6 2xl:mx-10 w-auto">
+          <ul>
+            <li>
+              <div className="flex flex-row items-center gap-2">
+                <FaHome />
+                <Link href="/admin/">Home</Link>
+              </div>
+            </li>
+            <li>
+              <div className="flex flex-row items-center gap-2 font-bold">
+                <FaChalkboard />
+                <Link href="/admin/class">Classes</Link>
+              </div>
+            </li>
+            <li>
+              <Link href={`/admin/class/${params.slug}`}>
+                <b>{params.slug}</b>
+              </Link>
+            </li>
+          </ul>
+        </div>
 
-      <div className="flex flex-col lg:grid lg:grid-cols-3 mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10s">
-        <details className="lg:col-start-0 lg:col-span-1 collapse bg-base-200 collapse-arrow border">
-          <summary className="collapse-title text-xl font-medium">
-            Import/Export Data
-          </summary>
-          <div className="collapse-content">
-            <div className="lg:col-start-0 lg:col-end-1">
-              <CSVImporter onFileUpload={handleFileUpload} />
+        <div className="flex flex-col lg:grid lg:grid-cols-3 mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10s">
+          <details className="lg:col-start-0 lg:col-span-1 collapse bg-base-200 collapse-arrow border">
+            <summary className="collapse-title text-xl font-medium">
+              Import/Export Data
+            </summary>
+            <div className="collapse-content">
+              <div className="lg:col-start-0 lg:col-end-1">
+                <CSVImporter onFileUpload={handleFileUpload} />
+              </div>
+              <div className="lg:col-start-2 lg:col-span-2">
+                <CSVExporter data={classListDataToStudentData(classList!.slice(1))} filename="exported_data" />
+              </div>
             </div>
-            <div className="lg:col-start-2 lg:col-span-2">
-              <CSVExporter data={classListDataToStudentData(classList!)} filename="exported_data" />
-            </div>
-          </div>
-        </details>
-        <details className="lg:col-start-auto lg:col-span-1 collapse bg-base-200 collapse-arrow border">
-          <summary className="collapse-title text-xl font-medium">
-            Sort Data
-          </summary>
-          <div className="collapse-content">
-            <div className="lg:col-start-0 lg:col-span-1">
-              <label className="form-control w-full max-w-xs">
-                <div className="label">
-                  <span className="label-text">Sort by</span>
-                </div>
-                <select
-                  className="select select-bordered"
-                  onChange={(e) =>
-                    handleSelectChange(e.target.value, setSortBy)
-                  }
-                >
-                  {/* <option disabled selected>--Option--</option> */}
-                  {classListTableHeaders.map((items, index) => {
-                    return (
-                      <option key={index} value={items.key}>
-                        {items.header_name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </label>
-            </div>
-            <div className="lg:mx-10 lg:col-start-1 lg:col-span-1">
-              <div className="form-control">
-                <div className="label">
-                  <span className="label-text">Order by</span>
-                </div>
-                <div className="flex lg:flex-col flex-row space-x-5 lg:space-y-3 lg:space-x-0">
-                  <label className="flex flex-row gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="order-by"
-                      className="radio radio-sm checked:bg-red-500"
-                      checked={orderBy === "asc"}
-                      onChange={() => handleRadioChange("asc", setOrderBy)}
-                    />
-                    <span className="label-text">Ascending</span>
-                  </label>
-                  <label className="flex flex-row gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="order-by"
-                      className="radio radio-sm checked:bg-blue-500"
-                      checked={orderBy === "desc"}
-                      onChange={() => handleRadioChange("desc", setOrderBy)}
-                    />
-                    <span className="label-text">Descending</span>
-                  </label>
+          </details>
+          <details className="lg:col-start-auto lg:col-span-1 collapse bg-base-200 collapse-arrow border">
+            <summary className="collapse-title text-xl font-medium">
+              Sort Data
+            </summary>
+            <div className="collapse-content">
+              <div className="lg:col-start-0 lg:col-span-1">
+                <label className="form-control w-full max-w-xs">
+                  <div className="label">
+                    <span className="label-text">Sort by</span>
+                  </div>
+                  <select
+                    className="select select-bordered"
+                    onChange={(e) =>
+                      handleSelectChange(e.target.value, setSortBy)
+                    }
+                  >
+                    {/* <option disabled selected>--Option--</option> */}
+                    {classListTableHeaders.map((items, index) => {
+                      return (
+                        <option key={index} value={items.key}>
+                          {items.header_name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </label>
+              </div>
+              <div className="lg:mx-10 lg:col-start-1 lg:col-span-1">
+                <div className="form-control">
+                  <div className="label">
+                    <span className="label-text">Order by</span>
+                  </div>
+                  <div className="flex lg:flex-col flex-row space-x-5 lg:space-y-3 lg:space-x-0">
+                    <label className="flex flex-row gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="order-by"
+                        className="radio radio-sm checked:bg-red-500"
+                        checked={orderBy === "asc"}
+                        onChange={() => handleRadioChange("asc", setOrderBy)}
+                      />
+                      <span className="label-text">Ascending</span>
+                    </label>
+                    <label className="flex flex-row gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="order-by"
+                        className="radio radio-sm checked:bg-blue-500"
+                        checked={orderBy === "desc"}
+                        onChange={() => handleRadioChange("desc", setOrderBy)}
+                      />
+                      <span className="label-text">Descending</span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </details>
+          </details>
 
-        <div className="lg:col-start-auto lg:col-span-1 max-w-md">
-          <SearchBar
-            placeholder="Search anything...."
-            setQuery={setQuery}
-            currentPage={currentPage}
-          />
-        </div>
-        <div className="lg:col-start-0 lg:col-span-4">
-          <div className="form-control">
-            <div className="label">
-              <span className="label-text">Filters</span>
-            </div>
-            <div className="flex flex-row space-x-10">
-              {/* <select className="select select-bordered w-full max-w-sm" value={classIdFilter || ''}
+          <div className="lg:col-start-auto lg:col-span-1 max-w-md">
+            <SearchBar
+              placeholder="Search anything...."
+              setQuery={setQuery}
+              currentPage={currentPage}
+            />
+          </div>
+          <div className="lg:col-start-0 lg:col-span-4">
+            <div className="form-control">
+              <div className="label">
+                <span className="label-text">Filters</span>
+              </div>
+              <div className="flex flex-row space-x-10">
+                {/* <select className="select select-bordered w-full max-w-sm" value={classIdFilter || ''}
                                     onChange={(e) => handleSelectChange(e.target.value, setClassIdFilter)}>
                                     <option disabled selected value={''}>ClassId</option>
                                     {
@@ -483,101 +485,113 @@ export default function Page({
                                         })
                                     }
                                 </select> */}
-              <select
-                className="select select-bordered w-full max-w-sm"
-                value={emailFilter || ""}
-                onChange={(e) =>
-                  handleSelectChange(e.target.value, setEmailFilter)
-                }
-              >
-                <option disabled selected value={""}>
-                  Email
-                </option>
-                {emailSelectOptions.map((items, index) => {
-                  return (
-                    <option key={index} value={items}>
-                      {items}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                className="select select-bordered w-full max-w-sm"
-                value={nameFilter || ""}
-                onChange={(e) =>
-                  handleSelectChange(e.target.value, setNameFilter)
-                }
-              >
-                <option disabled selected value={""}>
-                  Username
-                </option>
-                {nameSelectOptions.map((items, index) => {
-                  return (
-                    <option key={index} value={items}>
-                      {items}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                className="select select-bordered w-full max-w-sm"
-                value={roleFilter || ""}
-                onChange={(e) =>
-                  handleSelectChange(e.target.value, setRoleFilter)
-                }
-              >
-                <option disabled selected value={""}>
-                  Role
-                </option>
-                {roleSelectOptions.map((items, index) => {
-                  return (
-                    <option key={index} value={items}>
-                      {items}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                className="select select-bordered w-full max-w-sm"
-                value={studentIdFilter || ""}
-                onChange={(e) =>
-                  handleSelectChange(e.target.value, setStudentIdFilter)
-                }
-              >
-                <option disabled selected value={""}>
-                  StudentId
-                </option>
-                {studentIdSelectOptions.map((items, index) => {
-                  return (
-                    <option key={index} value={items?.toLowerCase()}>
-                      {items}
-                    </option>
-                  );
-                })}
-              </select>
-              <button
-                className="btn btn-error text-white"
-                onClick={() => handleClearFilters()}
-              >
-                Clear all filters
-              </button>
+                <select
+                  className="select select-bordered w-full max-w-sm"
+                  value={emailFilter || ""}
+                  onChange={(e) =>
+                    handleSelectChange(e.target.value, setEmailFilter)
+                  }
+                >
+                  <option disabled selected value={""}>
+                    Email
+                  </option>
+                  {emailSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items}>
+                        {items}
+                      </option>
+                    );
+                  })}
+                </select>
+                <select
+                  className="select select-bordered w-full max-w-sm"
+                  value={nameFilter || ""}
+                  onChange={(e) =>
+                    handleSelectChange(e.target.value, setNameFilter)
+                  }
+                >
+                  <option disabled selected value={""}>
+                    Username
+                  </option>
+                  {nameSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items}>
+                        {items}
+                      </option>
+                    );
+                  })}
+                </select>
+                <select
+                  className="select select-bordered w-full max-w-sm"
+                  value={roleFilter || ""}
+                  onChange={(e) =>
+                    handleSelectChange(e.target.value, setRoleFilter)
+                  }
+                >
+                  <option disabled selected value={""}>
+                    Role
+                  </option>
+                  {roleSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items}>
+                        {items}
+                      </option>
+                    );
+                  })}
+                </select>
+                <select
+                  className="select select-bordered w-full max-w-sm"
+                  value={studentIdFilter || ""}
+                  onChange={(e) =>
+                    handleSelectChange(e.target.value, setStudentIdFilter)
+                  }
+                >
+                  <option disabled selected value={""}>
+                    StudentId
+                  </option>
+                  {studentIdSelectOptions.map((items, index) => {
+                    return (
+                      <option key={index} value={items?.toLowerCase()}>
+                        {items}
+                      </option>
+                    );
+                  })}
+                </select>
+                <button
+                  className="btn btn-error text-white"
+                  onClick={() => handleClearFilters()}
+                >
+                  Clear all filters
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="lg:col-start-0 lg:col-span-4">
-          <Suspense key={query + currentPage}>
-            <ClassListTable
-              paginatedResult={paginatedResult}
-              totalItems={totalItems}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              itemsPerPage={itemsPerPage}
-              deleteClassListItem={deleteClassListHandler}
-              editClassListItem={editClassListHandler}
-            />
-          </Suspense>
+          <div className="lg:col-start-0 lg:col-span-4">
+            <Suspense key={query + currentPage}>
+              <ClassListTable
+                paginatedResult={paginatedResult}
+                totalItems={totalItems}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                itemsPerPage={itemsPerPage}
+                deleteClassListItem={deleteClassListHandler}
+                editClassListItem={editClassListHandler}
+              />
+            </Suspense>
+          </div>
         </div>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
     </div>
   );
 }

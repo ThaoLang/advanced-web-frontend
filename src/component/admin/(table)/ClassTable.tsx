@@ -39,7 +39,7 @@ export default async function ClassTable(props: ClassTableProps) {
         `, 
         to_normal:  
         `
-        "Are you sure you want to activate this class again? 
+        Are you sure you want to activate this class again? 
         Students and teachers will now have access to enter this class.
         `
     };

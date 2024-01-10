@@ -59,8 +59,17 @@ export default function Dashboard() {
           },
         }).then((response) => {
           ResponseData = response.data;
+          console.log("Classes: ", ResponseData);
+          const uniqueHostIds = new Set();
+          const filteredArray = ResponseData.filter(item => {
+              if (!uniqueHostIds.has(item.host_id)) {
+                  uniqueHostIds.add(item.host_id);
+                  return true;
+              }
+              return false;
+          });
           setTotalClasses(ResponseData.length);
-          setTotalTeachers(ResponseData.length);
+          setTotalTeachers(filteredArray.length);
         }).catch((error) => {
         console.error("Error fetching all classes:", error);
         return [];
