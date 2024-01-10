@@ -278,6 +278,7 @@ export default function Account({
       studentId: item.student_id ? item.student_id.toString() : '', // Convert student_id to string if it's a number, or use an empty string if undefined
     }));
     await fetchImportCSV(convertedData).catch(console.error);
+    handleImportModal();
   }
 
   return (

@@ -89,6 +89,12 @@ export default function Page({
     })) as Array<ClassListType> : [];
   }
 
+  const classListDataToStudentData = (classListData: Array<ClassListType>) => {
+    return classListData ? classListData.map((item: ClassListType) => ({
+      fullname: item.fullName ? item.fullName.toString() : "",
+      studentId: item.student_id ? item.student_id.toString() : "",
+    })) as Array<StudentType> : [];
+  }
 
   const fetchStudentListData = async (classId: string) => {
     return await axios
@@ -153,7 +159,11 @@ export default function Page({
       const classListData = await fetchClassListData(classId);
       const studentListData = await fetchStudentListData(classId);
       const convertedToClassList = studentDataToClassListData(studentListData, classId);
-      setClassList([...classListData!, ...convertedToClassList]);
+      // Remove items from convertedToClassList where studentId is present in classListData
+      const filteredClassList = convertedToClassList.filter(item => 
+        classListData?.some(classItem => classItem.student_id === item.student_id));
+
+      setClassList([...classListData!, ...filteredClassList]);
     };
     fetchData().catch(console.error);
   }, []);
@@ -346,9 +356,10 @@ export default function Page({
     const classId = params.slug;
     await fetchSaveCSV(convertedData, classId).catch(console.error);
     //Currently replacing
-
     const dataToClassList = studentDataToClassListData(convertedData, classId);
-    setClassList([...classList!, ...dataToClassList]);
+    const filteredClassList = dataToClassList.filter(item => 
+      classList?.some(classItem => classItem.student_id === item.student_id));
+    setClassList([...classList!, ...filteredClassList]);
   };
 
   return (
@@ -385,7 +396,7 @@ export default function Page({
               <CSVImporter onFileUpload={handleFileUpload} />
             </div>
             <div className="lg:col-start-2 lg:col-span-2">
-              <CSVExporter data={classList} filename="exported_data" />
+              <CSVExporter data={classListDataToStudentData(classList!)} filename="exported_data" />
             </div>
           </div>
         </details>
