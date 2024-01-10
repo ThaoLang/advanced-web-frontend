@@ -121,7 +121,7 @@ export default function ReviewPage() {
                     id: "",
                     senderId: "",
                     classId: classId.toString(),
-                    reviewId: data._id,
+                    reviewId: "",
                     senderRole: senderRole,
                     receiverIdList: receiverIdList,
                     message: message,

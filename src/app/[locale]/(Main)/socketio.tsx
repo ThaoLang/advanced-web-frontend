@@ -35,17 +35,13 @@ export const MySocketIO = (props: MySocketIOProps) => {
       console.log("[Inside] Is connected: " + socket.connected.toString());
       toast("Socket is connected!!");
 
-      // toast received messages from server
-      socket.on("onMessage", (message: string) => {
-        toast("New notification! " + message);
-
-        // toast(<>{t(message)}</>);
-      });
-
       socket.on("returnNotification", (message: string) => {
-        toast("New notification! " + message);
-
-        // toast(<>{t(message)}</>);
+        toast(
+          <div>
+            New notification! <br />
+            <b>{message}</b>
+          </div>
+        );
       });
     });
 
