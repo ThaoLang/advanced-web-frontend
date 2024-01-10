@@ -62,7 +62,9 @@ export default function AddReviewModal(props: AddReviewProps) {
             console.log("Response", response);
             let data: GradeType;
             data = response.data;
-            setGrade(data.grade.toString());
+            if (data.grade) {
+              setGrade(data.grade.toString());
+            }
           })
           .catch((error) => {
             console.error("Error fetching current grade:", error);
