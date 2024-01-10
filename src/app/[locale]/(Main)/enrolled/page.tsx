@@ -128,7 +128,7 @@ export default function EnrolledPage() {
 
   console.log("Class", classes);
 
-  return auth.user ? (
+  return auth.user && auth.user.status === "normal" ? (
     <div className="mx-20 my-10">
       <p className="mb-5 text-2xl text-yellow-500 flex justify-center items-center mx-auto">
         <b>{t("title")}</b>

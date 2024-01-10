@@ -119,7 +119,7 @@ export default function TeachingPage() {
 
   console.log("Teaching classes", auth.user);
 
-  return auth.user ? (
+  return auth.user && auth.user.status === "normal" ? (
     <div className="mx-20 my-10">
       <p className="mb-5 text-2xl text-blue-600 flex justify-center items-center mx-auto">
         <b>{t("title")}</b>
