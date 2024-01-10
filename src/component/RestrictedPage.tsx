@@ -1,0 +1,21 @@
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React from "react";
+
+export default function RestrictedPage() {
+    return (
+        <React.Fragment>
+            <div className="flex flex-col items-center justify-center h-screen">
+                <div className="font-bold text-9xl">403 Forbidden</div>
+                <div className="font-semibold text-4xl">Access denied...</div>
+                <div className="mt-2 text-2xl">You don&apos;t have permission to access this page</div>
+                <Link href="/auth">
+                    <div className="mt-2 text-lg text-primary">
+                        Go to Login Page
+                    </div>
+                </Link>
+            </div>
+        </React.Fragment>
+    )
+}
