@@ -58,7 +58,7 @@ const SortableItem: React.ComponentClass<
         props.setRubrics(newRubrics);
         axios
           .delete(
-            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/${rubric_id}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_PREFIX}grade/delete/${rubric_id}`,
             {
               headers: {
                 Authorization: `Bearer ${auth.user?.access_token}`,
