@@ -62,7 +62,8 @@
     "accept_terms_and_conditions_msg": "Vui lòng chấp nhận các điều khoản và điều kiện"
   },
   "Homepage": {
-    "class": "Danh sách lớp"
+    "class": "Danh sách lớp",
+    "ban_error": "Tài khoản đã bị hạn chế!"
   },
   "Profile": {
     "profile": "Hồ sơ của bạn",

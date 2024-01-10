@@ -62,7 +62,8 @@
     "accept_terms_and_conditions_msg": "Please accept terms and conditions"
   },
   "Homepage": {
-    "class": "My Classes"
+    "class": "My Classes",
+    "ban_error": "The account is banned!"
   },
   "Profile": {
     "profile": "Your Profile",
