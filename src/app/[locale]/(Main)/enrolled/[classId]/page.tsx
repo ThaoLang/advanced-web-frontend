@@ -16,6 +16,7 @@ export default function EncrollByLink() {
   const t = useTranslations("Tabs");
 
   const handleEnrollClass = async (code: string | null) => {
+    console.log("enroll class: ", class_code);
     if (class_code) {
       try {
         const response = await axios.post(
@@ -30,6 +31,7 @@ export default function EncrollByLink() {
         if (response.status === 201) {
           const newClass: ClassType = response.data;
           router.push(`/enrolled/${newClass._id}/detail`);
+          console.log("Error success", errorMsg);
         }
       } catch (error: any) {
         const errorMessage =
@@ -37,7 +39,10 @@ export default function EncrollByLink() {
             ? error.response.data.message
             : t("join_class_code_error_msg");
         setErrorMsg(errorMessage);
+        console.log("Error fail", errorMsg);
       }
+    } else {
+      setErrorMsg("Class code doesn't match any class");
     }
   };
 
@@ -56,9 +61,12 @@ export default function EncrollByLink() {
       const curUser: UserType = JSON.parse(savedUser);
       auth.login(curUser);
     }
+    console.log("User: ", auth.user);
   }, []);
 
-  handleEnrollClass(class_code);
+  useEffect(() => {
+    if (auth.user) handleEnrollClass(class_code);
+  }, [auth.user]);
 
   return (
     <div className="">
