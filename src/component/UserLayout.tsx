@@ -52,12 +52,15 @@ export default function UserLayout(props: UserLayoutProps) {
   useEffect(() => {
     const fetchData = async () => {
       if (auth.user) {
-        console.log('Fetching...');
+        // console.log('Fetching...');
         const newData = await fetchGetUser();
         if (newData) {
           const _newUserData = JSON.parse(JSON.stringify(newData.data));
           // Check if user status has changed
-          if (_newUserData.status !== auth.user?.status) {
+          if (_newUserData.status !== auth.user.status || 
+            _newUserData.username !== auth.user.username ||
+            _newUserData.studentId !== auth.user.studentId ||
+            _newUserData.avatarUrl !== auth.user.avatarUrl) {
             auth.login(_newUserData);
             localStorage.setItem('user', JSON.stringify(_newUserData));
             window.location.reload();
