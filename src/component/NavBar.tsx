@@ -66,15 +66,15 @@ export default function NavBar() {
         }
       };
       await checkCredential();
-      console.log("auth in navbar", auth);
-      console.log("user in navbar", auth.user);
+      // console.log("auth in navbar", auth);
+      // console.log("user in navbar", auth.user);
 
       setTrigger("triggered");
     })();
   }, []);
 
   useEffect(() => {
-    (async () => {
+    const fetchNotiData = async () => {
       if (!auth.user || auth.user == null) return;
       // get a list of class id user is in
       // loop the list
@@ -87,7 +87,7 @@ export default function NavBar() {
           },
         })
         .then((response) => {
-          console.log("All classes response", response);
+          // console.log("All classes response", response);
           classes = response.data;
 
           let notificationList: NotificationType[] = [];
@@ -106,27 +106,34 @@ export default function NavBar() {
               .then((response) => {
                 if (response.data.length > 0) {
                   notificationList = [...notificationList, ...response.data];
-                  console.log("Notifications response", response);
+                  // console.log("Notifications response", response);
                   setNotifications(notificationList);
                 }
               })
               .catch((error) => {
-                console.error("Error fetching notifications:", error);
+                // console.error("Error fetching notifications:", error);
               });
           });
         })
         .catch((error) => {
           console.error("Error fetching my classes:", error);
         });
+    };
+    fetchNotiData();
 
-      // socket io notification
-      let user = auth.user;
-      let accessToken = user?.access_token;
-      if (accessToken) {
-        actions.setAccessToken(accessToken);
-        actions.initializeSocket(accessToken);
-      }
-    })();
+    const intervalId = setInterval(fetchNotiData, 10000);
+
+    return () => clearInterval(intervalId);
+  }, [trigger]);
+
+  useEffect(() => {
+    // socket io notification
+    let user = auth.user;
+    let accessToken = user?.access_token;
+    if (accessToken) {
+      actions.setAccessToken(accessToken);
+      actions.initializeSocket(accessToken);
+    }
   }, [trigger]);
 
   return (

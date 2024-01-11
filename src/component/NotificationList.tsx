@@ -61,7 +61,7 @@ export function Notification(props: NotificationProps) {
           }
         )
         .then((response) => {
-          console.log("Response name", response);
+          // console.log("Response name", response);
           setSenderName(response.data.username);
         })
         .catch((error) => {
